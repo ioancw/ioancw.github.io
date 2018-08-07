@@ -6,15 +6,15 @@ categories:
 ---
 ## Introduction
 
-This post will describe the steps to follow in order to run Jupyter notebooks on a remote server and run them from an iPad.
+This post will describe the steps to follow in order to run Jupyter notebooks on a remote server from and iPad Pro.
 
-We'll use [Juno app][juno_app] on the iPad to run Jupyter notebooks hosted on a [Digital Ocean] [digital-ocean] server.
+We'll use [Juno app][juno_app] on the iPad to run Jupyter notebooks hosted on a [Digital Ocean][digital-ocean] server.
 
 ## Create Digital Ocean server
 
 To setup the server, follow the steps below:
 
-* [Create][create-account] a Digital Ocean account using my [referral][referral-code] code.  You get $10 credit (approx. two months of usage)
+* Create a Digital Ocean account using my [referral][referral-code] code.  You get $10 credit (approx. two months of usage)
 * [Create][ssl-key] an SSL key on your local machine, in order to use SSL to log on to the server.
 * [Add][add-key] the SSL key to your Digital Ocean account
 * [Follow][digitalocean-quick] the Digital Ocean quick start guide to set up your server.
@@ -27,7 +27,6 @@ You'll need to use SSH in order to connect from the Juno app to the server.
 Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
 
 [referral-code]:https://m.do.co/c/399038ff7529
-[create-account]:https://cloud.digitalocean.com/registrations/new
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
 [ssl-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/create-with-openssh/
 [digitalocean-quick]: https://www.digitalocean.com/docs/droplets/quickstart/
