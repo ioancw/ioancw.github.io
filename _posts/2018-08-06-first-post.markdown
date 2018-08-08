@@ -23,11 +23,14 @@ To setup the server, follow the steps below:
     ``` bash
     ssh root@123.45.678.901
     ```
+
 ## Install and configure Jupyter notebooks
 
 You'll need to use SSH in order to connect from the Juno app to the server.
 
-Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
+* Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
+* Now take the following files from my repository.
+
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
