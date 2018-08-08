@@ -29,8 +29,16 @@ To setup the server, follow the steps below:
 You'll need to use SSH in order to connect from the Juno app to the server.
 
 * Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
-* Now take the following files from my repository.
-
+* Take note of the three keys/certificates that are produced.  You’ll need these in the next step.
+* Clone this repository to your local machine (not your server).
+* Copy the two certificates from the first step into the same directory.
+* Execute the server setup file, which installs anaconda and the associated machine learning libraries and sets up the Jupyter notebook.
+* Restart the server
+* Now run the notebook in a Screen session (this means that it will run in a background process.
+	
+	``` bash
+	screen 
+	```
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
