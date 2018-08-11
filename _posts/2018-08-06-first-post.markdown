@@ -35,7 +35,6 @@ You'll need to use SSH in order to connect from the Juno app to the server.
 * Execute the setup_server.sh file, which installs anaconda and the associated machine learning libraries and sets up the Jupyter notebook.
 
 	``` bash
-	cd your-path-to/cloud-python
     bash setup_server.sh THE-IP-ADDRESS
 	```
 * Restart the server
