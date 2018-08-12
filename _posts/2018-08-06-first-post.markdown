@@ -28,26 +28,31 @@ To setup the server, follow the steps below:
 
 You'll need to use SSH in order to connect from the Juno app to the server.
 
-* Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
-* Take note of the three keys/certificates that are produced.  You’ll need these in the next step.
-* Clone this repository to your local machine (not your server).
-* Copy the two certificates from the first step into the same directory.
-* Execute the setup_server.sh file, which installs anaconda and the associated machine learning libraries and sets up the Jupyter notebook.
+1. Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
+2. Take note of the three keys/certificates that are produced.  You’ll need these in the next step.
+3. Clone [this][do-repository] repository to your local machine (not your server).
+4. Copy the two certificates from the first step into the same directory.
+5. Execute the setup_server.sh file, which installs anaconda and the associated machine learning libraries and sets up the Jupyter notebook.
 
 	``` bash
     bash setup_server.sh THE-IP-ADDRESS
 	```
-* Restart the server
-* Now run the notebook in a Screen session (this means that it will run in a background process.
+6. Restart the server
+7. Now run the notebook in a Screen session (this means that it will run in a background process.
 	
 	``` bash
 	screen 
     jupyter notebooks --allow-root
 	```
-* To detach from screen ctrl-a-d
+8. To detach from screen ctrl-a-d
+
+Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the certificate to yourself (so that you can isntall on the iPad).
+
+You should now see something like.
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
+[do-repository]:https://github.com/ioancw/Digital-Ocean-Droplet-Creation
 [ssl-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/create-with-openssh/
 [digitalocean-quick]: https://www.digitalocean.com/docs/droplets/quickstart/
 [juno_app]: https://juno.sh
