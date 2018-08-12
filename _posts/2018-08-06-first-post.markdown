@@ -44,7 +44,7 @@ You'll need to use SSH in order to connect from the Juno app to the server.
 	screen 
     jupyter notebooks --allow-root
 	```
-8. To detach from Screen ctrl-a-d
+8. To detach from Screen `ctrl-a-d`
 
 Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the certificate to yourself (so that you can install on the iPad).
 
