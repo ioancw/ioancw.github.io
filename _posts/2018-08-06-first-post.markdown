@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Juno app on iPad."
-date:   2018-08-06 21:29:25 +0100
+date:   2018-08-12 06:07:00 +0100
 categories: 
 ---
 ## Introduction
@@ -44,11 +44,10 @@ You'll need to use SSH in order to connect from the Juno app to the server.
 	screen 
     jupyter notebooks --allow-root
 	```
-8. To detach from screen ctrl-a-d
+8. To detach from Screen ctrl-a-d
 
-Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the certificate to yourself (so that you can isntall on the iPad).
+Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the certificate to yourself (so that you can install on the iPad).
 
-You should now see something like.
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
