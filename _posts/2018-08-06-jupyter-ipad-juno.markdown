@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Using Juno app on iPad to run Jupyter notebooks."
+title:  "Juno app on iPad running Jupyter notebooks."
 description: "How to run Jupyter notebooks on iPad using the Juno app."
 date:   2018-08-12 06:07:00 +0100
 categories: 

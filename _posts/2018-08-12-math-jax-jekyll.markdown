@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Using MathJax on Jekyll"
+description: "How to set up MathJax on Jekyll static blogs"
 date:   2018-08-12 06:07:00 +0100
 categories: 
 math: true
@@ -14,9 +15,10 @@ and
 $$
 a^2 + b^2 = c^2
 $$
+
 ### MathJax setup.
 
-* I followed the steps from [Dason][jekyll-mathjax] on his blog and also [here][gaston].  Although I had to use default.html rather than the page.html.
+* I followed the steps from Dason Kurkiewicz's [blog][jekyll-mathjax] and also Gaston Sanchez's [here][gaston].  Although I had to use default.html rather than the page.html.
 
 This was overly fiddly to setup (seems par for the course, based on other comments), e.g. the maths rendering worked when I served locally, however when I merged to GitHub, the math wasn’t rendered on the live site.  
 
