@@ -14,7 +14,6 @@ and
 $$
 a^2 + b^2 = c^2
 $$
-
 ### MathJax setup.
 
 * I followed the steps from [Dason][jekyll-mathjax] on his blog and also [here][gaston].  Although I had to use default.html rather than the page.html.
@@ -24,7 +23,7 @@ This was overly fiddly to setup (seems par for the course, based on other commen
 So this seems to now work (if you can see something below, then it has worked):
 
 $$
-
+$$e^{i\pi} + 1 = 0$$
 $$
 
 [jekyll-mathjax]: http://dasonk.com/blog/2012/10/09/Using-Jekyll-and-Mathjax
