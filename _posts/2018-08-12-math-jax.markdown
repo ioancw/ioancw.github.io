@@ -19,5 +19,13 @@ $$
 
 * I followed the steps from [Dason][jekyll-mathjax] on his blog and also [here][gaston].  Although I had to use default.html rather than the page.html.
 
+This was overly fiddly to setup (seems par for the course, based on other comments), e.g. the maths rendering worked when I served locally, however when I merged to GitHub, the maths wasn’t rendered.  Turns out one had to use `https` instead of `http` in the website included in the `default.html` file.
+
+So this seems to now work (if you can see something below, then it has worked):
+
+$$
+
+$$
+
 [jekyll-mathjax]: http://dasonk.com/blog/2012/10/09/Using-Jekyll-and-Mathjax
 [gaston]:http://www.gastonsanchez.com/visually-enforced/opinion/2014/02/16/Mathjax-with-jekyll/
