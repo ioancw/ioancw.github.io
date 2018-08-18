@@ -2,7 +2,7 @@
 layout: post
 title:  "Juno app on iPad running Jupyter notebooks."
 description: "How to run Jupyter notebooks on iPad using the Juno app."
-date:   2018-08-12 06:07:00 +0100
+date:   2018-08-11 06:07:00 +0100
 categories: 
 ---
 ## Introduction
@@ -30,25 +30,26 @@ To setup the server, follow the steps below:
 You'll need to use SSH in order to connect from the Juno app to the server.
 
 1. Firsly follow [these][juno-ssh] steps in order to generate the certificates and keys.
-2. Take note of the three keys/certificates that are produced.  You’ll need these in the next step.
+2. Take note of the three keys/certificates that are produced.  You’ll need these in the next steps.
+    * `ca/certs/ca.cert.pem` is to be email to yourself, so you can use from the iPad.
+    * `jupyter/certs/ssl.cert.pem` and `jupyter/private/ssl.key.pem` will be used below.
 3. Clone [this][do-repository] repository to your local machine (not your server).
-4. Copy the two certificates from the first step into the same directory.
-5. Execute the setup_server.sh file, which installs anaconda and the associated machine learning libraries and sets up the Jupyter notebook.
+4. Copy `jupyter/certs/ssl.cert.pem` and `jupyter/private/ssl.key.pem` into the same directory as the clone of the repository.
+5. Execute the setup_server.sh file, which installs Anaconda and the associated machine learning libraries and sets up the Jupyter notebook configuration file, and copies the key and certificate to the server.
 
 	``` bash
-    bash setup_server.sh THE-IP-ADDRESS
+    bash setup_server.sh 123.45.678.901
 	```
 6. Restart the server
-7. Now run the notebook in a Screen session (this means that it will run in a background process.
+7. Now run the notebook in a `Screen` session (this will allow the notebook to run in background process, and so won't be killed when you log out from the server.
 	
 	``` bash
 	screen 
     jupyter notebooks --allow-root
 	```
-8. To detach from Screen `ctrl-a-d`
+8. To detach from Screen `ctrl-a-d`.  It's now safe to log out from the server.
 
-Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the certificate to yourself (so that you can install on the iPad).
-
+Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the `ca/certs/ca.cert.pem` certificate to yourself (so that you can install on the iPad).
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/
