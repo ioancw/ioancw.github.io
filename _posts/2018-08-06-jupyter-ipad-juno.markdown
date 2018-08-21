@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Juno app on iPad running Jupyter notebooks."
+title:  "Running Jupyter notebook on iPad using Juno app."
 description: "How to run Jupyter notebooks on iPad using the Juno app."
 date:   2018-08-11 06:07:00 +0100
 categories: 
@@ -35,13 +35,13 @@ You'll need to use SSH in order to connect from the Juno app to the server.
     * `jupyter/certs/ssl.cert.pem` and `jupyter/private/ssl.key.pem` will be used below.
 3. Clone [this][do-repository] repository to your local machine (not your server).
 4. Copy `jupyter/certs/ssl.cert.pem` and `jupyter/private/ssl.key.pem` into the same directory as the clone of the repository.
-5. Execute the setup_server.sh file, which installs Anaconda and the associated machine learning libraries and sets up the Jupyter notebook configuration file, and copies the key and certificate to the server.
+5. Execute the setup_server.sh file, which installs Anaconda and the associated machine learning libraries and sets up the Jupyter notebook configuration file, then copies the key and certificate to the server.
 
 	``` bash
     bash setup_server.sh 123.45.678.901
 	```
 6. Restart the server
-7. Now run the notebook in a `Screen` session (this will allow the notebook to run in background process, and so won't be killed when you log out from the server.
+7. Log on to your server and run the Jupyter notebook in a `Screen` session (this will allow the notebook to run in background process, and so won't be killed when you log out from the server).
 	
 	``` bash
 	screen 
@@ -50,6 +50,9 @@ You'll need to use SSH in order to connect from the Juno app to the server.
 8. To detach from Screen `ctrl-a-d`.  It's now safe to log out from the server.
 
 Jupyter is now running on your Digital Ocean server.  The final step is to connect to it from the Juno app on the iPad.  Remember to follow all the instructions in step 1. above, especially emailing the `ca/certs/ca.cert.pem` certificate to yourself (so that you can install on the iPad).
+
+Here is an image of an example Jupyter workbook from within Juno.
+![test-img]({{"/assets/img/math-jax-jekyll/IMG_0082.jpg" | absolute_url }})
 
 [referral-code]:https://m.do.co/c/399038ff7529
 [add-key]:https://www.digitalocean.com/docs/droplets/how-to/add-ssh-keys/to-account/

@@ -18,7 +18,7 @@ $$
 
 ### MathJax setup.
 
-* I followed the steps from Dason Kurkiewicz's [blog][jekyll-mathjax] and also Gaston Sanchez's [here][gaston].  Although I had to use default.html rather than the page.html.
+* I followed the steps from Dason Kurkiewicz's [blog][jekyll-mathjax] and also Gaston Sanchez's [blog][gaston].  Although I had to use default.html rather than the page.html.
 
 This was overly fiddly to setup (seems par for the course, based on other comments), e.g. the maths rendering worked when I served locally, however when I merged to GitHub, the math wasn’t rendered on the live site.  
 
