@@ -6,6 +6,10 @@ categories:
 ---
 ## Introduction
 
+Since getting an iPad Pro last year, I've been looking at ways of using it to run Jupyter notebooks. One option is to run Jupyter notebooks on a remote server and then connecting via Safari.  While this method works, using Safari for this is clunky on the iPad.
+
+I started searching for a dedicated app, until I found [Juno app][juno_app], after which there was no point looking further.
+
 This post will describe the steps to follow in order to run Jupyter notebooks on a remote server from an iPad Pro.
 
 We'll use [Juno app][juno_app] on the iPad to run Jupyter notebooks hosted on a [Digital Ocean][digital-ocean] server.
