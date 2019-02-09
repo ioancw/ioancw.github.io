@@ -3,11 +3,9 @@ layout: post
 title:  "Git notes"
 description: "Notes on use git from the command line."
 date:   2019-02-09 16:07:00 +0100
-categories: 
+categories: git
 math: true
 ---
-## Git
-
 Some notes, predominantly so I can remember, of how to use github from the command line.
 
 ### New repository
@@ -15,10 +13,12 @@ Some notes, predominantly so I can remember, of how to use github from the comma
 To create a new repository
 
 	``` bash
-    git init
+    bash setup_server.sh 123.45.678.901
 	```
 
-
+	``` bash
+    git init
+	```
 ### Clone repository
 
 To clone an existing remote repository:
@@ -26,7 +26,6 @@ To clone an existing remote repository:
 	``` bash
     git clone <full repository path>
 	```
-
 ### Add
 
 Add a specific change:
@@ -34,13 +33,11 @@ Add a specific change:
 	``` bash
     git add <filename>
 	```
-
 Add all changes:
 
 	``` bash
     git add *
 	```
-
 ### Commit
 
 To commit changes:
