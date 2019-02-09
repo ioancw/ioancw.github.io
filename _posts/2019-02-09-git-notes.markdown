@@ -1,0 +1,76 @@
+---
+layout: post
+title:  "Git notes"
+description: "Notes on use git from the command line."
+date:   2019-02-09 16:07:00 +0100
+categories: 
+math: true
+---
+## Git
+
+Some notes, predominantly so I can remember, of how to use github from the command line.
+
+### New repository
+
+To create a new repository
+
+	``` bash
+    git init
+	```
+
+
+### Clone repository
+
+To clone an existing remote repository:
+
+	``` bash
+    git clone <full repository path>
+	```
+
+### Add
+
+Add a specific change:
+
+	``` bash
+    git add <filename>
+	```
+
+Add all changes:
+
+	``` bash
+    git add *
+	```
+
+### Commit
+
+To commit changes:
+
+	``` bash
+    git commit -m "Commit message"
+	```
+
+The file is commited to HEAD, but not to the remote repository.
+
+### Pushing
+
+To push changes from HEAD to the remote repository:
+
+	``` bash
+    git push origin master
+	```
+
+### Updating
+
+To fetch and merge remote changes (i.e. updating your local repository):
+
+	``` bash
+    git pull
+	```
+
+Git auto-merges changes, which won't necessarily be possibly if there any conficts.  You'll be required to manually resolve (edit) files in the case of conficts.
+
+An alternative to pull, is to use fetch.
+
+	``` bash
+    git fetch
+	```
