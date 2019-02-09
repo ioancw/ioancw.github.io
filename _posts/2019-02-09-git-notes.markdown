@@ -10,11 +10,7 @@ Some notes, predominantly so I can remember, of how to use github from the comma
 
 ### New repository
 
-To create a new repository
-
-	``` bash
-    bash setup_server.sh 123.45.678.901
-	```
+To create a new repository:
 
 	``` bash
     git init
