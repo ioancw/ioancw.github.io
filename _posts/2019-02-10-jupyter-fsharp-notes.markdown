@@ -15,13 +15,13 @@ I started to think about this problem, by thinking of 10 boxes [1,2,3,4,5,6,7,8,
 
 Naively, starting at the front of the list and adding to the next available box, gives us the following boxes packed:
 
-[1,2,3,4] -> volume = 10
-[5] -> volume = 5
-[6] -> volume = 6
-[7] -> volume = 7
-[8] -> volume = 8
-[9] -> volume = 9
-[10] -> volume = 10
+    [1,2,3,4] -> volume = 10
+    [5] -> volume = 5
+    [6] -> volume = 6
+    [7] -> volume = 7
+    [8] -> volume = 8
+    [9] -> volume = 9
+    [10] -> volume = 10
 
 This isn't particularly good and means we've packed our items into 7 boxes.
 
@@ -32,12 +32,12 @@ In this case, we get the following intial list of boxes:
 
 And by following the same algorithm as above, we pack into 6 boxes:
 
-[10] -> volume = 10
-[9,1] -> volume = 10
-[8,2] -> volume = 10
-[7,3] -> volume = 10
-[6,4] -> volume = 10
-[5] -> volume = 5
+    [10] -> volume = 10
+    [9,1] -> volume = 10
+    [8,2] -> volume = 10
+    [7,3] -> volume = 10
+    [6,4] -> volume = 10
+    [5] -> volume = 5
 
 Which is one fewer box that the first example.
 
