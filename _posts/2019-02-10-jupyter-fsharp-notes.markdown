@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Running Jupyter notebook on iPad using Juno app."
-description: "How to run Jupyter notebooks on iPad using the Juno app."
-date:   2018-08-11 06:07:00 +0100
+title:  "Starting with F#"
+description: "The adventure with F# begins."
+date:   2019-02-10 06:07:00 +0100
 categories: 
 ---
 ## Introduction
