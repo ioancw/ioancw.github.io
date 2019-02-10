@@ -11,7 +11,7 @@ A colleage recently asked me to test out one of his interview questions, which w
 
 Pack n number of items of different volumes v into a various boxes of volume V, and to do so by minimising the number of boxes used.  Where each item fits into a box, i.e. v <= V
 
-I started to think about this problem, by thinking of 10 boxes [1,2,3,4,5,6,7,8,9,10], where the int value represents the volume of each item, and tried to 'fit' them into boxes of Volume 10.
+I started to think about this problem, by thinking of 10 boxes `[1,2,3,4,5,6,7,8,9,10]`, where the int value represents the volume of each item, and tried to 'fit' them into boxes of Volume 10.
 
 Naively, starting at the front of the list and adding to the next available box, gives us the following boxes packed:
 
@@ -28,7 +28,7 @@ This isn't particularly good and means we've packed our items into 7 boxes.
 Another approach is to sort the initial list of boxes in decreasing order of their volume.
 In this case, we get the following intial list of boxes:
 
-[10,9,8,7,6,5,4,3,2,1]
+`[10,9,8,7,6,5,4,3,2,1]`
 
 And by following the same algorithm as above, we pack into 6 boxes:
 
@@ -56,7 +56,9 @@ let packBoxes items volume=
     items
     |> Array.sortDescending
     |> Array.iter (fun box ->
-                    let sackIndex = boxes |> Array.tryFindIndex (fun sack -> sack + box <= volume)
+                    let sackIndex = 
+                        boxes 
+                        |> Array.tryFindIndex (fun sack -> sack + box <= volume)
                     
                     match sackIndex with
                     | Some index -> boxes.[index] <- boxes.[index] + box
@@ -69,6 +71,9 @@ let packBoxes items volume=
 The above defines a function that takes a number of items to pack into boxes of max volume, volume.
 Returning the number of boxes 
 
+Now we need to run the simulation of 90 boxes of random volumes.
+
+``` fsharp
 let randomItems from upTo times =
     let randy = Random()
     Array.init times (fun _ -> randy.Next(from, upTo))
@@ -82,5 +87,21 @@ stopWatch.Stop()
 let averageSacks = (float)simulation4  / (float)vol
 printfn "Average number of sacks used %f" averageSacks
 printfn "%i" stopWatch.Elapsed.Seconds
+```
+
+This gives the average number of boxes you can pack the 90 items into, to be just over half the number of items, at 47.59 boxes.
+
+I tried to performance tune the script, in order to get a performance which was comparible to Julia.
+I ran the same simulation in Julia in approx. 8 seconds.
+
+The simulation in F# took, approx 16 seconds (when running the simulation in parallel).
+My original implementation (which didn't use a mutable array), and created a list of 1,000,000 random boxes, took approximately 4 minutes, so a reduction to 16 seconds isn't too bad.  I also did a naive implementation in Python which took nearly 8 minutes to run.
+
+All the above was run on my 15inch 6 core Macbook Pro (2018 version).
+
+One can run this script on the command line, in Mac OS, using:
+
+``` bash
+fsharpi binpacking.fsx
 ```
 
