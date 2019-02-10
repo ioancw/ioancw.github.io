@@ -12,35 +12,35 @@ Some notes, predominantly so I can remember, of how to use github from the comma
 
 To create a new repository:
 
-	``` bash
-    git init
-	```
+``` bash
+git init
+```
 ### Clone repository
 
 To clone an existing remote repository:
 
-	``` bash
-    git clone <full repository path>
-	```
+``` bash
+git clone <full repository path>
+```
 ### Add
 
 Add a specific change:
 
-	``` bash
-    git add <filename>
-	```
+``` bash
+git add <filename>
+```
 Add all changes:
 
-	``` bash
-    git add *
-	```
+``` bash
+git add *
+```
 ### Commit
 
 To commit changes:
 
-	``` bash
-    git commit -m "Commit message"
-	```
+``` bash
+git commit -m "Commit message"
+```
 
 The file is commited to HEAD, but not to the remote repository.
 
@@ -48,22 +48,22 @@ The file is commited to HEAD, but not to the remote repository.
 
 To push changes from HEAD to the remote repository:
 
-	``` bash
-    git push origin master
-	```
+``` bash
+git push origin master
+```
 
 ### Updating
 
 To fetch and merge remote changes (i.e. updating your local repository):
 
-	``` bash
-    git pull
-	```
+``` bash
+git pull
+```
 
 Git auto-merges changes, which won't necessarily be possibly if there any conficts.  You'll be required to manually resolve (edit) files in the case of conficts.
 
 An alternative to pull, is to use fetch.
 
-	``` bash
-    git fetch
-	```
+``` bash
+git fetch
+```
