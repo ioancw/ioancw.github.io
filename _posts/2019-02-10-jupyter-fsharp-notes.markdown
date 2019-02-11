@@ -9,11 +9,11 @@ categories:
 
 A colleage recently asked me to test out one of his interview questions, which went something like:
 
-Pack n number of items of different volumes v into a various boxes of volume V, and to do so by minimising the number of boxes used.  Where each item fits into a box, i.e. v <= V
+"Pack n number of items of different volumes v into boxes of volume V, and do so by minimising the number of boxes used."  Each item fits into a box, i.e. v <= V
 
 I started to think about this problem, by thinking of 10 boxes `[1,2,3,4,5,6,7,8,9,10]`, where the int value represents the volume of each item, and tried to 'fit' them into boxes of Volume 10.
 
-Naively, starting at the front of the list and adding to the next available box, gives us the following boxes packed:
+Naively, starting at the front of the list and adding to the next available box (including the current box, if not full), gives us the following packed boxes:
 
     [1,2,3,4] -> volume = 10
     [5] -> volume = 5
@@ -26,7 +26,7 @@ Naively, starting at the front of the list and adding to the next available box,
 This isn't particularly good and means we've packed our items into 7 boxes.
 
 Another approach is to sort the initial list of boxes in decreasing order of their volume.
-In this case, we get the following intial list of boxes:
+In this case, we get the following list of boxes:
 
 `[10,9,8,7,6,5,4,3,2,1]`
 
@@ -43,7 +43,7 @@ Which is one fewer box that the first example.
 
 We try to pack a given item into the first box that's available, which means that the 1 is paired with the 9, the 2 with 8 and so on.
 
-Googling, lead me to read the following in a paper trying to optimise (i.e lower) the numbers of bins (or boxes) used to pack items.
+Googling lead me to read the following in a paper trying to optimise (i.e lower) the numbers of bins (or boxes) used to pack items.
 
 What I've done, is simulate packing 90 randomly chosen boxes, that range in volume between 1 and 1,000,000 units.  I've run the simulation 1,000,000 times, and provided the average number of boxes used to pack the 90 items.
 
@@ -94,8 +94,10 @@ This gives the average number of boxes you can pack the 90 items into, to be jus
 I tried to performance tune the script, in order to get a performance which was comparible to Julia.
 I ran the same simulation in Julia in approx. 8 seconds.
 
-The simulation in F# took, approx 16 seconds (when running the simulation in parallel).
-My original implementation (which didn't use a mutable array), and created a list of 1,000,000 random boxes, took approximately 4 minutes, so a reduction to 16 seconds isn't too bad.  I also did a naive implementation in Python which took nearly 8 minutes to run.
+The simulation in F# took approx 16 seconds (when running the simulation in parallel).
+My original implementation (which didn't use a mutable array), and created a list of 1,000,000 random boxes, took approximately 4 minutes, so a reduction to 16 seconds isn't too bad.  
+
+I also did a naive implementation in Python which took nearly 8 minutes to run (but I havnen't tried to optimise this)
 
 All the above was run on my 15inch 6 core Macbook Pro (2018 version).
 
