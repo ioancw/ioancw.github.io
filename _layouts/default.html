@@ -14,11 +14,12 @@
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
         {{ content }}
+        {% include disqus.html %}
       </div>
     </main>
 
     {%- include footer.html -%}
-    {% include disqus.html %}
+
     <script id="dsq-count-scr" src="//ioancw-github-io.disqus.com/count.js" async></script>
   </body>
 </html>
