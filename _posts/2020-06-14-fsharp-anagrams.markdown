@@ -44,18 +44,18 @@ fileName
 Seq.groupBy returns a sequence containing a tuple of our key and a sequence of words that match this key.  So we just sort the outer sequence by the length of this inner sequence, then take 10 and then print the result to the console.
 
 Which gives us:
-    `
-    aelrst : alerts,alters,artels,estral,laster,ratels,salter,slater,staler,stelar,talers
-    aeprs : apers,asper,pares,parse,pears,prase,presa,rapes,reaps,spare,spear
-    aelst : least,setal,slate,stale,steal,stela,taels,tales,teals,tesla
-    aceprs : capers,crapes,escarp,pacers,parsec,recaps,scrape,secpar,spacer
-    einrst : estrin,inerts,insert,inters,niters,nitres,sinter,triens,trines
-    acers : acers,acres,cares,carse,escar,races,scare,serac
-    aeinrst : anestri,nastier,ratines,retains,retinas,retsina,stainer,stearin
-    aelrs : arles,earls,lares,laser,lears,rales,reals,seral
-    aeprss : aspers,parses,passer,prases,repass,spares,sparse,spears
-    aest : ates,east,eats,etas,sate,seat,seta,teas
-    `
+```
+aelrst : alerts,alters,artels,estral,laster,ratels,salter,slater,staler,stelar,talers
+aeprs : apers,asper,pares,parse,pears,prase,presa,rapes,reaps,spare,spear
+aelst : least,setal,slate,stale,steal,stela,taels,tales,teals,tesla
+aceprs : capers,crapes,escarp,pacers,parsec,recaps,scrape,secpar,spacer
+einrst : estrin,inerts,insert,inters,niters,nitres,sinter,triens,trines
+acers : acers,acres,cares,carse,escar,races,scare,serac
+aeinrst : anestri,nastier,ratines,retains,retinas,retsina,stainer,stearin
+aelrs : arles,earls,lares,laser,lears,rales,reals,seral
+aeprss : aspers,parses,passer,prases,repass,spares,sparse,spears
+aest : ates,east,eats,etas,sate,seat,seta,teas
+```
 
 My sort string function is as follows:
 
