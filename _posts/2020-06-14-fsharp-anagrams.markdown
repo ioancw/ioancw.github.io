@@ -1,12 +1,10 @@
 ---
 layout: post
-title:  "Finding anagrams in F#"
+title:  "Finding anagrams with F#"
 description: "Finding all anagrams of a word in a dictionary."
 date:   2020-06-14 06:07:00 +0100
 categories: 
 ---
-## Finding anagrams in F#
-
 Recently someone asked me how to find all anagrams of a given word contained in a dictionary, i.e. a file containing a large numnber of words, one per line.
 
 While I have an implementation in Python, I thought I'd try it in F#.
