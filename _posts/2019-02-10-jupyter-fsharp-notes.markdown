@@ -51,21 +51,20 @@ What I've done, is simulate packing 90 randomly chosen boxes, that range in volu
 open FSharp.Collections.ParallelSeq
 open System
 
-let packBoxes items volume= 
+let packBoxes items volume =
     let mutable boxes = [||]
     items
     |> Array.sortDescending
     |> Array.iter (fun box ->
-                    let sackIndex = 
-                        boxes 
-                        |> Array.tryFindIndex (fun sack -> sack + box <= volume)
-                    
-                    match sackIndex with
-                    | Some index -> boxes.[index] <- boxes.[index] + box
-                    | None -> 
-                        Array.Resize(&boxes, Array.length boxes + 1)
-                        boxes.[Array.length boxes - 1 ] <- box
-                )
+        let sackIndex =
+            boxes
+            |> Array.tryFindIndex (fun sack -> sack + box <= volume)
+
+        match sackIndex with
+        | Some index -> boxes.[index] <- boxes.[index] + box
+        | None ->
+            Array.Resize(&boxes, Array.length boxes + 1)
+            boxes.[Array.length boxes - 1] <- box)
     Array.length boxes
 ```
 The above defines a function that takes a number of items to pack into boxes of max volume, volume.
@@ -80,13 +79,16 @@ let randomItems from upTo times =
 
 let stopWatch = System.Diagnostics.Stopwatch.StartNew()
 let vol = 1000000
-let simulation4 = PSeq.fold (fun acc _ -> (packBoxes (randomItems 1 vol 90) vol) + acc) 0 {0 .. vol}
+
+let simulation4 =
+    PSeq.fold (fun acc _ -> (packBoxes (randomItems 1 vol 90) vol) + acc) 0 { 0 .. vol }
 
 stopWatch.Stop()
 
-let averageSacks = (float)simulation4  / (float)vol
+let averageSacks = (float) simulation4 / (float) vol
 printfn "Average number of sacks used %f" averageSacks
 printfn "%i" stopWatch.Elapsed.Seconds
+
 ```
 
 This gives the average number of boxes you can pack the 90 items into, to be just over half the number of items, at 47.59 boxes.

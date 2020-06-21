@@ -30,7 +30,7 @@ And that's it.
 Let's say though, that we wanted to print the words with the most anagrams, and find the top 10 words, we can extend our code by:
 
 ``` fsharp
-open SystemIO
+open System.IO
 fileName
 |> File.ReadAllLines
 |> Seq.groupBy sortString
