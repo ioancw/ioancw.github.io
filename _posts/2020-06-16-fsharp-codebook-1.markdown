@@ -115,11 +115,17 @@ We next need to write a function that will apply this 'key', essentially convert
 let decipher (charMap: seq<char * char>) =
   charMap
   |> Seq.fold (fun (state: string) (c, p) -> state.Replace(c, p)) cipherText
-
 ```
 The frist time this is run we get the following plaintext. 
 ```
-ri toe sawe ongh cawe fnhto friuehs nf a wai���s oaid, aid mhnte nveh auarist toe caidlestrcy gpni toe plasteh nf toe mall nf toe yriu���s palace; aid toe yriu sam toe paht nf toe oaid toat mhnte. toei toe yriu���s cngiteiaice mas coaiued, aid ors tonguots thngbled orw, sn toat toe xnrits nf ors lnris mehe lnnsed, aid ors yiees swnte nie auarist aintoeh. toe yriu chred alngd tn bhriu ri toe asthnlnuehs, toe coaldeais, aid toe snntosakehs. aid toe yriu spaye, aid sard tn toe mrse wei nf babklni, monsneveh soall head tors mhrtriu, aid sonm we toe ritehphetatrni toehenf, soall be clntoed mrto sca
+ri toe sawe ongh cawe fnhto friuehs nf a wai's oaid, aid mhnte nveh auarist toe 
+caidlestrcy gpni toe plasteh nf toe mall nf toe yriu's palace; aid toe yriu sam 
+toe paht nf toe oaid toat mhnte. toei toe yriu's cngiteiaice mas coaiued, aid ors 
+tonguots thngbled orw, sn toat toe xnrits nf ors lnris mehe lnnsed, aid ors yiees 
+swnte nie auarist aintoeh. toe yriu chred alngd tn bhriu ri toe asthnlnuehs, toe 
+coaldeais, aid toe snntosakehs. aid toe yriu spaye, aid sard tn toe mrse wei nf 
+babklni, monsneveh soall head tors mhrtriu, aid sonm we toe ritehphetatrni 
+toehenf, soall be clntoed mrto sca
 ```
 The convention is cryptography is to use UPPER case for the ciphertext and lower case for the paintext (i.e. the decrypted text).
 
@@ -153,7 +159,14 @@ let key3 =
 key3 |> decipher
 ``` 
 ```
-ri the sawe hngo cawe fnoth friueos nf a wai’s haid, aid monte nveo auarist the caidlestrcy gpni the plasteo nf the mall nf the yriu’s palace; aid the yriu sam the paot nf the haid that monte. thei the yriu’s cngiteiaice mas chaiued, aid hrs thnguhts tongbled hrw, sn that the xnrits nf hrs lnris meoe lnnsed, aid hrs yiees swnte nie auarist aintheo. the yriu cored alngd tn boriu ri the astonlnueos, the chaldeais, aid the snnthsakeos. aid the yriu spaye, aid sard tn the mrse wei nf babklni, mhnsneveo shall oead thrs mortriu, aid shnm we the riteopoetatrni theoenf, shall be clnthed mrth sca
+ri the sawe hngo cawe fnoth friueos nf a wai’s haid, aid monte nveo auarist the 
+caidlestrcy gpni the plasteo nf the mall nf the yriu’s palace; aid the yriu sam 
+the paot nf the haid that monte. thei the yriu’s cngiteiaice mas chaiued, aid hrs 
+thnguhts tongbled hrw, sn that the xnrits nf hrs lnris meoe lnnsed, aid hrs yiees 
+swnte nie auarist aintheo. the yriu cored alngd tn boriu ri the astonlnueos, the 
+chaldeais, aid the snnthsakeos. aid the yriu spaye, aid sard tn the mrse wei nf 
+babklni, mhnsneveo shall oead thrs mortriu, aid shnm we the riteopoetatrni 
+theoenf, shall be clnthed mrth sca
 ```
 This looks more resonable, although we can make futher guesses.  'Cawe' look as if it should be 'same', L should be m and Y is w.  Also 'aid' could be 'and', so T is n and C is i (given the are adjacent in the frequency analysis we probably got them the wrong way around).
 
@@ -187,7 +200,14 @@ let key4 =
 key4 |> decipher
 ```
 ```
-rn the same higo came fioth frnueos if a man’s hand, and woite iveo auarnst the candlestrcy gpin the plasteo if the wall if the yrnu’s palace; and the yrnu saw the paot if the hand that woite. then the yrnu’s cigntenance was chanued, and hrs thiguhts toigbled hrm, si that the xirnts if hrs lirns weoe liised, and hrs ynees smite ine auarnst anitheo. the yrnu cored aligd ti bornu rn the astoiliueos, the chaldeans, and the siithsakeos. and the yrnu spaye, and sard ti the wrse men if babklin, whisieveo shall oead thrs wortrnu, and shiw me the rnteopoetatrin theoeif, shall be clithed wrth sca
+rn the same higo came fioth frnueos if a man’s hand, and woite iveo auarnst the 
+candlestrcy gpin the plasteo if the wall if the yrnu’s palace; and the yrnu saw 
+the paot if the hand that woite. then the yrnu’s cigntenance was chanued, and hrs 
+thiguhts toigbled hrm, si that the xirnts if hrs lirns weoe liised, and hrs ynees 
+smite ine auarnst anitheo. the yrnu cored aligd ti bornu rn the astoiliueos, the 
+chaldeans, and the siithsakeos. and the yrnu spaye, and sard ti the wrse men if 
+babklin, whisieveo shall oead thrs wortrnu, and shiw me the rnteopoetatrin 
+theoeif, shall be clithed wrth sca
 ```
 Which is better and it's starting to look a lot like English, possibly referring to something biblical in nature.
 Maybe 'fioth' should be 'forth', so chaniging the map accordingly gives us:
@@ -220,16 +240,37 @@ let key5 =
 key5 |> decipher
 ```
 ```
-in the same hogr came forth finuers of a man’s hand, and wrote over auainst the candlesticy gpon the plaster of the wall of the yinu’s palace; and the yinu saw the part of the hand that wrote. then the yinu’s cogntenance was chanued, and his thoguhts trogbled him, so that the xoints of his loins were loosed, and his ynees smote one auainst another. the yinu cried alogd to brinu in the astrolouers, the chaldeans, and the soothsakers. and the yinu spaye, and said to the wise men of babklon, whosoever shall read this writinu, and show me the interpretation thereof, shall be clothed with sca
+in the same hogr came forth finuers of a man’s hand, and wrote over auainst the 
+candlesticy gpon the plaster of the wall of the yinu’s palace; and the yinu saw 
+the part of the hand that wrote. then the yinu’s cogntenance was chanued, and his 
+thoguhts trogbled him, so that the xoints of his loins were loosed, and his ynees 
+smote one auainst another. the yinu cried alogd to brinu in the astrolouers, the 
+chaldeans, and the soothsakers. and the yinu spaye, and said to the wise men of 
+babklon, whosoever shall read this writinu, and show me the interpretation 
+thereof, shall be clothed with sca
 ```
 This is definately looking more biblical in nature.
 Looking through the plain text again, there are a few words that should have letters changed, e.g. 'hogr' could be 'hour' and 'finuers' should be 'fingers', thus giving us the following (omiting the F# code this time):
 ```
-in the same hour came forth fingers of a man’s hand, and wrote over against the candlesticy upon the plaster of the wall of the ying’s palace; and the ying saw the part of the hand that wrote. then the ying’s countenance was changed, and his thoughts troubled him, so that the xoints of his loins were loosed, and his ynees smote one against another. the ying cried aloud to bring in the astrologers, the chaldeans, and the soothsakers. and the ying spaye, and said to the wise men of babklon, whosoever shall read this writing, and show me the interpretation thereof, shall be clothed with sca
+in the same hour came forth fingers of a man’s hand, and wrote over against the 
+candlesticy upon the plaster of the wall of the ying’s palace; and the ying saw 
+the part of the hand that wrote. then the ying’s countenance was changed, and his 
+thoughts troubled him, so that the xoints of his loins were loosed, and his ynees 
+smote one against another. the ying cried aloud to bring in the astrologers, the 
+chaldeans, and the soothsakers. and the ying spaye, and said to the wise men of 
+babklon, whosoever shall read this writing, and show me the interpretation 
+thereof, shall be clothed with sca
 ```
 Reading through the plaintext again, it mostly makes sense, however 'ying' should be 'king', making the change to the key map, give us the following plaintext.
 ```
-in the same hour came forth fingers of a man���s hand, and wrote over against the candlestick upon the plaster of the wall of the king���s palace; and the king saw the part of the hand that wrote. then the king���s countenance was changed, and his thoughts troubled him, so that the xoints of his loins were loosed, and his knees smote one against another. the king cried aloud to bring in the astrologers, the chaldeans, and the soothsayers. and the king spake, and said to the wise men of babylon, whosoever shall read this writing, and show me the interpretation thereof, shall be clothed with sca
+in the same hour came forth fingers of a man's hand, and wrote over against the 
+candlestick upon the plaster of the wall of the king's palace; and the king saw 
+the part of the hand that wrote. then the king's countenance was changed, and his 
+thoughts troubled him, so that the xoints of his loins were loosed, and his knees 
+smote one against another. the king cried aloud to bring in the astrologers, the 
+chaldeans, and the soothsayers. and the king spake, and said to the wise men of 
+babylon, whosoever shall read this writing, and show me the interpretation 
+thereof, shall be clothed with sca
 ```
 
 This looks fully decrypted now as it's readable in the plaintext for (albeit for a few old English words).
