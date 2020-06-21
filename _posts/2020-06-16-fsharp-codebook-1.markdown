@@ -122,6 +122,6 @@ ri toe sawe ongh cawe fnhto friuehs nf a wai���s oaid, aid mhnte nveh auar
 The convention is cryptography is to use 
 
 
-[the-code-book] : https://www.amazon.co.uk/Code-Book-Secret-History-Code-breaking/dp/1857028899/ref=sr_1_1?adgrpid=52694659589&dchild=1&gclid=EAIaIQobChMIx_fC3euG6gIVE-3tCh1PQw-9EAAYASAAEgKwwPD_BwE&hvadid=259082330636&hvdev=c&hvlocphy=1002316&hvnetw=g&hvqmt=e&hvrand=2287691142347200337&hvtargid=kwd-301205216858&hydadcr=28148_1752695&keywords=the+code+book&qid=1592327926&sr=8-1&tag=googhydr-21
-[swedish-solution] : http://codebook.org
+[the-code-book]: https://www.amazon.co.uk/Code-Book-Secret-History-Code-breaking/dp/1857028899/ref=sr_1_1?adgrpid=52694659589&dchild=1&gclid=EAIaIQobChMIx_fC3euG6gIVE-3tCh1PQw-9EAAYASAAEgKwwPD_BwE&hvadid=259082330636&hvdev=c&hvlocphy=1002316&hvnetw=g&hvqmt=e&hvrand=2287691142347200337&hvtargid=kwd-301205216858&hydadcr=28148_1752695&keywords=the+code+book&qid=1592327926&sr=8-1&tag=googhydr-21
+[swedish-solution]: http://codebook.org
 
