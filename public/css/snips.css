@@ -1,0 +1,37 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
+
+/*********************************** Styles for snippet details ***********************************/
+
+.modal-backdrop.in {
+  z-index: auto;
+}
+
+.snip-tweet {
+  float:right;
+  padding-top:5px;
+  margin:20px 30px 0px 0px;
+}
+
+.snip-like {
+  float:right;
+  font-size:80%;
+  margin:20px 30px 0px 0px;
+}
+
+#snip-tools {
+  float:right;
+  margin-right:8%;
+}
+
+#snip-tools a {
+  text-decoration:none;
+}
+
+.detail-table {
+  margin-left:30px;
+}
+
+.detail-lbl {
+  font-weight:bold;
+  width:80px;
+}
