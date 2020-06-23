@@ -2,7 +2,7 @@
 layout: post
 title:  "Cipher challenge F#"
 description: "Solve the cipher challenges from Simon Singh's Code Book."
-date:   2020-06-14 06:07:00 +0100
+date:   2020-06-18 06:07:00 +0100
 categories: 
 ---
 # Cipher Challenges
