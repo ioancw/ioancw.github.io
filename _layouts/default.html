@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
-<script type="text/javascript"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-  {%- include head.html -%}
+{%- include head.html -%}
+<link type="text/css" rel="stylesheet" href="{{ site.baseurl }}public/css/syntax.css">
+<link type="text/css" rel="stylesheet" href="{{ site.baseurl }}public/css/tips.css" />
+<script type="text/javascript" src="{{ site.baseurl }}public/js/tips.js"></script>
 
-  <body>
+<body>
 
-    {%- include header.html -%}
-    <link type="text/css" rel="stylesheet" href="{{ site.baseurl }}public/css/syntax.css">
-    <link type="text/css" rel="stylesheet" href="{{ site.baseurl }}public/css/tips.css" />
-    <script type="text/javascript" src="{{ site.baseurl }}public/js/tips.js"></script>
+  {%- include header.html -%}
 
-    <main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        {{ content }}
-      </div>
-      <script id="dsq-count-scr" src="//ioancw-github-io.disqus.com/count.js" async></script>
-    </main>
+  <main class="page-content" aria-label="Content">
+    <div class="wrapper">
+      {{ content }}
+    </div>
+    <script id="dsq-count-scr" src="//ioancw-github-io.disqus.com/count.js" async></script>
+  </main>
 
-    {%- include footer.html -%}
+  {%- include footer.html -%}
 
-  </body>
+</body>
+
 </html>
