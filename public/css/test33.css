@@ -80,10 +80,6 @@ a:hover {
     background: #eef
 }
 
-.highlighter-rouge .highlight {
-    background: #eef
-}
-
 .wrapper {
     max-width: calc(800px - (30px));
     margin-right: auto;
