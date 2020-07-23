@@ -347,7 +347,7 @@ table tr:nth-child(even) {
 
 .post-title,
 .post-content h1 {
-    font-size: 2.625rem;
+    font-size: 2.0rem;
     letter-spacing: -1px;
     line-height: 1.1
 }
@@ -355,7 +355,7 @@ table tr:nth-child(even) {
 @media screen and (min-width: 800px) {
     .post-title,
     .post-content h1 {
-        font-size: 2.625rem
+        font-size: 2.0rem
     }
 }
 
@@ -365,9 +365,9 @@ table tr:nth-child(even) {
 
 .post-content h1,
 .post-content h2,
-.post-content h3 {
+/* .post-content h3 {
     margin-top: 30px
-}
+} */
 
 .post-content h4,
 .post-content h5,
@@ -386,7 +386,7 @@ table tr:nth-child(even) {
 } */
 
 .post-content h3 {
-    font-size: 1.375rem
+    font-size: 1.2rem
 }
 
 @media screen and (min-width: 800px) {
