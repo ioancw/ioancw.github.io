@@ -38,13 +38,13 @@ span.u { color:#4ec9b0; }
 /* enumeration */
 span.e { color:#4ec9b0; }
 /* keywords */
-span.k { color:#FAB11D; }
+span.k { color:#409bf0; }
 /* comment */
 span.c { color:#808080; }
 /* operators */
 span.o { color:#af75c1; }
 /* numbers */
-span.n { color:#96C71D; }
+span.n { color:#afd157; }
 /* line number */
 span.l { color:#80b0b0; }
 /* mutable var or ref cell */
@@ -65,9 +65,9 @@ span.omitted {
 }
 /* tool tip */
 div.tip {
-	background:#475b5f;
+	background:#5c5c5c;
   border-radius:4px;
-  font:11pt 'Droid Sans', arial, sans-serif;
+  font:10pt 'Droid Sans', arial, sans-serif;
 	padding:6px 8px 6px 8px;
 	display:none;
   color:#d1d1d1;
@@ -170,9 +170,9 @@ td.title, thead {
 }
 
 /* Change font sizes for headings etc. */
-#main h1 { font-size: 26pt; margin:10px 0px 15px 0px; font-weight:400; }
-#main h2 { font-size: 20pt; margin:20px 0px 0px 0px; font-weight:400; }
-#main h3 { font-size: 14pt; margin:15px 0px 0px 0px; font-weight:600; }
+#main h1 { font-size: 24pt; margin:10px 0px 15px 0px; font-weight:400; }
+#main h2 { font-size: 28pt; margin:20px 0px 0px 0px; font-weight:400; }
+#main h3 { font-size: 12pt; margin:15px 0px 0px 0px; font-weight:600; }
 #main p  { font-size: 11pt; margin:5px 0px 15px 0px; }
 #main ul { font-size: 11pt; margin-top:10px; }
 #main li { font-size: 11pt; margin: 5px 0px 5px 0px; }
