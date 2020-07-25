@@ -5,6 +5,7 @@ title:  "Literate F#"
 description: "Using F# Literate for blog posts on Jekyll."
 date:   2020-07-24 06:07:00 +0100
 categories: 
+tags: F# FSharp Literate
 ---
 
 (**
