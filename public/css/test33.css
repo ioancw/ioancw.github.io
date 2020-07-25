@@ -319,7 +319,7 @@ table tr:nth-child(even) {
 }
 
 .post-list-heading {
-    font-size: 1.75rem
+    font-size: 1.5rem
 }
 
 .post-list {
@@ -328,7 +328,7 @@ table tr:nth-child(even) {
 }
 
 .post-list>li {
-    margin-bottom: 30px
+    margin-bottom: 25px
 }
 
 .post-meta {
@@ -372,11 +372,11 @@ table tr:nth-child(even) {
 .post-content h4,
 .post-content h5,
 .post-content h6 {
-    margin-top: 30px
+    margin-top: 25px
 }
 
 .post-content h2 {
-    font-size: 1.75rem
+    font-size: 1.25rem
 }
 
 /* @media screen and (min-width: 800px) {
@@ -386,25 +386,25 @@ table tr:nth-child(even) {
 } */
 
 .post-content h3 {
-    font-size: 1.2rem
+    font-size: 1.0rem
 }
 
 @media screen and (min-width: 800px) {
     .post-content h3 {
-        font-size: 1.625rem
+        font-size: 1.0rem
     }
 }
 
 .post-content h4 {
-    font-size: 1.25rem
+    font-size: 1.0rem
 }
 
 .post-content h5 {
-    font-size: 1.125rem
+    font-size: 1.0rem
 }
 
 .post-content h6 {
-    font-size: 1.0625rem
+    font-size: 1.0rem
 }
 
 .social-media-list,

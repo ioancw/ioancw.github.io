@@ -5,7 +5,7 @@
 /*--------------------------------------------------------------------------*/
 
 /* strings --- and stlyes for other string related formats */
-span.s { color:#E0E268; }
+span.s { color:#bb4b4b; }
 /* printf formatters */
 span.pf { color:#E0C57F; }
 /* escaped chars */
@@ -38,7 +38,7 @@ span.u { color:#4ec9b0; }
 /* enumeration */
 span.e { color:#4ec9b0; }
 /* keywords */
-span.k { color:#409bf0; }
+span.k { color:#408ed6; }
 /* comment */
 span.c { color:#808080; }
 /* operators */
