@@ -12,12 +12,13 @@ tags: F# FSharp Literate
 Literate F#
 -----------
 
-Up until now, I've mostly written my blog posts directly in markdown, and including code
+Up until now, I've written my blog posts directly in markdown, and including code
 snippets copied from fsx files.
 
 Literate programming has existed for a while in the F# ecosystem, although I always found
 it clunky to use, probably because it hasn't been updated for a while.  However Don Syme
-gave it a refresh last week, which has made it far more usable, especially as a Mac user.
+gave it a complete overhaul last week, which has made it far more usable, especially as a Mac
+user.
 
 This purpose of this post is to:
 
@@ -27,23 +28,45 @@ This purpose of this post is to:
 My Blog
 -------
 I use github's Jekyll as a 'blog engine'.  This a static blog engine, which means that
-you write posts in markdown and submit to your repository which the blog engine renders in html.
+you write posts in markdown and submit to your repository which the blog engine renders 
+in html.
 
 This works well and F# code is rendered resonably neatly (although it's somewhat hard to 
-the colour of the syntax.)
+change the colour of the syntax.)
 
 However a few people seem to be using Literate programming and the associated tools in F#
-in order to generate html files directly, and then post to Jekyll.
+to generate html files directly, and then post to Jekyll.
 
-I based my workflow from Colin Bull's [blog][cb] post, and associated github repository,
+I based my workflow on Colin Bull's [blog][cb] post, and associated github repository,
 although I updated all dlls to the latest version of FSharp.Formatting.* and used my own 
-scripts and css times.
+scripts and css files.
 
 FSX
 ---
 
 The recipe that I follow, is to write the post within a F# script file (.fsx) and then 
 conver to html using FSharp.Formatting.Literate.
+
+In order to for the Jekyll engine to convert embed the html that's generated into your blog
+you need to have a 'front matter' section on top of your html, which means that any blog
+post generated from fsx files needs to have the following at the top of the fsx file.
+
+```  bash
+---
+layout: post
+title:  "Literate F#"
+description: "Using F# Literate for blog posts on Jekyll."
+date:   2020-07-24 06:07:00 +0100
+categories: 
+tags: F# FSharp Literate
+---
+```
+
+As I've done above, it must be after the 'raw' tag, in order for the Literate processor to 
+ignore it.  If this doesn't exist on your html page, then the Jekyll engine won't include
+it within your blog.
+
+After this gumph, you can start your post.
 
 Start with a double asterisk comment, which allows you to write standard Markdown.
 
@@ -61,6 +84,7 @@ Writing F# code
 ---------------
 Code that is not inside comment will be formatted as a sample snippet
 (which also means that you can run it in Visual Studio Code or editor of your choosing).
+
 *)
 
 /// The Hello World of functional languages!
