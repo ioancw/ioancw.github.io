@@ -12,24 +12,25 @@ snippets copied from fsx files.</p>
 it clunky to use, probably because it hasn't been updated for a while.  However Don Syme
 gave it a refresh last week, which has made it far more usable, especially as a Mac user.</p>
 <p>This purpose of this post is to:
-<em> detail how I use Literate within my posts
-</em> remind me how to use it</p>
+- detail how I use Literate within my posts.
+- remind me how to use it, when I forget.</p>
 <h2>My Blog</h2>
-<p>I use GitHub's Jekyll as a 'blog engine'.  This a static blog engine, which means that
-you write posts in markdown, submit to your repository which the blog engine renders in html.</p>
-<p>This is works well and F# code is rendered resonably well.</p>
-<p>However a few people seems to be using Literate programming and the associated tools in F#
+<p>I use github's Jekyll as a 'blog engine'.  This a static blog engine, which means that
+you write posts in markdown and submit to your repository which the blog engine renders in html.</p>
+<p>This works well and F# code is rendered resonably neatly (although it's somewhat hard to
+the colour of the syntax.)</p>
+<p>However a few people seem to be using Literate programming and the associated tools in F#
 in order to generate html files directly, and then post to Jekyll.</p>
-<p>I tool my workflow from Colin Bull's <a href="http://www.colinbull.net/2014/11/04/Blogging-with-FSharp/">blog</a> post, and associated github repository,
-although I updated all dlls to the latest version of FSharp.Formatting.</p>
+<p>I based my workflow from Colin Bull's <a href="http://www.colinbull.net/2014/11/04/Blogging-with-FSharp/">blog</a> post, and associated github repository,
+although I updated all dlls to the latest version of FSharp.Formatting.* and used my own
+scripts and css times.</p>
 <h2>FSX</h2>
-<p>The recipe that I follow, is to write the post within a F# script file (.fsx).</p>
+<p>The recipe that I follow, is to write the post within a F# script file (.fsx) and then
+conver to html using FSharp.Formatting.Literate.</p>
 <p>Start with a double asterisk comment, which allows you to write standard Markdown.</p>
-<p>As as example, you can write lists:</p>
-<ul>
-<li>Unordered or ordered lists</li>
-<li>Text formatting including <strong>bold</strong> and <em>emphasis</em></li>
-</ul>
+<p>As as example, you can write lists:
+- Unordered or ordered lists
+- Text formatting including <strong>bold</strong> and <em>emphasis</em></p>
 <p>And numerous other <a href="http://daringfireball.net/projects/markdown">Markdown</a> features.</p>
 <h2>Writing F# code</h2>
 <p>Code that is not inside comment will be formatted as a sample snippet
@@ -106,9 +107,9 @@ This can be achieved through FSharp.Formatting.Literate as such.</p>
 </tr>
 </table>
 <p>This assumes that:
-<em> the dlls are in the tools directory
-</em> fsx files are in the code directory
-* generated html files will be in the _posts directory</p>
+- the dlls are in the tools directory
+- fsx files are in the code directory
+- generated html files will be in the _posts directory</p>
 <p>The script will process all fsx files in the code directory and create the html files in
 the _posts directory.</p>
 <p>You can then run the script from the command line as follows</p>
@@ -116,6 +117,7 @@ the _posts directory.</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="bash">dotnet fsi yourscriptname.fsx
 </code></pre></td></tr></table>
+<p>You dan then write a bash script, in order to commit your files to github.</p>
 
 
 <div class="tip" id="fs1">namespace Microsoft.FSharp</div>
