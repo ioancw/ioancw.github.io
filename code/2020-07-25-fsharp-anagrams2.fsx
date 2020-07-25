@@ -8,7 +8,7 @@ categories:
 ---
 
 (**
-# Anagrams
+## Anagrams
 Recently someone asked me how to find all anagrams of a given word contained in a dictionary,
 i.e. a file containing a large numnber of words, one per line.
 
