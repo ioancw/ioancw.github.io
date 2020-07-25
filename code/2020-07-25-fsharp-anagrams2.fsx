@@ -1,9 +1,9 @@
 (*** raw ***)
 ---
 layout: post
-title:  "Finding anagrams with F#"
+title:  "Finding anagrams with F# with FSharp.Literate"
 description: "Finding all anagrams of a word in a dictionary."
-date:   2020-06-14 06:07:00 +0100
+date:   2020-06-25 06:07:00 +0100
 categories: 
 ---
 
