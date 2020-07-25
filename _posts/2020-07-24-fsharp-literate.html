@@ -31,8 +31,8 @@ although I updated all dlls to the latest version of FSharp.Formatting.* and use
 scripts and css files.</p>
 <h2>FSX</h2>
 <p>The recipe that I follow, is to write the post within a F# script file (.fsx) and then
-conver to html using FSharp.Formatting.Literate.</p>
-<p>In order to for the Jekyll engine to convert embed the html that's generated into your blog
+convert to html using <code>FSharp.Formatting.Literate</code>.</p>
+<p>In order to for the Jekyll engine to include the html that's generated into your blog
 you need to have a 'front matter' section on top of your html, which means that any blog
 post generated from fsx files needs to have the following at the top of the fsx file.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
@@ -53,9 +53,9 @@ categories:
 tags: F# FSharp Literate
 ---
 </code></pre></td></tr></table>
-<p>As I've done above, it must be after the 'raw' tag, in order for the Literate processor to
-ignore it.  If this doesn't exist on your html page, then the Jekyll engine won't include
-it within your blog.</p>
+<p>As I've done above, it must be after the 'raw' Literate special <a href="https://fsprojects.github.io/FSharp.Formatting/literate.html">command</a> <code>(*** raw ***)</code>
+, in order for the Literate processor to ignore it.  If this doesn't exist on your html page,
+then the Jekyll engine won't include it within your blog.</p>
 <p>After this gumph, you can start your post.</p>
 <p>Start with a double asterisk comment, which allows you to write standard Markdown.</p>
 <p>As as example, you can write lists:</p>
@@ -138,6 +138,38 @@ This can be achieved through FSharp.Formatting.Literate as such.</p>
 </code></pre></td>
 </tr>
 </table>
+<h2>Template</h2>
+<p>The html that's generated is raw, and quite ugly, so in order to prettify it, you need to use
+a template, with points at a css file that provides the formatting to your page.  This css
+file includes the colours to use for the F# syntax highlighting.</p>
+<p>In order to use the template directly in the Literate process you can use the following:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//this processes a single file.</span>
+<span class="k">let</span> <span class="id">template</span> <span class="o">=</span> <span class="id">source</span> <span class="o">+</span> <span class="s">&quot;template.html&quot;</span>
+<span class="k">let</span> <span class="k">in</span> <span class="o">=</span> <span class="id">source</span> <span class="o">+</span> <span class="s">&quot;post.fsx&quot;</span>
+<span class="k">let</span> <span class="id">out</span> <span class="o">=</span> <span class="id">source</span> <span class="o">+</span> <span class="s">&quot;post.html&quot;</span>
+
+<span class="k">do</span> <span class="id">Literate</span><span class="pn">.</span><span class="id">ConvertScriptFile</span><span class="pn">(</span><span class="id">input</span> <span class="o">=</span> <span class="k">in</span><span class="pn">,</span> <span class="id">template</span> <span class="o">=</span> <span class="id">template</span><span class="pn">,</span> <span class="id">output</span> <span class="o">=</span> <span class="id">out</span><span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
+<p>If the template contains the css file, then your output when opened in the brower will
+be pretty.
+However when creating content for your blog post on Jekyll, you don't need to apply a template.
+As Jekyll already embeds your html within the main page template for your post.  However you
+do need to ensure that you main template refers to the same css file as your local templte did.</p>
+<p>The best way to visualise this, and the way that I understood it, is to right click in your
+brower and view the page source.  You should be then able to click on the css file that I
+used and see yourself what settings I used to prettiy the output.</p>
+<p>I don't come from a webdevelopment background, so css is new to me, so I found viewing the
+source in the brower and tinkering with the css to be valuable in order to visualise the
+impact the css had on the page.</p>
 <p>This assumes that:</p>
 <ul>
 <li>the dlls are in the tools directory</li>

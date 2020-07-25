@@ -45,9 +45,9 @@ FSX
 ---
 
 The recipe that I follow, is to write the post within a F# script file (.fsx) and then 
-conver to html using FSharp.Formatting.Literate.
+convert to html using `FSharp.Formatting.Literate`.
 
-In order to for the Jekyll engine to convert embed the html that's generated into your blog
+In order to for the Jekyll engine to include the html that's generated into your blog
 you need to have a 'front matter' section on top of your html, which means that any blog
 post generated from fsx files needs to have the following at the top of the fsx file.
 
@@ -62,9 +62,9 @@ tags: F# FSharp Literate
 ---
 ```
 
-As I've done above, it must be after the 'raw' tag, in order for the Literate processor to 
-ignore it.  If this doesn't exist on your html page, then the Jekyll engine won't include
-it within your blog.
+As I've done above, it must be after the 'raw' Literate special [command][cd] `(*** raw ***)`
+, in order for the Literate processor to ignore it.  If this doesn't exist on your html page, 
+then the Jekyll engine won't include it within your blog.
 
 After this gumph, you can start your post.
 
@@ -79,6 +79,7 @@ And numerous other [Markdown][md] features.
 
  [md]: http://daringfireball.net/projects/markdown
  [cb]: http://www.colinbull.net/2014/11/04/Blogging-with-FSharp/
+ [cd]: https://fsprojects.github.io/FSharp.Formatting/literate.html
 
 Writing F# code
 ---------------
@@ -130,6 +131,39 @@ let processDirectory () =
     Literate.ConvertDirectory(input = codeDirectory, outputDirectory = outputDirectory)
 
 do processDirectory ()
+
+(** 
+## Template
+The html that's generated is raw, and quite ugly, so in order to prettify it, you need to use
+a template, with points at a css file that provides the formatting to your page.  This css
+file includes the colours to use for the F# syntax highlighting.
+
+In order to use the template directly in the Literate process you can use the following:
+
+*)
+
+//this processes a single file.
+let template = source + "template.html"
+let in = source + "post.fsx"
+let out = source + "post.html"
+
+do Literate.ConvertScriptFile(input = in, template = template, output = out)
+
+(** 
+If the template contains the css file, then your output when opened in the brower will
+be pretty.
+However when creating content for your blog post on Jekyll, you don't need to apply a template.
+As Jekyll already embeds your html within the main page template for your post.  However you
+do need to ensure that you main template refers to the same css file as your local templte did.
+
+The best way to visualise this, and the way that I understood it, is to right click in your 
+brower and view the page source.  You should be then able to click on the css file that I 
+used and see yourself what settings I used to prettiy the output.
+
+I don't come from a webdevelopment background, so css is new to me, so I found viewing the
+source in the brower and tinkering with the css to be valuable in order to visualise the 
+impact the css had on the page.
+*)
 
 (** 
 This assumes that: 
