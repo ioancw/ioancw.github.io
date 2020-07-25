@@ -19,8 +19,8 @@ it clunky to use, probably because it hasn't been updated for a while.  However 
 gave it a refresh last week, which has made it far more usable, especially as a Mac user.
 
 This purpose of this post is to:
-* detail how I use Literate within my posts
-* remind me how to use it
+ - detail how I use Literate within my posts
+ - remind me how to use it
 
 My Blog
 -------
@@ -104,9 +104,9 @@ do processDirectory ()
 
 (** 
 This assumes that: 
-* the dlls are in the tools directory
-* fsx files are in the code directory
-* generated html files will be in the _posts directory
+ - the dlls are in the tools directory
+ - fsx files are in the code directory
+ - generated html files will be in the _posts directory
 
 The script will process all fsx files in the code directory and create the html files in
 the _posts directory.
