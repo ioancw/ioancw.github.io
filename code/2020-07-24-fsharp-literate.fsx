@@ -19,6 +19,7 @@ it clunky to use, probably because it hasn't been updated for a while.  However 
 gave it a refresh last week, which has made it far more usable, especially as a Mac user.
 
 This purpose of this post is to:
+
  - detail how I use Literate within my posts.
  - remind me how to use it, when I forget.
 
@@ -46,6 +47,7 @@ conver to html using FSharp.Formatting.Literate.
 Start with a double asterisk comment, which allows you to write standard Markdown.
 
 As as example, you can write lists:
+
  - Unordered or ordered lists
  - Text formatting including **bold** and _emphasis_
 
@@ -106,6 +108,7 @@ do processDirectory ()
 
 (** 
 This assumes that: 
+
  - the dlls are in the tools directory
  - fsx files are in the code directory
  - generated html files will be in the _posts directory

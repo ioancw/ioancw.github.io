@@ -11,9 +11,11 @@ snippets copied from fsx files.</p>
 <p>Literate programming has existed for a while in the F# ecosystem, although I always found
 it clunky to use, probably because it hasn't been updated for a while.  However Don Syme
 gave it a refresh last week, which has made it far more usable, especially as a Mac user.</p>
-<p>This purpose of this post is to:
-- detail how I use Literate within my posts.
-- remind me how to use it, when I forget.</p>
+<p>This purpose of this post is to:</p>
+<ul>
+<li>detail how I use Literate within my posts.</li>
+<li>remind me how to use it, when I forget.</li>
+</ul>
 <h2>My Blog</h2>
 <p>I use github's Jekyll as a 'blog engine'.  This a static blog engine, which means that
 you write posts in markdown and submit to your repository which the blog engine renders in html.</p>
@@ -28,9 +30,11 @@ scripts and css times.</p>
 <p>The recipe that I follow, is to write the post within a F# script file (.fsx) and then
 conver to html using FSharp.Formatting.Literate.</p>
 <p>Start with a double asterisk comment, which allows you to write standard Markdown.</p>
-<p>As as example, you can write lists:
-- Unordered or ordered lists
-- Text formatting including <strong>bold</strong> and <em>emphasis</em></p>
+<p>As as example, you can write lists:</p>
+<ul>
+<li>Unordered or ordered lists</li>
+<li>Text formatting including <strong>bold</strong> and <em>emphasis</em></li>
+</ul>
 <p>And numerous other <a href="http://daringfireball.net/projects/markdown">Markdown</a> features.</p>
 <h2>Writing F# code</h2>
 <p>Code that is not inside comment will be formatted as a sample snippet
@@ -106,10 +110,12 @@ This can be achieved through FSharp.Formatting.Literate as such.</p>
 </code></pre></td>
 </tr>
 </table>
-<p>This assumes that:
-- the dlls are in the tools directory
-- fsx files are in the code directory
-- generated html files will be in the _posts directory</p>
+<p>This assumes that:</p>
+<ul>
+<li>the dlls are in the tools directory</li>
+<li>fsx files are in the code directory</li>
+<li>generated html files will be in the _posts directory</li>
+</ul>
 <p>The script will process all fsx files in the code directory and create the html files in
 the _posts directory.</p>
 <p>You can then run the script from the command line as follows</p>
