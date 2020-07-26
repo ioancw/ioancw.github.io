@@ -5,7 +5,7 @@ title:  "Literate F#"
 description: "Using F# Literate for blog posts on Jekyll."
 date:   2020-07-24 06:07:00 +0100
 categories: 
-tags: F# FSharp Literate
+tags: F# FSharp Literate Formatting
 ---
 
 (**
@@ -27,19 +27,18 @@ This purpose of this post is to:
 
 My Blog
 -------
-I use github's Jekyll as a 'blog engine'.  This a static blog engine, which means that
-you write posts in markdown and submit to your repository which the blog engine renders 
-in html.
+I use github's Jekyll as a 'blog engine'.  Which means that posts are written in markdown 
+and submitted to the repository at which point the blog engine renders in nice html.
 
 This works well and F# code is rendered resonably neatly (although it's somewhat hard to 
 change the colour of the syntax.)
 
-However a few people seem to be using Literate programming and the associated tools in F#
+However, a few people seem to be using Literate programming and the associated tools in F#
 to generate html files directly, and then post to Jekyll.
 
-I based my workflow on Colin Bull's [blog][cb] post, and associated github repository,
-although I updated all dlls to the latest version of FSharp.Formatting.* and used my own 
-scripts and css files.
+So I decided to give this a crack.  I based my workflow on Colin Bull's [blog][cb] post, and 
+associated github repository, although I updated all dlls to the latest version of 
+FSharp.Formatting.* and used my own scripts and css files.
 
 FSX
 ---
@@ -186,7 +185,7 @@ The best way to visualise this - and the way that I understood it - is to right 
 browser and view the page source.  You should be then able to click on the css file that I 
 used and see yourself what settings I used to prettify the output.
 
-I don't come from a webdevelopment background, css is new to me, so I found viewing the
+I don't come from a web development background, css is new to me, so I found viewing the
 source in the brower and tinkering with the css to be valuable in order to visualise the 
 impact the css had on the page.
 *)

@@ -4,7 +4,7 @@ title:  "Literate F#"
 description: "Using F# Literate for blog posts on Jekyll."
 date:   2020-07-24 06:07:00 +0100
 categories: 
-tags: F# FSharp Literate
+tags: F# FSharp Literate Formatting
 ---
 <h2>Literate F#</h2>
 <p>Up until now, I've written my blog posts directly in markdown, and including code
@@ -19,16 +19,15 @@ user.</p>
 <li>remind me how to use it, when I forget.</li>
 </ul>
 <h2>My Blog</h2>
-<p>I use github's Jekyll as a 'blog engine'.  This a static blog engine, which means that
-you write posts in markdown and submit to your repository which the blog engine renders
-in html.</p>
+<p>I use github's Jekyll as a 'blog engine'.  Which means that posts are written in markdown
+and submitted to the repository at which point the blog engine renders in nice html.</p>
 <p>This works well and F# code is rendered resonably neatly (although it's somewhat hard to
 change the colour of the syntax.)</p>
-<p>However a few people seem to be using Literate programming and the associated tools in F#
+<p>However, a few people seem to be using Literate programming and the associated tools in F#
 to generate html files directly, and then post to Jekyll.</p>
-<p>I based my workflow on Colin Bull's <a href="http://www.colinbull.net/2014/11/04/Blogging-with-FSharp/">blog</a> post, and associated github repository,
-although I updated all dlls to the latest version of FSharp.Formatting.* and used my own
-scripts and css files.</p>
+<p>So I decided to give this a crack.  I based my workflow on Colin Bull's <a href="http://www.colinbull.net/2014/11/04/Blogging-with-FSharp/">blog</a> post, and
+associated github repository, although I updated all dlls to the latest version of
+FSharp.Formatting.* and used my own scripts and css files.</p>
 <h2>FSX</h2>
 <p>The recipe that I follow, is to write the post within a F# script file (.fsx) and then
 convert to html using <code>FSharp.Formatting.Literate</code>.</p>
@@ -194,7 +193,7 @@ do need to ensure that the main css file is uploaded to your Jekyll repository.<
 <p>The best way to visualise this - and the way that I understood it - is to right click in your
 browser and view the page source.  You should be then able to click on the css file that I
 used and see yourself what settings I used to prettify the output.</p>
-<p>I don't come from a webdevelopment background, css is new to me, so I found viewing the
+<p>I don't come from a web development background, css is new to me, so I found viewing the
 source in the brower and tinkering with the css to be valuable in order to visualise the
 impact the css had on the page.</p>
 
