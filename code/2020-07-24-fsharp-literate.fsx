@@ -146,7 +146,15 @@ You can then run the script from the command line as follows
 ``` bash
 dotnet fsi yourscriptname.fsx
 ```
-You dan then write a bash script, in order to commit your files to github.
+You can then include this in a bash script that will run this file and commit to your
+github repository:
+``` bash 
+#!/bin/bash
+dotnet fsi processScript.fsx
+git add *
+git commit -m "latest changes to blog"
+git push
+```
 *)
 
 (** 

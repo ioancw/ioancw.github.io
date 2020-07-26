@@ -151,7 +151,20 @@ the _posts directory.</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="bash">dotnet fsi yourscriptname.fsx
 </code></pre></td></tr></table>
-<p>You dan then write a bash script, in order to commit your files to github.</p>
+<p>You can then include this in a bash script that will run this file and commit to your
+github repository:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="bash">#!/bin/bash
+dotnet fsi processScript.fsx
+git add *
+git commit -m "latest changes to blog"
+git push
+</code></pre></td></tr></table>
 <h2>Template</h2>
 <p>The html that's generated is raw, and quite ugly, so in order to prettify it, you need to use
 a template, with points at a css file that provides the formatting to your page.  This css
