@@ -73,7 +73,7 @@ Start with a double asterisk comment, which allows you to write standard Markdow
 As as example, you can write lists:
 
  - Unordered or ordered lists
- - Text formatting including **bold** and _emphasis_
+ - Text formatting including **bold** and _emphasis_ and ```bash commands``
 
 And numerous other [Markdown][md] features.
 
@@ -133,6 +133,23 @@ let processDirectory () =
 do processDirectory ()
 
 (** 
+This assumes that: 
+
+ - the dlls are in the tools directory
+ - fsx files are in the code directory
+ - generated html files will be in the _posts directory
+
+The script will process all fsx files in the code directory and create the html files in
+the _posts directory.
+
+You can then run the script from the command line as follows
+``` bash
+dotnet fsi yourscriptname.fsx
+```
+You dan then write a bash script, in order to commit your files to github.
+*)
+
+(** 
 ## Template
 The html that's generated is raw, and quite ugly, so in order to prettify it, you need to use
 a template, with points at a css file that provides the formatting to your page.  This css
@@ -151,33 +168,18 @@ do Literate.ConvertScriptFile(input = in, template = template, output = out)
 
 (** 
 If the template contains the css file, then your output when opened in the brower will
-be pretty.
+be nice and pretty.
+
 However when creating content for your blog post on Jekyll, you don't need to apply a template.
-As Jekyll already embeds your html within the main page template for your post.  However you
-do need to ensure that you main template refers to the same css file as your local templte did.
+As Jekyll already embeds your html within the main page template for your post.  But you
+do need to ensure that the main css file is uploaded to your Jekyll repository.
 
-The best way to visualise this, and the way that I understood it, is to right click in your 
-brower and view the page source.  You should be then able to click on the css file that I 
-used and see yourself what settings I used to prettiy the output.
+The best way to visualise this - and the way that I understood it - is to right click in your 
+browser and view the page source.  You should be then able to click on the css file that I 
+used and see yourself what settings I used to prettify the output.
 
-I don't come from a webdevelopment background, so css is new to me, so I found viewing the
+I don't come from a webdevelopment background, css is new to me, so I found viewing the
 source in the brower and tinkering with the css to be valuable in order to visualise the 
 impact the css had on the page.
 *)
 
-(** 
-This assumes that: 
-
- - the dlls are in the tools directory
- - fsx files are in the code directory
- - generated html files will be in the _posts directory
-
-The script will process all fsx files in the code directory and create the html files in
-the _posts directory.
-
-You can then run the script from the command line as follows
-``` bash
-dotnet fsi yourscriptname.fsx
-```
-You dan then write a bash script, in order to commit your files to github.
-*)
