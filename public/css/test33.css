@@ -149,7 +149,7 @@ table tr:nth-child(even) {
 .site-title,
 .site-title:visited {
     color: #b10202;
-    font: 300 30pt Kreon,'Times New Roman', Times, serif
+    /* font: 300 30pt Kreon,'Times New Roman', Times, serif */
 }
 
 .site-nav {
