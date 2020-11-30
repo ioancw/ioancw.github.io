@@ -20,7 +20,7 @@ change the colour of the syntax).
 Jekyll is free, easy enough to use.
 
 However, a few people seem to be using Literate programming and the associated tools in F#
-to generate html files directly, and then post to Jekyll, which it then displayes on your
+to generate html files directly, and then post to Jekyll, which it then displays on your
 blog.
 
 So I decided to give this a crack.  
@@ -34,7 +34,7 @@ Enter Literate F#
 
 I've been writing my blog posts directly in markdown, and including code
 snippets copied from fsx files, and as stated above, this does seem to work quite well, 
-although it means copying code snippets from other files and icluding them as part of the
+although it means copying code snippets from other files and including them as part of the
 markdown document.
 
 Literate programming has existed for a while in the F# ecosystem, although I always found
@@ -92,7 +92,7 @@ And numerous other [Markdown][md] features.
 
 Writing F# code
 ---------------
-Code that is not inside comment will be formatted as a sample snippet
+Code that is not inside a comment will be formatted as a sample snippet
 (which also means that you can run it in Visual Studio Code!).
 
 *)
