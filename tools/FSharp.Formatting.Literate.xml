@@ -26,14 +26,14 @@
 </member>
 <member name="M:FSharp.Collections.List.nestUnderLastMatching``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- A function that nests items of the input sequence 
- that do not match a specified predicate under the 
- last item that matches the predicate. 
+ A function that nests items of the input sequence
+ that do not match a specified predicate under the
+ last item that matches the predicate.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilEquals``1(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions the input list into two parts - the break is added 
+ Partitions the input list into two parts - the break is added
  at a point where the list starts with the specified sub-list.
 </summary>
 </member>
@@ -45,32 +45,32 @@
 </member>
 <member name="M:FSharp.Collections.List.iterInterleaved``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Iterates over the elements of the list and calls the first function for 
+ Iterates over the elements of the list and calls the first function for
  every element. Between each two elements, the second function is called.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntil``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhileLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the specified predicate 
- returns true) and a rest of the list. The predicate gets the entire 
+ Partitions list into an initial sequence (while the specified predicate
+ returns true) and a rest of the list. The predicate gets the entire
  tail of the list and can perform lookahead.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhile``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns true) and a rest of the list.
 </summary>
 </member>
@@ -82,26 +82,26 @@
 <member name="M:FSharp.Patterns.|ParseCommand|_|(System.String)">
 <summary>
  Utility for parsing commands - this deals with a single command.
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|ParseCommands|_|(System.String)">
 <summary>
- Utility for parsing commands. Commands can be used in different places. We 
+ Utility for parsing commands. Commands can be used in different places. We
  recognize `key1=value, key2=value` and also `key1:value, key2:value`
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|Let|``2(``0,``1)">
 <summary>
- Parameterized pattern that assigns the specified value to the 
+ Parameterized pattern that assigns the specified value to the
  first component of a tuple. Usage:
 
     match str with
     | Let 1 (n, &quot;one&quot;) | Let 2 (n, &quot;two&quot;) -&gt; n
- 
+
 </summary>
 </member>
 <member name="M:FSharp.Patterns.Lines.|TrimParagraphLines|(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
@@ -124,7 +124,7 @@
 </member>
 <member name="M:FSharp.Patterns.Lines.|TakeStartingWithOrBlank|_|(System.String,Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Matches when there are some lines at the beginning that are 
+ Matches when there are some lines at the beginning that are
  either empty (or whitespace) or start with the specified string.
  Returns all such lines from the beginning until a different line.
 </summary>
@@ -142,7 +142,7 @@
 <member name="M:FSharp.Patterns.List.|BracketDelimited|_|(System.Char,System.Char,Microsoft.FSharp.Collections.FSharpList{System.Char})">
 <summary>
  Matches a list if it starts with a bracketed list. Nested brackets
- are skipped (by counting opening and closing brackets) and can be 
+ are skipped (by counting opening and closing brackets) and can be
  escaped using the &apos;\&apos; symbol.
 </summary>
 </member>
@@ -165,13 +165,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|EqualsRepeated|_|(System.String,FSharp.Formatting.Markdown.MarkdownRange,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string consists of some number of 
+ Matches when a string consists of some number of
  complete repetitions of a specified sub-string.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsWithWrapped|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -189,13 +189,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWith|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -223,7 +223,7 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|TrimStartAndCount|(System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Returns a string trimmed from the start together with 
+ Returns a string trimmed from the start together with
  the number of skipped whitespace characters
 </summary>
 </member>
@@ -257,10 +257,10 @@
  Matches when a string is a whitespace or null
 </summary>
 </member>
-<member name="M:FSharp.Patterns.String.removeSpaces(System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:FSharp.Patterns.String.removeSpaces(Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Given a list of lines indented with certan number of whitespace 
- characters (spaces), remove the spaces from the beginning of each line 
+ Given a list of lines indented with certan number of whitespace
+ characters (spaces), remove the spaces from the beginning of each line
  and return the string as a list of lines
 </summary>
 </member>
@@ -271,7 +271,7 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsWithWrapped|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -279,13 +279,13 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWith|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -320,6 +320,11 @@
  Original document source code
 </summary>
 </member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocument.RootInputFolder">
+<summary>
+ Root for computing relative paths
+</summary>
+</member>
 <member name="P:FSharp.Formatting.Literate.LiterateDocument.Paragraphs">
 <summary>
  Returns a list of paragraphs in the document
@@ -345,7 +350,7 @@
  Returns a dictionary containing explicitly defined links
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.LiterateDocument.With(Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}}},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.LiterateSource},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.SourceError[]})">
+<member name="M:FSharp.Formatting.Literate.LiterateDocument.With(Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}}},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.LiterateSource},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpOption{System.String}},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.SourceError[]})">
 <summary>
  Clone the document and change some of its properties
 </summary>
@@ -368,7 +373,7 @@
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateSource">
 <summary>
- Represents the source of a literate document. 
+ Represents the source of a literate document.
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateParagraph.RawBlock">
@@ -391,9 +396,15 @@
  (*** include-value:foo ***) - Include the formatting of a specified value here
 </summary>
 </member>
+<member name="T:FSharp.Formatting.Literate.LiterateParagraph.ItRawReference">
+<summary>
+ (*** include-it-raw ***) - Include &quot;it&quot; value from the subsequent snippet here as raw text (Not formatted as fsi)
+ (*** include-it-raw:foo ***) - Include &quot;it&quot; value from a named snippet as raw text (Not formatted as fsi)
+</summary>
+</member>
 <member name="T:FSharp.Formatting.Literate.LiterateParagraph.ItValueReference">
 <summary>
- (*** include-it ***) - Include &quot;it&quot; value from the subsequent snippet here 
+ (*** include-it ***) - Include &quot;it&quot; value from the subsequent snippet here
  (*** include-it:foo ***) - Include &quot;it&quot; value from a named snippet
 </summary>
 </member>
@@ -417,15 +428,15 @@
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateParagraph.CodeReference">
 <summary>
- (*** include:foo ***) - Include formatted snippet from other part of the document here 
+ (*** include:foo ***) - Include formatted snippet from other part of the document here
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateParagraph">
-<summary>
- Extends `MarkdownParagrap` using the `MarkdownEmbedParagraphs` case with
+ <summary>
+ Extends <c>MarkdownParagrap</c> using the <c>MarkdownEmbedParagraphs</c> case with
  additional kinds of paragraphs that can appear in literate F# scripts
  (such as various special commands to embed output of a snippet etc.)
-</summary>
+ </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateCodeOptions.Visibility">
 <summary>
@@ -445,17 +456,17 @@
 </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateCodeOptions.Evaluate">
-<summary>
+ <summary>
  Specifies whether the snippet is evalauted while processing
- Use (*** do-not-eval ***) command to set this to `false`
-</summary>
+ Use (*** do-not-eval ***) command to set this to <c>false</c>
+ </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateCodeOptions">
-<summary>
+ <summary>
  Additional properties of a literate code snippet, embedded in a
- `LiterateParagraph.LiterateCode`. The properties specify how should
+ <c>LiterateParagraph.LiterateCode</c>. The properties specify how should
  a snippet be evaluated and formatted.
-</summary>
+ </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateParagraphOptions.Condition">
 <summary>
@@ -484,17 +495,22 @@
 </member>
 <member name="T:FSharp.Formatting.Literate.LiterateCodeVisibility">
 <summary>
- Specifies visibility of a code snippet. 
-</summary>
-</member>
-<member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.TokenKindToCss">
-<summary>
- Function assigning CSS class to given token kind. If not specified, default mapping will be used
+ Specifies visibility of a code snippet.
 </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.ConditionalDefines">
 <summary>
  Conditional defines for the processing
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.CodeReferenceResolver">
+<summary>
+ Helper to resolve `cref:T:TypeName` references in markdown
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.MarkdownDirectLinkResolver">
+<summary>
+ Helper to resolve URL referenecs in markdown, e.g. &apos;index.md&apos; --&gt; &apos;index.html&apos; when doing HTML output
 </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.OutputKind">
@@ -512,9 +528,9 @@
  Generate line numbers for F# snippets?
 </summary>
 </member>
-<member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.Replacements">
+<member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.Substitutions">
 <summary>
- Additional parameters to be made in the template file
+ Additional substitutions to be made in the template file
 </summary>
 </member>
 <member name="P:FSharp.Formatting.Literate.LiterateProcessingContext.Prefix">
@@ -527,9 +543,54 @@
  Specifies a context that is passed to functions that generate the output
 </summary>
 </member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.OutputKind">
+<summary>
+ The kind of output generated
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.OutputPath">
+<summary>
+ The relative output path
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.Index">
+<summary>
+ The index in the front matter (Determines the order of files within a category)
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.CategoryIndex">
+<summary>
+ The category index in the front matter (determines the order of categories)
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.Category">
+<summary>
+ The category in the front matter
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.IndexText">
+<summary>
+ The text for search index generation (empty for notebooks and latex)
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.Substitutions">
+<summary>
+ The replacement paramaters
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Literate.LiterateDocModel.Title">
+<summary>
+ The extracted title of the document (first h1 header if not in front matter)
+</summary>
+</member>
 <member name="T:FSharp.Formatting.Literate.LiterateDocModel">
 <summary>
- Defines input type for output generator
+ Defines the output of processing a literate doc
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Literate.OutputKind.Markdown">
+<summary>
+ Requests Markdown output
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.OutputKind.Fsx">
@@ -557,6 +618,11 @@
  Defines the possible output types from literate script (HTML, Latex, Pynb)
 </summary>
 </member>
+<member name="P:FSharp.Formatting.Literate.CompilerContext.OnError">
+<summary>
+ Reporting errors
+</summary>
+</member>
 <member name="P:FSharp.Formatting.Literate.CompilerContext.ConditionalDefines">
 <summary>
  Defined symbols for the F# compiler
@@ -572,133 +638,132 @@
  F# interactive evaluator
 </summary>
 </member>
-<member name="P:FSharp.Formatting.Literate.CompilerContext.FormatAgent">
-<summary>
- An instance of the F# code formatting agent
-</summary>
-</member>
 <member name="T:FSharp.Formatting.Literate.CompilerContext">
 <summary>
  Specifies a context that is passed to functions
  that need to use the F# compiler
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.ParseScript.ParseScriptFile(System.String,System.String)">
+<member name="M:FSharp.Formatting.Literate.ParseScript.ParseAndCheckScriptFile(System.String,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit})">
 <summary>
  Parse script file with specified name and content
- and return `LiterateDocument` with the content
+ and return LiterateDocument with the content
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.ParseScript">
 <summary>
- Turns the content of `fsx` file into `LiterateDocument` that contains
+ Turns the content of fsx file into LiterateDocument that contains
  formatted F# snippets and parsed Markdown document. Handles commands such
- as `hide`, `define` and `include`.
+ as hide, define and include.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.WriteLatex(FSharp.Formatting.Literate.LiterateDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
+<member name="M:FSharp.Formatting.Literate.Literate.WriteLatex(FSharp.Formatting.Literate.LiterateDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Write the literate document as Latex without using a template
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.WriteHtml(FSharp.Formatting.Literate.LiterateDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.WriteHtml(FSharp.Formatting.Literate.LiterateDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
 <summary>
  Write the literate document as HTML without using a template
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.TransformDocument(FSharp.Formatting.Literate.LiterateDocument,System.String,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ToPynb(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
- Process the given literate document
+ Formate the literate document as an iPython notebook
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.TransformAndOutputDocument(FSharp.Formatting.Literate.LiterateDocument,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
-<summary>
- Write a document object into HTML or another output kind
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Literate.Literate.ToPynb(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
-<summary>
- Formate the literate document as an iPython notebook 
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Literate.Literate.ToLatex(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
+<member name="M:FSharp.Formatting.Literate.Literate.ToLatex(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Format the literate document as Latex without using a template
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ToHtml(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ToHtml(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
 <summary>
  Format the literate document as HTML without using a template
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ToFsx(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ToFsx(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
- Formate the literate document as an .fsx script 
+ Formate the literate document as an .fsx script
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseScriptString(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
+<member name="M:FSharp.Formatting.Literate.Literate.ParseScriptString(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
 <summary>
- Parse F# Script file
+ Parse string as F# Script to LiterateDocument
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseScriptFile(System.String,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
-<summary>
- Parse F# Script file
-</summary>
+<member name="M:FSharp.Formatting.Literate.Literate.ParseMarkdownString(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
+ <summary>
+  Parse string as a markdown document
+ </summary>
+ <param name="content"></param>
+ <param name="path">optional file path for debugging purposes</param>
+ <param name="fscOptions"></param>
+ <param name="definedSymbols"></param>
+ <param name="references"></param>
+ <param name="fsiEvaluator"></param>
+ <param name="parseOptions">Defaults to MarkdownParseOptions.AllowYamlFrontMatter</param>
+ <param name="rootInputFolder"></param>
+ <param name="onError"></param>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseMarkdownString(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
-<summary>
- Parse Markdown document
-</summary>
+<member name="M:FSharp.Formatting.Literate.Literate.ParseMarkdownFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
+ <summary>
+  Parse Markdown document to LiterateDocument
+ </summary>
+ <param name="path"></param>
+ <param name="fscOptions"></param>
+ <param name="definedSymbols"></param>
+ <param name="references"></param>
+ <param name="fsiEvaluator"></param>
+ <param name="parseOptions">Defaults to MarkdownParseOptions.AllowYamlFrontMatter</param>
+ <param name="rootInputFolder"></param>
+ <param name="onError"></param>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseMarkdownFile(System.String,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
-<summary>
- Parse Markdown document
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseAndTransformScriptFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateProcessingContext,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateDocument,FSharp.Formatting.Literate.LiterateDocument}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ParseAndTransformScriptFile(System.String,System.String,FSharp.Formatting.Literate.OutputKind,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
 <summary>
  Parse and transform an F# script file
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ParseAndTransformMarkdownFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateProcessingContext,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateDocument,FSharp.Formatting.Literate.LiterateDocument}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ParseAndTransformMarkdownFile(System.String,System.String,FSharp.Formatting.Literate.OutputKind,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}},FSharp.Formatting.Markdown.MarkdownParseOptions,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
 <summary>
  Parse and transform a markdown document
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.FormatLiterateNodes(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Literate.ParseAndCheckScriptFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
 <summary>
- Replace literate paragraphs with plain paragraphs
+ Parse F# Script file to LiterateDocument
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ConvertScriptFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateProcessingContext,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateDocument,FSharp.Formatting.Literate.LiterateDocument}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
-<summary>
- Convert a script file into HTML or another output kind
-</summary>
+<member name="M:FSharp.Formatting.Literate.Literate.ConvertScriptFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
+ <summary>Convert a script file into HTML or another output kind</summary>
+ <example>
+   <code>
+     Literate.ConvertScriptFile("script.fsx", template)
+   </code>
+ </example>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ConvertMarkdownFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateProcessingContext,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateDocument,FSharp.Formatting.Literate.LiterateDocument}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
+<member name="M:FSharp.Formatting.Literate.Literate.ConvertMarkdownFile(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.OutputKind},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
 <summary>
  Convert a markdown file into HTML or another output kind
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Literate.ConvertDirectory(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.CodeFormat.CodeFormatAgent},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Literate.Evaluation.IFsiEvaluator},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateProcessingContext,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.Literate.LiterateDocument,FSharp.Formatting.Literate.LiterateDocument}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
-<summary>
- Convert markdown, script and other content into a static site
-</summary>
-</member>
 <member name="T:FSharp.Formatting.Literate.Literate">
-<summary>
+ <summary>
  This type provides three simple methods for calling the literate programming tool.
- The `ConvertMarkdownFile` and `ConvertScriptFile` methods process a single Markdown document
- and F# script, respectively. The `ConvertDirectory` method handles an entire directory tree
- (looking for `*.fsx` and `*.md` files).
-</summary>
+ The <c>ConvertMarkdownFile</c> and <c>ConvertScriptFile</c> methods process a single Markdown document
+ and F# script, respectively. The <c>ConvertDirectory</c> method handles an entire directory tree
+ (looking for <c>*.fsx</c> and <c>*.md</c> files).
+ </summary>
+
+ <namespacedoc>
+   <summary>Functionality to support literate programming for F# scripts</summary>
+ </namespacedoc>
 </member>
 <member name="T:FSharp.Formatting.Literate.MarkdownPatterns">
-<summary>
- Provides active patterns for extracting `LiterateParagraph` values from
+ <summary>
+ Provides active patterns for extracting <c>LiterateParagraph</c> values from
  Markdown documents.
-</summary>
+ </summary>
 </member>
 <member name="F:FSharp.Formatting.Literate.Evaluation.FsiEvaluator.InjectedFsiObj@">
 <summary>
@@ -775,27 +840,7 @@
 <summary>
  Register a function that formats (some) values that are produced by the evaluator.
  The specified function should return &apos;Some&apos; when it knows how to format a value
- and it should return formatted 
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Literate.Evaluation.FsiEvaluator.FSharp-Formatting-Literate-Evaluation-IFsiEvaluator-Format(FSharp.Formatting.Literate.Evaluation.IFsiEvaluationResult,FSharp.Formatting.Literate.Evaluation.FsiEmbedKind,System.Int32)">
-<summary>
- Format a specified result or value 
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Literate.Evaluation.FsiEvaluator.FSharp-Formatting-Literate-Evaluation-IFsiEvaluator-Evaluate(System.String,System.Boolean,Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Evaluates the given text in an fsi session and returns
- an FsiEvaluationResult.
-
- If evaluated as an expression, Result should be set with the
- result of evaluating the text as an F# expression.
- If not, just the console output of the evaluation is captured and
- returned in Output.
-
- If file is set, the text will be evaluated as if it was present in the
- given script file - this is for correct usage of #I and #r with relative paths.
- Note however that __SOURCE_DIRECTORY___ does not currently pick this up.
+ and it should return formatted
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEvaluator">
@@ -805,14 +850,14 @@
 </member>
 <member name="M:FSharp.Formatting.Literate.Evaluation.FsiEvaluatorConfig.CreateNoOpFsiObject">
 <summary>
- Creates a dummy `fsi` object that does not affect the behaviour of F# Interactive
- (and simply ignores all operations that are done on it). You can use this to 
+ Creates a dummy fsi object that does not affect the behaviour of F# Interactive
+ (and simply ignores all operations that are done on it). You can use this to
  e.g. disable registered printers that would open new windows etc.
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEvaluatorConfig">
 <summary>
- Provides configuration options for the `FsiEvaluator`
+ Provides configuration options for the FsiEvaluator
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.NoOpFsiObject">
@@ -832,7 +877,7 @@
 </member>
 <member name="M:FSharp.Formatting.Literate.Evaluation.IFsiEvaluator.Evaluate(System.String,System.Boolean,Microsoft.FSharp.Core.FSharpOption{System.String})">
 <summary>
- Called to evaluate a snippet 
+ Called to evaluate a snippet
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.IFsiEvaluator">
@@ -842,7 +887,7 @@
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEvaluationFailedInfo">
 <summary>
- Record that is reported by the `EvaluationFailed` event when something
+ Record that is reported by the EvaluationFailed event when something
  goes wrong during evalutaiton of an expression
 </summary>
 </member>
@@ -863,6 +908,11 @@
  A specific value
 </summary>
 </member>
+<member name="T:FSharp.Formatting.Literate.Evaluation.FsiEmbedKind.ItRaw">
+<summary>
+ The &apos;it&apos; value as raw text
+</summary>
+</member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEmbedKind.ItValue">
 <summary>
  The &apos;it&apos; value
@@ -880,13 +930,16 @@
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEmbedKind.FsiOutput">
 <summary>
- The FSI output 
+ The FSI output
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Evaluation.FsiEmbedKind">
-<summary>
- Represents a kind of thing that can be embedded 
-</summary>
+ <summary>
+   Represents a kind of thing that can be embedded
+ </summary>
+ <namespacedoc>
+   <summary>Functionality to support literate evaluation for F# scripts</summary>
+ </namespacedoc>
 </member>
 <member name="M:FSharp.Formatting.Literate.CodeBlockUtils.parseScriptFile(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.CodeFormat.Line})">
 <summary>
@@ -900,34 +953,34 @@
 </member>
 <member name="M:FSharp.Formatting.Literate.CodeBlockUtils.collectComment(System.String,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.CodeFormat.Line})">
 <summary>
- Waiting for the end of a comment      
+ Waiting for the end of a comment
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Literate.CodeBlockUtils.|ConcatenatedComments|_|(FSharp.Formatting.CodeFormat.Line)">
 <summary>
- Succeeds when a line (list of tokens) contains only Comment 
+ Succeeds when a line (list of tokens) contains only Comment
  tokens and returns the text from the comment as a string
  (Comment may also be followed by Whitespace that is skipped)
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Literate.CodeBlockUtils.trimBlanksAndReverse(System.Collections.Generic.IEnumerable{FSharp.Formatting.CodeFormat.Line})">
 <summary>
- Trim blank lines from both ends of a lines list &amp; reverse it (we accumulate 
+ Trim blank lines from both ends of a lines list &amp; reverse it (we accumulate
  lines &amp; we want to remove all blanks before returning BlockSnippet)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.CodeBlockUtils">
 <summary>
- Parsing of F# Script files with Markdown commands. Given a parsed script file, we 
- split it into a sequence of comments, snippets and commands (comment starts with 
- `(**` and ending with `*)` are translated to Markdown, snippet is all other F# code 
- and command looks like `(*** key1:value, key2:value ***)` (and should be single line).
+ Parsing of F# Script files with Markdown commands. Given a parsed script file, we
+ split it into a sequence of comments, snippets and commands (comment starts with
+ &lt;c&gt;(**&lt;/c&gt; and ending with &lt;c&gt;*)&lt;/c&gt; are translated to Markdown, snippet is all other F# code
+ and command looks like &lt;c&gt;(*** key1:value, key2:value ***)&lt;/c&gt; (and should be single line).
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.ParseMarkdown.parseMarkdown(System.String,System.String,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
+<member name="M:FSharp.Formatting.Literate.ParseMarkdown.parseMarkdown(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},System.String,Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
 <summary>
  Parse the specified Markdown document and return it
- as `LiterateDocument` (without processing code snippets)
+ as LiterateDocument (without processing code snippets)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Literate.Transformations.EvalKey">
@@ -942,7 +995,12 @@
 </member>
 <member name="M:FSharp.Formatting.Literate.Transformations.replaceLiterateParagraph(FSharp.Formatting.Literate.LiterateProcessingContext,System.Collections.Generic.IDictionary{Microsoft.FSharp.Core.FSharpChoice{Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.CodeFormat.Line},System.String},FSharp.Formatting.Markdown.MarkdownParagraph},FSharp.Formatting.Markdown.MarkdownParagraph)">
 <summary>
- Replace all sporiginalLineecial &apos;LiterateParagraph&apos; elements recursively using the given lookup dictionary
+ Replace all special &apos;LiterateParagraph&apos; elements recursively using the given lookup dictionary
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Literate.Transformations.replaceHtmlTaggedCode(FSharp.Formatting.Literate.LiterateProcessingContext,System.String,System.String)">
+<summary>
+ Replace all special &apos;LiterateParagraph&apos; elements recursively using the given lookup dictionary
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Literate.Transformations.collectLiterateCode(FSharp.Formatting.Markdown.MarkdownParagraph)">
@@ -965,8 +1023,8 @@
 <member name="M:FSharp.Formatting.Literate.Transformations.evalAllSnippets(FSharp.Formatting.Literate.CompilerContext,FSharp.Formatting.Literate.Evaluation.IFsiEvaluator,FSharp.Formatting.Literate.LiterateDocument)">
 <summary>
  Given an evaluator and document, evaluate all code snippets and return a map with
- their results - the key is `ValueRef(name)` for all value references and
- `OutputRef(name)` for all references to the snippet console output
+ their results - the key is ValueRef(name) for all value references and
+ OutputRef(name) for all references to the snippet console output
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Literate.Transformations.evalBlocks(FSharp.Formatting.Literate.CompilerContext,FSharp.Formatting.Literate.Evaluation.IFsiEvaluator,Microsoft.FSharp.Core.FSharpRef{System.Int32},System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Literate.Transformations.EvalKey,System.Tuple{FSharp.Formatting.Literate.Evaluation.IFsiEvaluationResult,System.Int32}}},Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">
@@ -989,7 +1047,7 @@
  and add paragraph to the document
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Transformations.generateRefParagraphs``1(System.Collections.Generic.IDictionary{``0,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},System.Collections.Generic.IEnumerable{``0})">
+<member name="M:FSharp.Formatting.Literate.Transformations.generateReferenceParagraphs``1(System.Collections.Generic.IDictionary{``0,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},System.Collections.Generic.IEnumerable{``0})">
 <summary>
  Given all links defined in the Markdown document and a list of all links
  that are accessed somewhere from the document, generate References paragraph
@@ -1010,7 +1068,7 @@
 <member name="M:FSharp.Formatting.Literate.Transformations.formatCodeSnippets(System.String,FSharp.Formatting.Literate.CompilerContext,FSharp.Formatting.Literate.LiterateDocument)">
 <summary>
  Walk over literate document and replace F# code snippets with
- their formatted representation (of `LiterateParagraph` type)
+ their formatted representation (of LiterateParagraph type)
 
  Note: this processes snipppets within markdown, not snippets coming from .fsx
 </summary>
@@ -1031,10 +1089,15 @@
  Note: this processes snipppets within markdown, not snippets coming from .fsx
 </summary>
 </member>
+<member name="M:FSharp.Formatting.Literate.Formatting.getIndexText(FSharp.Formatting.Literate.LiterateDocument)">
+<summary>
+ Given literate document, get the text for indexing for search
+</summary>
+</member>
 <member name="M:FSharp.Formatting.Literate.Formatting.getSourceDocument(FSharp.Formatting.Literate.LiterateDocument)">
 <summary>
  Given literate document, get a new MarkdownDocument that represents the
- entire source code of the specified document (with possible `fsx` formatting)
+ entire source code of the specified document (with possible fsx formatting)
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Literate.Formatting.findHeadings(System.Collections.Generic.IEnumerable{FSharp.Formatting.Markdown.MarkdownParagraph},System.Boolean,FSharp.Formatting.Literate.OutputKind)">
@@ -1042,7 +1105,7 @@
  Try find first-level heading in the paragraph collection
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Literate.Formatting.format(FSharp.Formatting.Markdown.MarkdownDocument,System.Boolean,FSharp.Formatting.Literate.OutputKind,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}})">
+<member name="M:FSharp.Formatting.Literate.Formatting.format(FSharp.Formatting.Markdown.MarkdownDocument,System.Boolean,FSharp.Formatting.Literate.OutputKind,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}})">
 <summary>
  Format document with the specified output kind
 </summary>

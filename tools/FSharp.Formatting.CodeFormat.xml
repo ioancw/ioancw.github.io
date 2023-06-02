@@ -26,14 +26,14 @@
 </member>
 <member name="M:FSharp.Collections.List.nestUnderLastMatching``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- A function that nests items of the input sequence 
- that do not match a specified predicate under the 
- last item that matches the predicate. 
+ A function that nests items of the input sequence
+ that do not match a specified predicate under the
+ last item that matches the predicate.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilEquals``1(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions the input list into two parts - the break is added 
+ Partitions the input list into two parts - the break is added
  at a point where the list starts with the specified sub-list.
 </summary>
 </member>
@@ -45,32 +45,32 @@
 </member>
 <member name="M:FSharp.Collections.List.iterInterleaved``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Iterates over the elements of the list and calls the first function for 
+ Iterates over the elements of the list and calls the first function for
  every element. Between each two elements, the second function is called.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntil``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhileLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the specified predicate 
- returns true) and a rest of the list. The predicate gets the entire 
+ Partitions list into an initial sequence (while the specified predicate
+ returns true) and a rest of the list. The predicate gets the entire
  tail of the list and can perform lookahead.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhile``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns true) and a rest of the list.
 </summary>
 </member>
@@ -82,26 +82,26 @@
 <member name="M:FSharp.Patterns.|ParseCommand|_|(System.String)">
 <summary>
  Utility for parsing commands - this deals with a single command.
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|ParseCommands|_|(System.String)">
 <summary>
- Utility for parsing commands. Commands can be used in different places. We 
+ Utility for parsing commands. Commands can be used in different places. We
  recognize `key1=value, key2=value` and also `key1:value, key2:value`
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|Let|``2(``0,``1)">
 <summary>
- Parameterized pattern that assigns the specified value to the 
+ Parameterized pattern that assigns the specified value to the
  first component of a tuple. Usage:
 
     match str with
     | Let 1 (n, &quot;one&quot;) | Let 2 (n, &quot;two&quot;) -&gt; n
- 
+
 </summary>
 </member>
 <member name="M:FSharp.Patterns.Lines.|TrimParagraphLines|(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
@@ -124,7 +124,7 @@
 </member>
 <member name="M:FSharp.Patterns.Lines.|TakeStartingWithOrBlank|_|(System.String,Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Matches when there are some lines at the beginning that are 
+ Matches when there are some lines at the beginning that are
  either empty (or whitespace) or start with the specified string.
  Returns all such lines from the beginning until a different line.
 </summary>
@@ -142,7 +142,7 @@
 <member name="M:FSharp.Patterns.List.|BracketDelimited|_|(System.Char,System.Char,Microsoft.FSharp.Collections.FSharpList{System.Char})">
 <summary>
  Matches a list if it starts with a bracketed list. Nested brackets
- are skipped (by counting opening and closing brackets) and can be 
+ are skipped (by counting opening and closing brackets) and can be
  escaped using the &apos;\&apos; symbol.
 </summary>
 </member>
@@ -165,13 +165,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|EqualsRepeated|_|(System.String,FSharp.Formatting.Markdown.MarkdownRange,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string consists of some number of 
+ Matches when a string consists of some number of
  complete repetitions of a specified sub-string.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsWithWrapped|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -189,13 +189,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWith|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -223,7 +223,7 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|TrimStartAndCount|(System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Returns a string trimmed from the start together with 
+ Returns a string trimmed from the start together with
  the number of skipped whitespace characters
 </summary>
 </member>
@@ -257,10 +257,10 @@
  Matches when a string is a whitespace or null
 </summary>
 </member>
-<member name="M:FSharp.Patterns.String.removeSpaces(System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:FSharp.Patterns.String.removeSpaces(Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Given a list of lines indented with certan number of whitespace 
- characters (spaces), remove the spaces from the beginning of each line 
+ Given a list of lines indented with certan number of whitespace
+ characters (spaces), remove the spaces from the beginning of each line
  and return the string as a list of lines
 </summary>
 </member>
@@ -271,7 +271,7 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsWithWrapped|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -279,13 +279,13 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWith|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -320,7 +320,7 @@
 <summary>
  Error reported from the F# compiler consists of location (start and end),
  error kind and the message (wrapped in a single case discriminated union
- with constructor `SourceError`)
+ with constructor SourceError)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.Snippet">
@@ -330,21 +330,20 @@
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.Line">
 <summary>
- Represents a line of source code as a list of `TokenSpan` values. This is
- a single case discriminated union with `Line` constructor.
+ Represents a line of source code as a list of TokenSpan values. This is
+ a single case discriminated union with Line constructor.
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.TokenSpans">
 <summary>
- A type alias representing a list of `TokenSpan` values
+ A type alias representing a list of TokenSpan values
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.TokenSpan">
 <summary>
  A token in a parsed F# code snippet. Aside from standard tokens reported from
- the compiler (`Token`), this also includes `Error` (wrapping the underlined
- tokens), `Omitted` for the special `[omit:...]` tags and `Output` for the special
- `[output:...]` tag
+ the compiler (Token), this also includes Error (wrapping the underlined
+ tokens), Omitted for the special [omit:...] tags and Output for the special [output:...] tag
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.ErrorKind">
@@ -359,31 +358,12 @@
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.ToolTipSpan">
 <summary>
- A tool tip span can be emphasized text, plain text `Literal` or a line brak
+ A tool tip span can be emphasized text, plain text Literal or a line brak
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.ToolTipSpans">
 <summary>
  A tool tip consists of a list of items reported from the compiler
-</summary>
-</member>
-<member name="M:FSharp.Formatting.CodeFormat.CodeFormatAgent.ParseSource(System.String,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Parse, check and annotate the source code specified by &apos;source&apos;, assuming that it
- is located in a specified &apos;file&apos;. Optional arguments can be used
- to give compiler command line options and preprocessor definitions
-</summary>
-</member>
-<member name="M:FSharp.Formatting.CodeFormat.CodeFormatAgent.AsyncParseSource(System.String,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Parse, check and annotate the source code specified by &apos;source&apos;, assuming that it
- is located in a specified &apos;file&apos;. Optional arguments can be used
- to give compiler command line options and preprocessor definitions
-</summary>
-</member>
-<member name="T:FSharp.Formatting.CodeFormat.CodeFormatAgent">
-<summary>
- Uses agent to handle formatting requests
 </summary>
 </member>
 <member name="M:FSharp.Formatting.CodeFormat.CodeFormat.FormatLatex(FSharp.Formatting.CodeFormat.Snippet[],Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
@@ -401,12 +381,6 @@
 <member name="M:FSharp.Formatting.CodeFormat.CodeFormat.FormatFsx(System.Collections.Generic.IEnumerable{FSharp.Formatting.CodeFormat.Snippet})">
 <summary>
  Formats the .fsx snippets as iPython notebook using the default settings.
-</summary>
-</member>
-<member name="M:FSharp.Formatting.CodeFormat.CodeFormat.CreateAgent">
-<summary>
- Returns a new instance of the agent that manages code formatting
- using the F# compiler service. 
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.CodeFormat">
@@ -431,12 +405,12 @@
 </member>
 <member name="P:FSharp.Formatting.CodeFormat.FormattedSnippet.Title">
 <summary>
- Returns the title of the snippet 
+ Returns the title of the snippet
 </summary>
 </member>
 <member name="P:FSharp.Formatting.CodeFormat.FormattedSnippet.Key">
 <summary>
- Returns the key of the snippet 
+ Returns the key of the snippet
 </summary>
 </member>
 <member name="P:FSharp.Formatting.CodeFormat.FormattedSnippet.Content">
@@ -445,41 +419,45 @@
 </summary>
 </member>
 <member name="T:FSharp.Formatting.CodeFormat.FormattedSnippet">
-<summary>
- Represents an individual formatted snippet with title as key
-</summary>
+ <summary>
+  Represents an individual formatted snippet with title as key
+ </summary>
+
+ <namespacedoc>
+   <summary>Functionality relating to formatting F# scripts and code snippets</summary>
+ </namespacedoc>
 </member>
 <member name="M:FSharp.Formatting.CodeFormat.Pervasive.Async.cache``1(Microsoft.FSharp.Control.FSharpAsync{``0})">
 <summary>
- Creates an asynchronous workflow that runs the asynchronous workflow given as an argument at most once. 
+ Creates an asynchronous workflow that runs the asynchronous workflow given as an argument at most once.
  When the returned workflow is started for the second time, it reuses the result of the previous execution.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkOmittedParts(Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}})">
+<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkOmittedParts(Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}})">
 <summary>
  Process the whole source file and shrink all blocks marked using
  special &apos;omit&apos; meta-comments (see the two functions above)
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkLine(FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}})">
+<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkLine(FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}})">
 <summary>
- Find all code marked using the (*[omit:&lt;...&gt;]*) tags and replace it with 
+ Find all code marked using the (*[omit:&lt;...&gt;]*) tags and replace it with
  a special token (named &quot;OMIT....&quot; where &quot;....&quot; is a replacement string)
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkOmittedCode(System.Text.StringBuilder,FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}})">
+<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.shrinkOmittedCode(System.Text.StringBuilder,FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}})">
 <summary>
  Continue reading shrinked code until we reach the end (*[/omit]*) tag
  (see the function below for more information and beginning of shrinking)
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.mergeComments(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}},Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}})">
+<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.mergeComments(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}},Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}})">
 <summary>
- Preprocesses a line and merges all subsequent comments on a line 
+ Preprocesses a line and merges all subsequent comments on a line
  into a single long comment (so that we can parse it as snippet command)
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.getSnippets(Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.SourceCodeServices.FSharpTokenInfo}}}},System.String[])">
+<member name="M:FSharp.Formatting.CodeFormat.CommentFilter.getSnippets(Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}},System.String[])">
 <summary>
  Finds special commands (comments) in the source code. If there are commands, then
  we only generate HTML for parts of source (snippets). This function returns a list
@@ -489,30 +467,47 @@
     // [/snippet]
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.tryFormatTip(FSharp.Compiler.SourceCodeServices.FSharpToolTipText{System.String})">
+<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.tryFormatTip(FSharp.Compiler.EditorServices.ToolTipText)">
 <summary>
- Format a tool tip, but first make sure that there is actually 
+ Format a tool tip, but first make sure that there is actually
  some text in the tip. Returns None if no information is available
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatTip(FSharp.Compiler.SourceCodeServices.FSharpToolTipText{System.String})">
+<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatTip(FSharp.Compiler.EditorServices.ToolTipText)">
 <summary>
- Format entire tool tip as a value of type ToolTipSpans      
+ Format entire tool tip as a value of type ToolTipSpans
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatElement(FSharp.Compiler.SourceCodeServices.FSharpToolTipElement{System.String})">
+<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatElement(FSharp.Compiler.EditorServices.ToolTipElement)">
 <summary>
  Format the element of a tool tip (comment, overloads, etc.)
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatComment(FSharp.Compiler.SourceCodeServices.FSharpXmlDoc)">
+<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatComment(FSharp.Compiler.Symbols.FSharpXmlDoc)">
 <summary>
  Format comment in the tool tip
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatMultilineString(System.String)">
+<member name="M:FSharp.Formatting.CodeFormat.ToolTipReader.formatMultilineString(System.String[])">
 <summary>
  Turn string into a sequence of lines interleaved with line breaks
+</summary>
+</member>
+<member name="M:FSharp.Formatting.CodeFormat.CodeFormatter.ParseAndCheckSource(System.String,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit})">
+<summary>
+ Parse, check and annotate the source code specified by &apos;source&apos;, assuming that it
+ is located in a specified &apos;file&apos;. Optional arguments can be used
+ to give compiler command line options and preprocessor definitions
+</summary>
+</member>
+<member name="M:FSharp.Formatting.CodeFormat.CodeFormatter.processSnippet``1(FSharp.Compiler.CodeAnalysis.FSharpCheckFileResults,Microsoft.FSharp.Collections.FSharpMap{System.Int32,``0},System.String[],Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Markdown.MarkdownRange,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Compiler.Tokenization.FSharpTokenInfo}}}})">
+<summary>
+ Process snippet
+</summary>
+</member>
+<member name="T:FSharp.Formatting.CodeFormat.CodeFormatter">
+<summary>
+ Uses agent to handle formatting requests
 </summary>
 </member>
 <member name="M:FSharp.Formatting.CodeFormat.Helpers.getTokens(Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},System.String[])">
@@ -521,7 +516,7 @@
  into a snippet with token information and line numbers.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.Helpers.getTokenKind(FSharp.Compiler.SourceCodeServices.FSharpTokenColorKind)">
+<member name="M:FSharp.Formatting.CodeFormat.Helpers.getTokenKind(FSharp.Compiler.Tokenization.FSharpTokenColorKind)">
 <summary>
  Mapping table that translates F# compiler representation to our union
 </summary>
@@ -546,7 +541,7 @@
  Mutable type that formats tool tips and keeps the generated HTML
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.Html.format(System.Boolean,System.Boolean,System.String,System.String,System.String,System.String,System.String,FSharp.Formatting.CodeFormat.Snippet[],Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String})">
+<member name="M:FSharp.Formatting.CodeFormat.Html.formatSnippetsAsHtml(System.Boolean,System.Boolean,System.String,System.String,System.String,System.String,System.String,Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.CodeFormat.TokenKind,System.String},FSharp.Formatting.CodeFormat.Snippet[])">
 <summary>
  Format snippets and return HTML for &lt;pre&gt; tags together
  wtih HTML for ToolTips (to be added to the end of document)
@@ -572,7 +567,7 @@
  Represents context used by the formatter
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.Latex.format(System.Boolean,System.String,System.String,FSharp.Formatting.CodeFormat.Snippet[])">
+<member name="M:FSharp.Formatting.CodeFormat.Latex.formatSnippetsAsLatex(System.Boolean,System.String,System.String,FSharp.Formatting.CodeFormat.Snippet[])">
 <summary>
  Format snippets and return LaTEX for &lt;pre&gt; tags together
  (to be added to the end of document)
@@ -594,7 +589,7 @@
  from http://tex.stackexchange.com/questions/34580/escape-character-in-latex
 </summary>
 </member>
-<member name="M:FSharp.Formatting.CodeFormat.Pynb.format(FSharp.Formatting.CodeFormat.Snippet[])">
+<member name="M:FSharp.Formatting.CodeFormat.Pynb.formatSnippetsAsPynb(FSharp.Formatting.CodeFormat.Snippet[])">
 <summary>
  Generate Pynb code cell text with the specified snippets
 </summary>

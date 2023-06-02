@@ -26,14 +26,14 @@
 </member>
 <member name="M:FSharp.Collections.List.nestUnderLastMatching``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- A function that nests items of the input sequence 
- that do not match a specified predicate under the 
- last item that matches the predicate. 
+ A function that nests items of the input sequence
+ that do not match a specified predicate under the
+ last item that matches the predicate.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilEquals``1(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions the input list into two parts - the break is added 
+ Partitions the input list into two parts - the break is added
  at a point where the list starts with the specified sub-list.
 </summary>
 </member>
@@ -45,32 +45,32 @@
 </member>
 <member name="M:FSharp.Collections.List.iterInterleaved``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Iterates over the elements of the list and calls the first function for 
+ Iterates over the elements of the list and calls the first function for
  every element. Between each two elements, the second function is called.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntil``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhileLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the specified predicate 
- returns true) and a rest of the list. The predicate gets the entire 
+ Partitions list into an initial sequence (while the specified predicate
+ returns true) and a rest of the list. The predicate gets the entire
  tail of the list and can perform lookahead.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhile``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns true) and a rest of the list.
 </summary>
 </member>
@@ -82,26 +82,26 @@
 <member name="M:FSharp.Patterns.|ParseCommand|_|(System.String)">
 <summary>
  Utility for parsing commands - this deals with a single command.
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|ParseCommands|_|(System.String)">
 <summary>
- Utility for parsing commands. Commands can be used in different places. We 
+ Utility for parsing commands. Commands can be used in different places. We
  recognize `key1=value, key2=value` and also `key1:value, key2:value`
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|Let|``2(``0,``1)">
 <summary>
- Parameterized pattern that assigns the specified value to the 
+ Parameterized pattern that assigns the specified value to the
  first component of a tuple. Usage:
 
     match str with
     | Let 1 (n, &quot;one&quot;) | Let 2 (n, &quot;two&quot;) -&gt; n
- 
+
 </summary>
 </member>
 <member name="M:FSharp.Patterns.Lines.|TrimParagraphLines|(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
@@ -124,7 +124,7 @@
 </member>
 <member name="M:FSharp.Patterns.Lines.|TakeStartingWithOrBlank|_|(System.String,Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Matches when there are some lines at the beginning that are 
+ Matches when there are some lines at the beginning that are
  either empty (or whitespace) or start with the specified string.
  Returns all such lines from the beginning until a different line.
 </summary>
@@ -142,7 +142,7 @@
 <member name="M:FSharp.Patterns.List.|BracketDelimited|_|(System.Char,System.Char,Microsoft.FSharp.Collections.FSharpList{System.Char})">
 <summary>
  Matches a list if it starts with a bracketed list. Nested brackets
- are skipped (by counting opening and closing brackets) and can be 
+ are skipped (by counting opening and closing brackets) and can be
  escaped using the &apos;\&apos; symbol.
 </summary>
 </member>
@@ -165,13 +165,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|EqualsRepeated|_|(System.String,FSharp.Formatting.Markdown.MarkdownRange,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string consists of some number of 
+ Matches when a string consists of some number of
  complete repetitions of a specified sub-string.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsWithWrapped|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -189,13 +189,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWith|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -223,7 +223,7 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|TrimStartAndCount|(System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Returns a string trimmed from the start together with 
+ Returns a string trimmed from the start together with
  the number of skipped whitespace characters
 </summary>
 </member>
@@ -257,10 +257,10 @@
  Matches when a string is a whitespace or null
 </summary>
 </member>
-<member name="M:FSharp.Patterns.String.removeSpaces(System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:FSharp.Patterns.String.removeSpaces(Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Given a list of lines indented with certan number of whitespace 
- characters (spaces), remove the spaces from the beginning of each line 
+ Given a list of lines indented with certan number of whitespace
+ characters (spaces), remove the spaces from the beginning of each line
  and return the string as a list of lines
 </summary>
 </member>
@@ -271,7 +271,7 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsWithWrapped|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -279,13 +279,13 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWith|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -315,84 +315,166 @@
  Represents an entry suitable for constructing a Lunr index
 </summary>
 </member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocsModel">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.Substitutions">
+<summary>
+ The substitutions.  Different substitutions can also be used for each specific input
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.Root">
+<summary>
+ The root URL for the entire generation, normally &apos;/&apos;
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.Resolver">
+<summary>
+ Specifies file extensions to use in files and URLs
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.Qualify">
+<summary>
+ Indicates if each collection is being qualified by its collection name, e.g. &apos;reference/FSharp.Core&apos;
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.FileExtensions">
+<summary>
+ Specifies file extensions to use in files and URLs
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.EntityInfos">
+<summary>
+ The full list of all entities
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocModel.Collection">
+<summary>
+ The full list of all entities
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocModel.IndexOutputFile(System.String,System.Boolean,System.String)">
+<summary>
+ URL of the &apos;index.html&apos; for the reference documentation for the model
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocModel.IndexFileUrl(System.String,System.String,System.Boolean,System.String)">
+<summary>
+ URL of the &apos;index.html&apos; for the reference documentation for the model
+</summary>
+</member>
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocModel">
 <summary>
  Represents a set of assemblies integrated with their associated documentation
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeInfo.Type">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.PublicOnly">
 <summary>
- The actual type
+ Whether to generate only public things
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeInfo.ParentModule">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.Warn">
+<summary>
+ Whether doc processing should warn on missing comments
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.MarkdownComments">
+<summary>
+ Whether the input uses markdown comments
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.Substitutions">
+<summary>
+ The substitutionss active for this input. If specified these
+ are used instead of the overall substitutions.  This allows different parameters (e.g.
+ different authors) for each assembly in a collection.
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.SourceRepo">
+<summary>
+ The URL the the source repo where the source code lives
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.SourceFolder">
+<summary>
+ The compile-time source folder
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.XmlFile">
+<summary>
+ Override the default XML file (normally assumed to live alongside)
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocInput.Path">
+<summary>
+ The path to the assembly
+</summary>
+</member>
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocInput">
+<summary>
+ Represents an input assembly for API doc generation
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntityInfo.ParentModule">
 <summary>
  The parent module, if any.
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeInfo.Namespace">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntityInfo.Namespace">
 <summary>
- The namespace the type belongs to
+ The namespace the entity belongs to
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeInfo.AssemblyGroup">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntityInfo.Entity">
 <summary>
- The assembly group the type belongs to
+ The actual entity
 </summary>
 </member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocTypeInfo">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntityInfo.Collection">
 <summary>
- High-level information about a type definition
+ The collection of assemblies the entity belongs to
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModuleInfo.ParentModule">
-<summary>
- The parent module, if any.
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModuleInfo.Namespace">
-<summary>
- The namespace the module belongs to
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModuleInfo.Module">
-<summary>
- The actual module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModuleInfo.AssemblyGroup">
-<summary>
- The assembly group the module belongs to
-</summary>
-</member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocModuleInfo">
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocEntityInfo">
 <summary>
  High-level information about a module definition
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocAssemblyGroup.Namespaces">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocCollection.Namespaces">
 <summary>
- All namespaces in the group
+ All namespaces in the collection
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocAssemblyGroup.Name">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocCollection.CollectionName">
 <summary>
- Name of the group
+ Name of the collection
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocAssemblyGroup.Assemblies">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocCollection.Assemblies">
 <summary>
- All assemblies in the group
+ All assemblies in the collection
 </summary>
 </member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocAssemblyGroup">
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocCollection">
 <summary>
  Represents a group of assemblies integrated with its associated documentation
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.Types">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.UrlHash">
 <summary>
- All types in the namespace
+ The hash label for the URL with the overall namespaces file
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.UrlBaseName">
+<summary>
+ The base name for the generated file
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.Substitutions">
+<summary>
+ The substitution substitutions active for generating thist content
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.NamespaceDocs">
+<summary>
+ The summary text for the namespace
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.Name">
@@ -400,9 +482,19 @@
  The name of the namespace
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.Modules">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocNamespace.Entities">
 <summary>
  All modules in the namespace
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocNamespace.Url(System.String,System.String,System.Boolean,System.String)">
+<summary>
+ The URL of the best link documentation for the item (without the http://site.io/reference)
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocNamespace.OutputFile(System.String,System.Boolean,System.String)">
+<summary>
+ The name of the file generated for this entity
 </summary>
 </member>
 <member name="T:FSharp.Formatting.ApiDocs.ApiDocNamespace">
@@ -410,204 +502,184 @@
  Represents a namespace integrated with its associated documentation
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.ValuesAndFuncs">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.ValuesAndFuncs">
 <summary>
  Values and functions of the module
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.UrlBaseName">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.UrlBaseName">
 <summary>
- The URL of the best link documentation for the item (without the http://site.io/reference or .html)
+ The URL base name of the primary documentation for the entity  (without the http://site.io/reference)
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.TypeExtensions">
-<summary>
- Type extensions of the module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Symbol">
-<summary>
- The F# compiler symbol for the type definition
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.ObsoleteMessage">
-<summary>
- Returns the obsolete message, when this member is obsolete. When its not or no message was specified, an empty string is returned
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.NestedTypes">
-<summary>
- All nested types
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.NestedModules">
-<summary>
- All nested modules
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Name">
-<summary>
- The name of the module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.IsObsolete">
-<summary>
- Gets a value indicating whether this member is obsolete
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Comment">
-<summary>
- The attached comment
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Category">
-<summary>
- The category of the module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Attributes">
-<summary>
- The declared attributes of the module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.Assembly">
-<summary>
- The name of the module&apos;s assembly
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.AllMembers">
-<summary>
- All members of the module
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocModule.ActivePatterns">
-<summary>
- Active patterns of the module
-</summary>
-</member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocModule">
-<summary>
- Represents an F# module definition integrated with its associated documentation
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.UrlBaseName">
-<summary>
- The URL of the best link documentation for the item (without the http://site.io/reference or .html)
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.UnionCases">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.UnionCases">
 <summary>
  The cases of a union type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Symbol">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.TypeExtensions">
+<summary>
+ Type extensions of the module
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Symbol">
 <summary>
  The F# compiler symbol for the type definition
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.StaticParameters">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Substitutions">
+<summary>
+ The substitution parameters active for generating thist content
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.StaticParameters">
 <summary>
  Static parameters
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.StaticMembers">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.StaticMembers">
 <summary>
  The static members of the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.RecordFields">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.SourceLocation">
+<summary>
+ The URL of the member&apos;s source location, if any
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.RequiresQualifiedAccess">
+<summary>
+ Does the module have the RequiresQualifiedAccess attribute
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.RecordFields">
 <summary>
  The fields of a record type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.ObsoleteMessage">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.ObsoleteMessage">
 <summary>
  Returns the obsolete message, when this member is obsolete. When its not or no message was specified, an empty string is returned
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Name">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.NestedEntities">
 <summary>
- The name of the type
+ All nested modules and types
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.IsObsolete">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Name">
+<summary>
+ The name of the entity
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.IsTypeDefinition">
+<summary>
+ Indicates if the entity is a type definition
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.IsObsolete">
 <summary>
  Gets a value indicating whether this member is obsolete
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.InstanceMembers">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.InstanceMembers">
 <summary>
  The instance members of the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.DelegateSignature">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Exclude">
+<summary>
+ The exclude flag
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.DelegateSignature">
 <summary>
  If this is a delegate, then e formatted signature
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Constructors">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Constructors">
 <summary>
  The constuctorsof the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Comment">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Comment">
 <summary>
  The attached comment
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Category">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.CategoryIndex">
+<summary>
+ The category index of the type
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Category">
 <summary>
  The category of the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.BaseType">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.BaseType">
 <summary>
  The base type of the type, formatted
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Attributes">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Attributes">
 <summary>
  The declared attributes of the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.Assembly">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.Assembly">
 <summary>
  The name of the type&apos;s assembly
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.AllMembers">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.AllMembers">
 <summary>
  All members of the type
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.AllInterfaces">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.AllInterfaces">
 <summary>
  All interfaces of the type, formatted
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition.AbbreviatedType">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.ActivePatterns">
+<summary>
+ Active patterns of the module
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocEntity.AbbreviatedType">
 <summary>
  If this is a type abbreviation, then the abbreviated type
 </summary>
 </member>
-<member name="T:FSharp.Formatting.ApiDocs.ApiDocTypeDefinition">
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocEntity.Url(System.String,System.String,System.Boolean,System.String)">
+<summary>
+ The URL of the best link for the entity relative to &quot;reference&quot; directory (without the http://site.io/reference)
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocEntity.OutputFile(System.String,System.Boolean,System.String)">
+<summary>
+ The name of the file generated for this entity
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocEntity.GetUrl(System.String,System.String,System.String,System.Boolean,System.String)">
+<summary>
+ Compute the URL of the best link for the entity relative to &quot;reference&quot; directory (without the http://site.io/reference)
+</summary>
+</member>
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocEntity">
 <summary>
  Represents a type definition integrated with its associated documentation
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.UsageTooltip">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.UsageHtml">
 <summary>
  The usage section in a typical tooltip
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.UrlFileNameAndHash">
-<summary>
- The URL of the best link documentation for the item (without the http://site.io/reference)
-</summary>
-</member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.UrlBaseName">
 <summary>
- The URL of the best link documentation for the item (without the http://site.io/reference)
+ The URL base name of the best link documentation for the item (without the http://site.io/reference)
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.TypeArguments">
@@ -622,22 +694,17 @@
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.SourceLocation">
 <summary>
- The member&apos;s source location, if any
+ The URL of the member&apos;s source location, if any
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.SignatureTooltip">
-<summary>
- The full signature section in a typical tooltip
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.ReturnTooltip">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.ReturnInfo">
 <summary>
  The return section in a typical tooltip
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.ParameterTooltips">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.Parameters">
 <summary>
- The member&apos;s parameter sections in a typical tooltip
+ The member&apos;s parameters and associated documentation
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.ObsoleteMessage">
@@ -665,19 +732,9 @@
  Gets a value indicating whether this member is obsolete
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.IsCustomOperation">
-<summary>
- Gets a value indicating whether this member has CustomOperationAttribute
-</summary>
-</member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.FormatTypeArguments">
 <summary>
  Formats type arguments
-</summary>
-</member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.FormatSourceLocation">
-<summary>
- Formats source location
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.FormatModifiers">
@@ -695,14 +752,19 @@
  The type extended by an extension member, if any
 </summary>
 </member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.Exclude">
+<summary>
+ The exclude flag
+</summary>
+</member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.Details">
 <summary>
- The member&apos;s compiled name, if any
+ The members details
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.CustomOperationName">
 <summary>
- Returns the custom operation name, when this attribute is the CustomOperationAttribute. When its not an empty string is returned
+ Returns the custom operation name, when this attribute is the CustomOperationAttribute.
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.CompiledName">
@@ -715,6 +777,11 @@
  The attached comment
 </summary>
 </member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.CategoryIndex">
+<summary>
+ The category index
+</summary>
+</member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocMember.Category">
 <summary>
  The category
@@ -725,9 +792,14 @@
  The declared attributes of the member
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.ApiDocMember.FormatUsage(System.Int32)">
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocMember.Url(System.String,System.String,System.Boolean,System.String)">
 <summary>
- Formats usage
+ The URL of the best link documentation for the item relative to &quot;reference&quot; directory (without the http://site.io/reference)
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocMember.GetUrl(System.String,System.String,System.String,System.String,System.Boolean,System.String)">
+<summary>
+ The URL of the best link documentation for the item relative to &quot;reference&quot; directory (without the http://site.io/reference)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.ApiDocs.ApiDocMember">
@@ -826,9 +898,24 @@
  Represents a custom attribute attached to source code
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Sections">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Xml">
 <summary>
- The parsed sections of the comment
+ The XElement for the XML doc if available
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Summary">
+<summary>
+ The summary for the comment
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Returns">
+<summary>
+ The return sections of the comment
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Remarks">
+<summary>
+ The remarks html for comment
 </summary>
 </member>
 <member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.RawData">
@@ -836,14 +923,24 @@
  The raw data of the comment
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.FullText">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Parameters">
 <summary>
- The full text of the comment
+ The param sections of the comment
 </summary>
 </member>
-<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Blurb">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Notes">
 <summary>
- The summary for the comment
+ The notes sections of the comment
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Exceptions">
+<summary>
+ The notes sections of the comment
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocComment.Examples">
+<summary>
+ The examples sections of the comment
 </summary>
 </member>
 <member name="T:FSharp.Formatting.ApiDocs.ApiDocComment">
@@ -851,112 +948,173 @@
  Represents a documentation comment attached to source code
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateSearchIndexFromModel(FSharp.Formatting.ApiDocs.ApiDocsModel)">
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocHtml.Id">
 <summary>
+ Get the Id of the element when rendered to html, if any
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.ApiDocHtml.HtmlText">
+<summary>
+ Get the HTML text of the HTML section
+</summary>
+</member>
+<member name="T:FSharp.Formatting.ApiDocs.ApiDocHtml">
+<summary>
+ Represents some HTML formatted by model generation
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.SearchIndexEntriesForModel(FSharp.Formatting.ApiDocs.ApiDocModel)">
+ <summary>
  Generates the search index from the given documentation model
+ </summary>
 
-  - `model` - the model for documentation
+ <param name="model">the model for documentation</param>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateModel(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.ApiDocs.ApiDocInput},System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.ApiDocs.ApiDocFileExtensions})">
+ <summary>
+ Generates a documentation model for the assemblies specified by the `inputs` parameter
+ </summary>
+
+ <param name="inputs">the components to generate documentation for</param>
+ <param name="collectionName">the overall collection name</param>
+ <param name="substitutions">the substitutions to use in content and templates</param>
+ <param name="qualify">qualify the output set by collection name, e.g. <c>reference/FSharp.Core/...</c></param>
+ <param name="libDirs">Use this to specify additional paths where referenced DLL files can be found when formatting code snippets inside Markdown comments</param>
+ <param name="otherFlags">Additional flags that are passed to the F# compiler (you can use this if you want to
+    specify references explicitly etc.)</param>
+ <param name="root">The root url of the generated documentation within the website</param>
+ <param name="urlRangeHighlight">A function that can be used to override the default way of generating GitHub links</param>
+ <param name="strict">Fail if any assembly is missing XML docs or can't be resolved</param>
+ <param name="extension">The extensions used for files and URLs</param>
+ <param name="onError"></param>
+
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateMarkdownPhased``1(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.ApiDocs.ApiDocInput},System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.String})">
+<summary>
+ Like GenerateMarkdown but allows for intermediate phase to insert other global substitutions
+ and combine search index
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateModel(System.Collections.Generic.IEnumerable{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}})">
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateMarkdown(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.ApiDocs.ApiDocInput},System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
+ <summary>
+ Generates default Markdown pages for the assemblies specified by the `inputs` parameter
+ </summary>
+
+ <param name="inputs">the components to generate documentation for</param>
+ <param name="output">the output directory</param>
+ <param name="collectionName">the overall collection name</param>
+ <param name="substitutions">the substitutions to use in content and templates</param>
+ <param name="template">the template to use for each documentation page</param>
+ <param name="root">The root url of the generated documentation within the website</param>
+ <param name="qualify">qualify the output set by collection name, e.g. `reference/FSharp.Core/...`</param>
+ <param name="libDirs">Use this to specify additional paths where referenced DLL files can be found when formatting code snippets inside Markdown comments</param>
+ <param name="otherFlags">Additional flags that are passed to the F# compiler to specify references explicitly etc.</param>
+ <param name="urlRangeHighlight">A function that can be used to override the default way of generating GitHub links</param>
+ <param name="strict">Fail if any assembly is missing XML docs or can't be resolved</param>
+
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateHtmlPhased``1(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.ApiDocs.ApiDocInput},System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.String})">
 <summary>
- Generates a documentation model for the assemblies specified by the `dllFiles` parameter
-
-  - `parameters` - provides additional parameters for substitution in the templates
-  - `xmlFile` - can be used to override the default name of the assumed XML documentation file
-  - `rootUrl` - The root url of the generated documentation within the website
-  - `mdcomments` - specifies if you want to use the Markdown parser for in-code comments.
-    With `mdcomments` enabled there is no support for `&lt;see cref=&quot;&quot;&gt;` links, so `false` is
-    recommended for C# assemblies (if not specified, `true` is used).
-  - `sourceFolder` and `sourceRepo` - When specified, the documentation generator automatically
-    generates links to GitHub pages for each of the entity.
-  - `publicOnly` - When set to `false`, the tool will also generate documentation for non-public members
-  - `libDirs` - Use this to specify additional paths where referenced DLL files can be found when formatting code snippets inside Markdown comments
-  - `otherFlags` - Additional flags that are passed to the F# compiler (you can use this if you want to
-    specify references explicitly etc.)
-  - `urlRangeHighlight` - A function that can be used to override the default way of generating GitHub links
-
+ Like GenerateHtml but allows for intermediate phase to insert other global substitutions
+ and combine search index
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateHtmlFromModel(FSharp.Formatting.ApiDocs.ApiDocsModel,System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
-<summary>
- Generates default HTML pages for the given documentation model
+<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateHtml(Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.ApiDocs.ApiDocInput},System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit}})">
+ <summary>
+ Generates default HTML pages for the assemblies specified by the `inputs` parameter
+ </summary>
 
-  - `model` - the model for documentation
-  - `template` - the template to use for each documentation page
-</summary>
-</member>
-<member name="M:FSharp.Formatting.ApiDocs.ApiDocs.GenerateHtml(System.Collections.Generic.IEnumerable{System.String},System.String,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.String}},Microsoft.FSharp.Core.FSharpOption{System.Boolean},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.Uri,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.String}}}})">
-<summary>
- Generates default HTML pages for the assemblies specified by the `dllFiles` parameter
-
-  - `dllFiles` - the components to generate documentation for
-  - `outDir` - the output directory
-  - `parameters` - provides additional parameters for substitution in the templates
-  - `template` - the template to use for each documentation page
-  - `xmlFile` - can be used to override the assumed name of the XML documenation file 
-  - `rootUrl` - The root url of the generated documentation within the website
-  - `sourceRepo` - Links to GitHub pages for each of the entity.
-  - `sourceFolder` - Links to GitHub pages for each of the entity.
-  - `mdcomments` - specifies if you want to use the Markdown parser for in-code comments.
-  - `publicOnly` - When set to `false`, the tool will also generate documentation for non-public members
-  - `libDirs` - Use this to specify additional paths where referenced DLL files can be found when formatting code snippets inside Markdown comments
-  - `otherFlags` - Additional flags that are passed to the F# compiler to specify references explicitly etc.
-  - `urlRangeHighlight` - A function that can be used to override the default way of generating GitHub links
-
-</summary>
+ <param name="inputs">the components to generate documentation for</param>
+ <param name="output">the output directory</param>
+ <param name="collectionName">the overall collection name</param>
+ <param name="substitutions">the substitutions to use in content and templates</param>
+ <param name="template">the template to use for each documentation page</param>
+ <param name="root">The root url of the generated documentation within the website</param>
+ <param name="qualify">qualify the output set by collection name, e.g. `reference/FSharp.Core/...`</param>
+ <param name="libDirs">Use this to specify additional paths where referenced DLL files can be found when formatting code snippets inside Markdown comments</param>
+ <param name="otherFlags">Additional flags that are passed to the F# compiler to specify references explicitly etc.</param>
+ <param name="urlRangeHighlight">A function that can be used to override the default way of generating GitHub links</param>
+ <param name="strict">Fail if any assembly is missing XML docs or can't be resolved</param>
 </member>
 <member name="T:FSharp.Formatting.ApiDocs.ApiDocs">
-<summary>
- This type exposes the functionality for producing documentation model from `dll` files with associated `xml` files
- generated by the F# or C# compiler. To generate documentation model, use one of the overloades of the `Generate` method.
-</summary>
+ <summary>
+  This type exposes the functionality for producing documentation model from `dll` files with associated `xml` files
+  generated by the F# or C# compiler. To generate documentation model, use one of the overloades of the `Generate` method.
+ </summary>
+
+ <namespacedoc>
+   <summary>Functionality relating to generating API documentation</summary>
+ </namespacedoc>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.readCommentsInto``1(FSharp.Compiler.SourceCodeServices.FSharpSymbol,FSharp.Formatting.ApiDocs.ValueReader.ReadingContext,System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.Collections.Generic.IDictionary{System.String,System.String},Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.ApiDocs.ApiDocComment,``0}}})">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.readCommentsInto``1(FSharp.Compiler.Symbols.FSharpSymbol,FSharp.Formatting.ApiDocs.SymbolReader.ReadingContext,System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Boolean,Microsoft.FSharp.Core.FSharpFunc{System.Collections.Generic.IDictionary{System.String,System.String},Microsoft.FSharp.Core.FSharpFunc{FSharp.Formatting.ApiDocs.ApiDocComment,``0}}}}})">
 <summary>
  Reads XML documentation comments and calls the specified function
  to parse the rest of the entity, unless [omit] command is set.
  The function is called with category name, commands &amp; comment.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.addMissingLinkToTypes(FSharp.Formatting.ApiDocs.ValueReader.ReadingContext,FSharp.Formatting.Literate.LiterateDocument)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.addMissingLinkToTypes(FSharp.Formatting.ApiDocs.SymbolReader.ReadingContext,FSharp.Formatting.Literate.LiterateDocument)">
 <summary>
  Adds the missing links to types to the document defined links
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.wrapInlineCodeLinksInParagraphs(FSharp.Formatting.ApiDocs.ValueReader.ReadingContext,FSharp.Formatting.Markdown.MarkdownParagraph)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.wrapInlineCodeLinksInParagraphs(FSharp.Formatting.ApiDocs.SymbolReader.ReadingContext,FSharp.Formatting.Markdown.MarkdownParagraph)">
 <summary>
- Wraps inside an `IndirectLink` all inline code spans in the paragraph that can be converted to a link
+ Wraps inside an IndirectLink all inline code spans in the paragraph that can be converted to a link
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.wrapInlineCodeLinksInSpans(FSharp.Formatting.ApiDocs.ValueReader.ReadingContext,FSharp.Formatting.Markdown.MarkdownSpan)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.wrapInlineCodeLinksInSpans(FSharp.Formatting.ApiDocs.SymbolReader.ReadingContext,FSharp.Formatting.Markdown.MarkdownSpan)">
 <summary>
- Wraps the span inside an `IndirectLink` if it is an inline code that can be converted to a link
+ Wraps the span inside an IndirectLink if it is an inline code that can be converted to a link
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.addLinkToType(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,FSharp.Formatting.ApiDocs.ValueReader.CrefReference}})">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.addLinkToType(FSharp.Formatting.Literate.LiterateDocument,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,FSharp.Formatting.ApiDocs.CrefReference}})">
 <summary>
  Adds a cross-type link to the document defined links
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.getTypeLink(FSharp.Formatting.ApiDocs.ValueReader.ReadingContext,System.String)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.getTypeLink(FSharp.Formatting.ApiDocs.SymbolReader.ReadingContext,System.String)">
 <summary>
  Returns a tuple of the undefined link and its Cref if it exists
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.linkNotDefined(FSharp.Formatting.Literate.LiterateDocument,System.String)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.linkNotDefined(FSharp.Formatting.Literate.LiterateDocument,System.String)">
 <summary>
  Returns whether the link is not included in the document defined links
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.collectParagraphIndirectLinks(FSharp.Formatting.Markdown.MarkdownParagraph)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.collectParagraphIndirectLinks(FSharp.Formatting.Markdown.MarkdownParagraph)">
 <summary>
  Returns all indirect links in the specified paragraph node
 </summary>
 </member>
-<member name="M:FSharp.Formatting.ApiDocs.Reader.collectSpanIndirectLinks(FSharp.Formatting.Markdown.MarkdownSpan)">
+<member name="M:FSharp.Formatting.ApiDocs.SymbolReader.collectSpanIndirectLinks(FSharp.Formatting.Markdown.MarkdownSpan)">
 <summary>
  Returns all indirect links in a specified span node
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.TypeFormatter.codeHtml(FSharp.Formatting.HtmlModel.HtmlElement)">
+<summary>
+ We squeeze the spaces out of anything where whitespace layout must be exact - any deliberate
+ whitespace must use &amp;#32;
+
+ This kind of sucks but stems from the fact the formatting for the internal HTML DSL is freely
+ adding spaces which are actually significant when formatting F# type information.
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.GenerateHtml.HtmlRender.GlobalSubstitutions">
+<summary>
+ Get the substitutions relevant to all
+</summary>
+</member>
+<member name="M:FSharp.Formatting.ApiDocs.GenerateHtml.embed(FSharp.Formatting.ApiDocs.ApiDocHtml)">
+<summary>
+ Embed some HTML generateed in GenerateModel
+</summary>
+</member>
+<member name="P:FSharp.Formatting.ApiDocs.GenerateMarkdown.MarkdownRender.GlobalSubstitutions">
+<summary>
+ Get the substitutions relevant to all
 </summary>
 </member>
 </members>

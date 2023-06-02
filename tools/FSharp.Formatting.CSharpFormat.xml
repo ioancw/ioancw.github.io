@@ -5,9 +5,13 @@
     </assembly>
     <members>
         <member name="T:FSharp.Formatting.CSharpFormat.CLikeFormat">
-            <summary>
-            Provides a base class for formatting languages similar to C.
-            </summary>
+             <summary>
+             Provides a base class for formatting languages similar to C.
+             </summary>
+            
+             <namespacedoc>
+               <summary>Functionality for formatting code in various languages</summary>
+             </namespacedoc>
         </member>
         <member name="P:FSharp.Formatting.CSharpFormat.CLikeFormat.CommentRegEx">
             <summary>

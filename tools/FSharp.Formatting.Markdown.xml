@@ -26,14 +26,14 @@
 </member>
 <member name="M:FSharp.Collections.List.nestUnderLastMatching``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- A function that nests items of the input sequence 
- that do not match a specified predicate under the 
- last item that matches the predicate. 
+ A function that nests items of the input sequence
+ that do not match a specified predicate under the
+ last item that matches the predicate.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilEquals``1(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions the input list into two parts - the break is added 
+ Partitions the input list into two parts - the break is added
  at a point where the list starts with the specified sub-list.
 </summary>
 </member>
@@ -45,32 +45,32 @@
 </member>
 <member name="M:FSharp.Collections.List.iterInterleaved``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Iterates over the elements of the list and calls the first function for 
+ Iterates over the elements of the list and calls the first function for
  every element. Between each two elements, the second function is called.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntilLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionUntil``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns &apos;false&apos;) and a rest of the list.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhileLookahead``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{``0},System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the specified predicate 
- returns true) and a rest of the list. The predicate gets the entire 
+ Partitions list into an initial sequence (while the specified predicate
+ returns true) and a rest of the list. The predicate gets the entire
  tail of the list and can perform lookahead.
 </summary>
 </member>
 <member name="M:FSharp.Collections.List.partitionWhile``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
- Partitions list into an initial sequence (while the 
+ Partitions list into an initial sequence (while the
  specified predicate returns true) and a rest of the list.
 </summary>
 </member>
@@ -82,26 +82,26 @@
 <member name="M:FSharp.Patterns.|ParseCommand|_|(System.String)">
 <summary>
  Utility for parsing commands - this deals with a single command.
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|ParseCommands|_|(System.String)">
 <summary>
- Utility for parsing commands. Commands can be used in different places. We 
+ Utility for parsing commands. Commands can be used in different places. We
  recognize `key1=value, key2=value` and also `key1:value, key2:value`
- The key of the command should be identifier with just 
+ The key of the command should be identifier with just
  characters in it - otherwise, the parsing fails.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.|Let|``2(``0,``1)">
 <summary>
- Parameterized pattern that assigns the specified value to the 
+ Parameterized pattern that assigns the specified value to the
  first component of a tuple. Usage:
 
     match str with
     | Let 1 (n, &quot;one&quot;) | Let 2 (n, &quot;two&quot;) -&gt; n
- 
+
 </summary>
 </member>
 <member name="M:FSharp.Patterns.Lines.|TrimParagraphLines|(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
@@ -124,7 +124,7 @@
 </member>
 <member name="M:FSharp.Patterns.Lines.|TakeStartingWithOrBlank|_|(System.String,Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Matches when there are some lines at the beginning that are 
+ Matches when there are some lines at the beginning that are
  either empty (or whitespace) or start with the specified string.
  Returns all such lines from the beginning until a different line.
 </summary>
@@ -142,7 +142,7 @@
 <member name="M:FSharp.Patterns.List.|BracketDelimited|_|(System.Char,System.Char,Microsoft.FSharp.Collections.FSharpList{System.Char})">
 <summary>
  Matches a list if it starts with a bracketed list. Nested brackets
- are skipped (by counting opening and closing brackets) and can be 
+ are skipped (by counting opening and closing brackets) and can be
  escaped using the &apos;\&apos; symbol.
 </summary>
 </member>
@@ -165,13 +165,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|EqualsRepeated|_|(System.String,FSharp.Formatting.Markdown.MarkdownRange,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string consists of some number of 
+ Matches when a string consists of some number of
  complete repetitions of a specified sub-string.
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsWithWrapped|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -189,13 +189,13 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|StartsAndEndsWith|_|(System.String,System.String,System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -223,7 +223,7 @@
 </member>
 <member name="M:FSharp.Patterns.StringPosition.|TrimStartAndCount|(System.String,FSharp.Formatting.Markdown.MarkdownRange)">
 <summary>
- Returns a string trimmed from the start together with 
+ Returns a string trimmed from the start together with
  the number of skipped whitespace characters
 </summary>
 </member>
@@ -257,10 +257,10 @@
  Matches when a string is a whitespace or null
 </summary>
 </member>
-<member name="M:FSharp.Patterns.String.removeSpaces(System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:FSharp.Patterns.String.removeSpaces(Microsoft.FSharp.Collections.FSharpList{System.String})">
 <summary>
- Given a list of lines indented with certan number of whitespace 
- characters (spaces), remove the spaces from the beginning of each line 
+ Given a list of lines indented with certan number of whitespace
+ characters (spaces), remove the spaces from the beginning of each line
  and return the string as a list of lines
 </summary>
 </member>
@@ -271,7 +271,7 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsWithWrapped|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with a sub-string wrapped using the 
+ Matches when a string starts with a sub-string wrapped using the
  opening and closing sub-string specified in the parameter.
  For example &quot;[aa]bc&quot; is wrapped in [ and ] pair. Returns the wrapped
  text together with the rest.
@@ -279,13 +279,13 @@
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWithTrim|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns trimmed body)
 </summary>
 </member>
 <member name="M:FSharp.Patterns.String.|StartsAndEndsWith|_|(System.String,System.String,System.String)">
 <summary>
- Matches when a string starts with the given value and ends 
+ Matches when a string starts with the given value and ends
  with a given value (and returns the rest of it)
 </summary>
 </member>
@@ -318,7 +318,7 @@
 <member name="T:FSharp.Formatting.Markdown.MarkdownEmbedParagraphs">
 <summary>
  Provides an extensibility point for adding custom kinds of paragraphs into a document
- (`MarkdownEmbedParagraphs` values can be embedded using `MarkdownParagraph.EmbedParagraphs`)
+ (MarkdownEmbedParagraphs values can be embedded using MarkdownParagraph.EmbedParagraphs)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownTableRow">
@@ -331,9 +331,64 @@
  A type alias for a list of paragraphs
 </summary>
 </member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.OutputBlock">
+<summary>
+ A special addition for inserted outputs
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.YamlFrontmatter">
+<summary>
+ A special addition for YAML-style frontmatter
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.EmbedParagraphs">
+<summary>
+ A special addition for computing paragraphs
+</summary>
+</member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.OtherBlock">
 <summary>
- Reprsents a block of markdown produced when parsing of tables or quoted blocks is suppressed
+ Represents a block of markdown produced when parsing of code or tables or quoted blocks is suppressed
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.TableBlock">
+<summary>
+ A Markdown Table
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.HorizontalRule">
+<summary>
+ A Markdown Horizontal rule
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.LatexBlock">
+<summary>
+ A Markdown Latex block
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.Span">
+<summary>
+ A Markdown Span block
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.QuotedBlock">
+<summary>
+ A Markdown Quote block
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.ListBlock">
+<summary>
+ A Markdown List block
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.InlineHtmlBlock">
+<summary>
+ A HTML block
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Markdown.MarkdownParagraph.CodeBlock">
+<summary>
+ A code block, whether fenced or via indentation
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownParagraph">
@@ -346,12 +401,12 @@
 <member name="T:FSharp.Formatting.Markdown.MarkdownEmbedSpans">
 <summary>
  Provides an extensibility point for adding custom kinds of spans into a document
- (`MarkdownEmbedSpans` values can be embedded using `MarkdownSpan.EmbedSpans`)
+ (MarkdownEmbedSpans values can be embedded using MarkdownSpan.EmbedSpans)
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownSpans">
 <summary>
- A type alias for a list of `MarkdownSpan` values
+ A type alias for a list of MarkdownSpan values
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownSpan">
@@ -366,78 +421,81 @@
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownListKind">
-<summary>
- A list kind can be `Ordered` or `Unordered` corresponding to `&lt;ol&gt;` and `&lt;ul&gt;` elements
-</summary>
+ <summary>
+   A list kind can be Ordered or Unordered corresponding to <c>&lt;ol&gt;</c> and <c>&lt;ul&gt;</c> elements
+ </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.WriteLatex(System.String,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.WriteLatex(System.String,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Transform Markdown document into LaTeX format. The result
  will be written to the provided TextWriter.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.WriteLatex(FSharp.Formatting.Markdown.MarkdownDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.WriteLatex(FSharp.Formatting.Markdown.MarkdownDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
 <summary>
  Transform the provided MarkdownDocument into LaTeX
  format and write the result to a given writer.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.WriteHtml(System.String,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.WriteHtml(System.String,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Transform Markdown text into HTML format. The result
  will be written to the provided TextWriter.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.WriteHtml(FSharp.Formatting.Markdown.MarkdownDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.WriteHtml(FSharp.Formatting.Markdown.MarkdownDocument,System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Transform the provided MarkdownDocument into HTML
  format and write the result to a given writer.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToPynb(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToPynb(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Transform the provided MarkdownDocument into Pynb and return the result as a string.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToLatex(System.String,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToMd(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
+<summary>
+ Transform the provided MarkdownDocument into Markdown and return the result as a string.
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToLatex(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
 <summary>
  Transform Markdown text into LaTeX format. The result will be returned as a string.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToLatex(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToLatex(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Core.FSharpOption{System.Boolean})">
 <summary>
  Transform the provided MarkdownDocument into LaTeX
  format and return the result as a string.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToHtml(System.String,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToHtml(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
- Transform Markdown document into HTML format. 
+ Transform Markdown document into HTML format.
  The result will be returned as a string.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToHtml(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToHtml(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
  Transform the provided MarkdownDocument into HTML
  format and return the result as a string.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Markdown.ToFsx(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}})">
+<member name="M:FSharp.Formatting.Markdown.Markdown.ToFsx(FSharp.Formatting.Markdown.MarkdownDocument,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}}},Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
 <summary>
- Transform the provided MarkdownDocument into Pynb and return the result as a string.
+ Transform the provided MarkdownDocument into Fsx and return the result as a string.
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Markdown.Markdown.Parse(System.String,Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{FSharp.Formatting.Markdown.MarkdownParseOptions})">
 <summary>
  Parse the specified text into a MarkdownDocument. Line breaks in the
  inline HTML (etc.) will be stored using the specified string.
-
-  - `parseOptions`: Controls whether code and non-code blocks are parsed as raw lines or not.
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.Markdown">
 <summary>
- Static class that provides methods for formatting 
+ Static class that provides methods for formatting
  and transforming Markdown documents.
 </summary>
 </member>
@@ -452,10 +510,13 @@
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownDocument">
-<summary>
+ <summary>
  Representation of a Markdown document - the representation of Paragraphs
  uses an F# discriminated union type and so is best used from F#.
-</summary>
+ </summary>
+ <namespacedoc>
+   <summary>Functionality for processing markdown documents, converting to HTML, LaTeX, ipynb and scripts</summary>
+ </namespacedoc>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownPatterns">
 <summary>
@@ -487,7 +548,7 @@
 
    2. Single line latex starting with `$$`.
 
-   3. Block delimited by \begin{equation} \end{equation}. 
+   3. Block delimited by \begin{equation} \end{equation}.
 
    4. Block delimited by \begin{align} \end{align}.
 
@@ -604,7 +665,7 @@
  Recognizes a fenced code block - starting and ending with at least ``` or ~~~
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.Parser.|NestedCodeBlock|_|(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
+<member name="M:FSharp.Formatting.Markdown.Parser.|NestedCodeBlock|_|``1(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,FSharp.Formatting.Markdown.MarkdownRange}})">
 <summary>
  Recognizes a code block - lines starting with four spaces (including blank)
 </summary>
@@ -670,6 +731,38 @@
  This is similar to `List.Delimited`, but it skips over escaped characters.
 </summary>
 </member>
+<member name="M:FSharp.Formatting.Markdown.Parser.|CannotOpenEmphasis|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
+<summary>
+ Matches [&apos;c&apos;,LeftDelimiterRun]::xs that should
+ not open emphasis. This is useful because the
+ parser iterates through characters one by one and
+ in this case we need to skip both &apos;c&apos; and the LeftDelimiterRun.
+ If we only skipped &apos;c&apos; then we could match LeftDelimiterRun
+ on the next iteration and we do not want that to happen.
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Markdown.Parser.|RightDelimiterRun|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
+<summary>
+ Succeeds when there&apos;s a match to a string of * or _ that could
+ close emphasis.
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Markdown.Parser.|LeftDelimiterRun|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
+<summary>
+ Succeeds when there&apos;s a match to a string of * or _ that could
+ open emphasis.
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Markdown.Parser.|DelimiterRun|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
+<summary>
+ Succeeds when the specificed character list starts with a delimeter run.
+</summary>
+</member>
+<member name="M:FSharp.Formatting.Markdown.Parser.|Punctuation|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
+<summary>
+ Succeeds when the specificed character list starts with non-escaped punctuation.
+</summary>
+</member>
 <member name="M:FSharp.Formatting.Markdown.Parser.|EscapedLatexInlineMathChar|_|(Microsoft.FSharp.Collections.FSharpList{System.Char})">
 <summary>
  Escape dollar inside a LaTex inline math span.
@@ -687,24 +780,34 @@
  and an optional title part (may be wrapped using quote or double-quotes)
 </summary>
 </member>
-<member name="P:FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext.Replacements">
+<member name="P:FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext.MarkdownDirectLinkResolver">
 <summary>
- Additional replacements to be made in the code snippets
+ Helper to resolve `[foo](file.md)` references in markdown (where file.md is producing file.fsx)
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext.CodeReferenceResolver">
+<summary>
+ Helper to resolve `cref:T:TypeName` references in markdown
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext.Substitutions">
+<summary>
+ Additional replacements to be made in content
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext">
 <summary>
- Context passed around while formatting 
+ Context passed around while formatting
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Markdown.MarkdownUtils.formatParagraph(FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext,FSharp.Formatting.Markdown.MarkdownParagraph)">
 <summary>
- Format a MarkdownParagraph 
+ Format a MarkdownParagraph
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Markdown.MarkdownUtils.formatSpans(FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownSpan})">
 <summary>
- Format a list of MarkdownSpan 
+ Format a list of MarkdownSpan
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Markdown.MarkdownUtils.formatSpan(FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext,FSharp.Formatting.Markdown.MarkdownSpan)">
@@ -728,9 +831,9 @@
  Generates a unique string out of given input
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.HtmlFormatting.formatMarkdown(System.IO.TextWriter,System.Boolean,System.String,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
+<member name="M:FSharp.Formatting.Markdown.HtmlFormatting.formatAsHtml(System.IO.TextWriter,System.Boolean,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}},Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">
 <summary>
- Format Markdown document and write the result to 
+ Format Markdown document and write the result to
  a specified TextWriter. Parameters specify newline character
  and a dictionary with link keys defined in the document.
 </summary>
@@ -776,39 +879,34 @@
  Basic escaping as done by Markdown
 </summary>
 </member>
-<member name="T:FSharp.Formatting.Markdown.HtmlFormatting">
-<summary>
- [omit]
-</summary>
-</member>
 <member name="T:FSharp.Formatting.Markdown.LatexFormatting.FormattingContext">
 <summary>
  Context passed around while formatting the LaTEX
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatMarkdown(System.IO.TextWriter,System.String,System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}})">
+<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatAsLatex(System.IO.TextWriter,System.Collections.Generic.IDictionary{System.String,System.Tuple{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}}},Microsoft.FSharp.Collections.FSharpList{System.Tuple{FSharp.Formatting.Templating.ParamKey,System.String}},System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.Tuple{System.String,System.String}}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpOption{System.String}},System.Boolean,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">
 <summary>
- Format Markdown document and write the result to 
+ Format Markdown document and write the result to
  a specified TextWriter. Parameters specify newline character
  and a dictionary with link keys defined in the document.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatParagraphs(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">
+<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatParagraphsAsLatex(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">
 <summary>
  Write a list of MarkdownParagraph values to a TextWriter
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatParagraph(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,FSharp.Formatting.Markdown.MarkdownParagraph)">
+<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatParagraphAsLatex(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,FSharp.Formatting.Markdown.MarkdownParagraph)">
 <summary>
  Write a MarkdownParagraph value to a TextWriter
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatSpans(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext)">
+<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatSpansAsLatex(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext)">
 <summary>
  Write list of MarkdownSpan values to a TextWriter
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatSpan(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,FSharp.Formatting.Markdown.MarkdownSpan)">
+<member name="M:FSharp.Formatting.Markdown.LatexFormatting.formatSpanAsLatex(FSharp.Formatting.Markdown.LatexFormatting.FormattingContext,FSharp.Formatting.Markdown.MarkdownSpan)">
 <summary>
  Write MarkdownSpan value to a TextWriter
 </summary>
@@ -823,11 +921,6 @@
 <summary>
  LaTEX special chars
  from http://tex.stackexchange.com/questions/34580/escape-character-in-latex
-</summary>
-</member>
-<member name="T:FSharp.Formatting.Markdown.LatexFormatting">
-<summary>
- [omit]
 </summary>
 </member>
 <member name="M:FSharp.Formatting.Markdown.FsxFormatting.formatParagraphs(FSharp.Formatting.Markdown.MarkdownUtils.FormattingContext,Microsoft.FSharp.Collections.FSharpList{FSharp.Formatting.Markdown.MarkdownParagraph})">

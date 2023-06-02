@@ -17,29 +17,7 @@
  Same as ChangeCurrentDirectory but takes a function for the scope.
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Internal.FsiSession.WithCd``1(System.String,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0})">
-<summary>
- Same as Cd but takes a function for the scope.
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.FsiSession.Handle``1(Microsoft.FSharp.Core.FSharpFunc{System.String,``0},System.String)">
-<summary>
- Handle the given evaluation function
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.FsiSession.EvalScriptAsInteraction(System.String)">
-<summary>
- See https://github.com/Microsoft/visualfsharp/issues/1392
-</summary>
-</member>
 <member name="M:FSharp.Formatting.Internal.FsiSession.ChangeCurrentDirectory(System.String)">
-<summary>
- Change the current directory (so that relative paths within scripts work properly).
- Returns a handle to change the current directory back to it&apos;s initial state
- (Because this will change the current directory of the currently running code as well!).
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.FsiSession.Cd(System.String)">
 <summary>
  Change the current directory (so that relative paths within scripts work properly).
  Returns a handle to change the current directory back to it&apos;s initial state
@@ -52,15 +30,9 @@
  Level 5 warnings are: 21 (recursive use checked at runtime), 22 (let rec evaluated out of order), 45 (full abstraction), and 52 (defensive copy). All other warnings are level 2.
 </summary>
 </member>
-<member name="P:FSharp.Formatting.Internal.FsiOptions.Default">
-<summary>
- Sets a warning level (0 to 5). The default level is 3. Each warning is given a level based on its severity. Level 5 gives more, but less severe, warnings than level 1.
- Level 5 warnings are: 21 (recursive use checked at runtime), 22 (let rec evaluated out of order), 45 (full abstraction), and 52 (defensive copy). All other warnings are level 2.
-</summary>
-</member>
 <member name="T:FSharp.Formatting.Internal.FsiOptions">
 <summary>
- See https://msdn.microsoft.com/en-us/library/dd233172.aspx
+ See https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/fsharp-interactive-options
 </summary>
 </member>
 <member name="T:FSharp.Formatting.Internal.FsiExpressionTypeException">
@@ -83,30 +55,204 @@
  Represents a simple (fake) event loop for the &apos;fsi&apos; object
 </summary>
 </member>
-<member name="M:FSharp.Formatting.Internal.CompilerServiceExtensions.Type.get_FSharpFullNameWithTypeArgs(System.Type)">
-<summary>
- Gets a string that can be used in F# source code to reference the current type instance.
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.CompilerServiceExtensions.Type.get_FSharpParamList(System.Type)">
-<summary>
- The parameter list of the current type, sets &quot;_&quot; if the current instance is a generic definition.
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.CompilerServiceExtensions.Type.get_FSharpFullName(System.Type)">
-<summary>
- Gets the FullName of the current type in F# source code.
-</summary>
-</member>
-<member name="M:FSharp.Formatting.Internal.CompilerServiceExtensions.Type.get_FSharpName(System.Type)">
-<summary>
- The name of the current type instance in F# source code.
-</summary>
-</member>
 <member name="M:FSharp.Formatting.Internal.CompilerServiceExtensions.Type.get_NamespaceName(System.Type)">
 <summary>
  The FullName but without any generic parameter types.
 </summary>
+</member>
+<member name="T:FSharp.Formatting.Templating.Substitutions">
+<summary>
+ A list of parameters for substituting in templates, indexed by parameter keys
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Templating.ParamKey">
+ <summary>
+ A parameter key
+ </summary>
+
+ <namespacedoc>
+   <summary>Functionality relating to templating (mostly internal)</summary>
+ </namespacedoc>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-item-id">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu-item_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-item-content">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu-item_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-item-link">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu-item_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-items">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-header-id">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-menu-header-content">
+<summary>
+ A parameter key known to FSharp.Formatting, available in _menu_template.html
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-watch-script">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-tooltips">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-theme">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-source-basename">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-source-filename">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-source">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-repository-link">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-repository-commit">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-repository-branch">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-release-notes-link">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-page-source">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-page-title">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-package-icon-url">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-package-version">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-package-tags">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-package-project-url">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-package-license-expression">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-navbar-position">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-logo-src">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-logo-link">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-list-of-documents">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-list-of-namespaces">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-license-link">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-copyright">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-collection-name-link">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-content">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-collection-name">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.fsdocs-authors">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="P:FSharp.Formatting.Templating.ParamKeys.root">
+<summary>
+ A parameter key known to FSharp.Formatting
+</summary>
+</member>
+<member name="T:FSharp.Formatting.Templating.ParamKeys">
+ <summary>
+  Defines the parameter keys known to FSharp.Formatting processing code
+ </summary>
 </member>
 </members>
 </doc>
