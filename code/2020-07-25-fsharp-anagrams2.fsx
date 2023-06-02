@@ -1,11 +1,13 @@
-(*** raw ***)
----
-layout: post
-title:  "Finding anagrams with F# with FSharp.Literate"
-description: "Finding all anagrams of a word in a dictionary."
-date:   2020-06-25 06:07:00 +0100
-categories: 
----
+(**
+    (*** raw ***)
+    ---
+    layout: post
+    title:  "Finding anagrams with F# with FSharp.Literate"
+    description: "Finding all anagrams of a word in a dictionary."
+    date:   2020-06-25 06:07:00 +0100
+    categories: 
+    ---
+*)
 
 (**
 ## Anagrams
@@ -41,7 +43,7 @@ let rec listToString l =
 let sortString s =
     s |> Seq.sort |> Seq.toList |> listToString
 
-let fileName =@"C:\Users\ioan_\GitHub\furry-palm-tree\words.txt"
+let fileName = @"C:\Users\ioan_\GitHub\furry-palm-tree\words.txt"
 
 fileName
 |> File.ReadAllLines

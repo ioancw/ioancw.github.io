@@ -1,12 +1,14 @@
-﻿(*** raw ***)
----
-layout: post
-title:  "Literate F#"
-description: "Using F# Literate for blog posts on Jekyll."
-date:   2020-07-24 06:07:00 +0100
-categories: 
-tags: F# FSharp Literate Formatting
----
+﻿(**
+  (*** raw ***)
+  ---
+  layout: post
+  title:  "Literate F#"
+  description: "Using F# Literate for blog posts on Jekyll."
+  date:   2020-07-24 06:07:00 +0100
+  categories: 
+  tags: F# FSharp Literate Formatting
+  ---
+*)
 
 (**
 My Blog
@@ -135,11 +137,6 @@ let source = __SOURCE_DIRECTORY__
 let codeDirectory = source + "/code"
 let outputDirectory = source + "/_posts"
 
-//process directory, converting files in code to the _posts directory.
-let processDirectory () =
-    Literate.ConvertDirectory(input = codeDirectory, outputDirectory = outputDirectory)
-
-do processDirectory ()
 
 (** 
 This assumes that: 
@@ -178,10 +175,10 @@ In order to use the template directly in the Literate process you can use the fo
 
 //this processes a single file.
 let template = source + "template.html"
-let in = source + "post.fsx"
+let inputFile = source + "post.fsx"
 let out = source + "post.html"
 
-do Literate.ConvertScriptFile(input = in, template = template, output = out)
+do Literate.ConvertScriptFile(input = inputFile, template = template, output = out)
 
 (** 
 If the template contains the css file, then your output when opened in the brower will
