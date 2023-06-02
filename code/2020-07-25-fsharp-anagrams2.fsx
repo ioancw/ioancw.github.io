@@ -41,8 +41,7 @@ let rec listToString l =
 let sortString s =
     s |> Seq.sort |> Seq.toList |> listToString
 
-let fileName =
-    @"/Users/ioanwilliams/github/furry-palm-tree/words.txt"
+let fileName =@"C:\Users\ioan_\GitHub\furry-palm-tree\words.txt"
 
 fileName
 |> File.ReadAllLines
