@@ -21,6 +21,6 @@ let processDirectory () =
         let baseName = Path.GetFileNameWithoutExtension(input)
         let outputFile = Path.Combine(outputDirectory, sprintf "%s.%s" baseName outputKind.Extension)
         printfn "converting %s --> %s" input outputFile
-        Literate.ConvertScriptFile(input, outputFile, outputKind = OutputKind.Html)
+        Literate.ConvertScriptFile(input, output = outputFile, outputKind = OutputKind.Html)
 
 do processDirectory ()

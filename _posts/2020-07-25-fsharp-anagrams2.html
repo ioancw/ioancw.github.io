@@ -1,0 +1,214 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(*** raw ***)</span>
+<span class="o">---</span>
+<span class="id">layout</span><span class="pn">:</span> <span class="id">post</span>
+<span class="id">title</span><span class="pn">:</span>  <span class="s">&quot;Finding anagrams with F# with FSharp.Literate&quot;</span>
+<span class="id">description</span><span class="pn">:</span> <span class="s">&quot;Finding all anagrams of a word in a dictionary.&quot;</span>
+<span class="id">date</span><span class="pn">:</span>   <span class="n">2020</span><span class="o">-</span><span class="n">06</span><span class="o">-</span><span class="n">25</span> <span class="n">06</span><span class="pn">:</span><span class="n">07</span><span class="pn">:</span><span class="n">00</span> <span class="o">+</span><span class="n">0100</span>
+<span class="id">categories</span><span class="pn">:</span> 
+<span class="o">---</span>
+</code></pre></td>
+</tr>
+</table>
+<h2>Anagrams</h2>
+<p>Recently someone asked me how to find all anagrams of a given word contained in a dictionary,
+i.e. a file containing a large numnber of words, one per line.</p>
+<p>While I have an implementation in Python, I thought I'd try it in F#.</p>
+<p>The basic way to solve this problem, is to find a means to determine a key/hash for each
+word and then storing it in a dictionary or map, along with the anagrams that match the
+given key.</p>
+<p>One can use a fancy method to determine the key, e.g. create a prime number hash, based on
+position of each letter in the alphabet, but for now, it's as easy to sort each word, as all
+anagrams of a given word, sort to the same string.</p>
+<p>This can be done easily in F#, as all the magic happens inside Array.groupBy.<br />
+This takes the array of words read from the file and creates a dictionary where the key is
+the sorted word (all anagrams sort to the same string) and the value is an array of all
+words with the same key (i.e. anagrams). They dictionary is then converted to an Sequence.</p>
+<p>I don't believe F# has it's own sort string function, so you have to write your own.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">IO</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="fn">listToString</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="fn">l</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="fn">l</span> <span class="k">with</span>
+    <span class="pn">|</span> <span class="pn">[</span><span class="pn">]</span> <span class="k">-&gt;</span> <span class="s">&quot;&quot;</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="fn">head</span> <span class="uc">::</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="fn">tail</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="fn">head</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="id">ToString</span><span class="pn">(</span><span class="pn">)</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="fn">listToString</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="fn">tail</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="fn">sortString</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="fn">s</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="fn">s</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="id">sort</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="id">toList</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 19)" onmouseover="showTip(event, 'fs3', 19)" class="fn">listToString</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="id">fileName</span> <span class="o">=</span> <span class="s">@&quot;C:\Users\ioan_\GitHub\furry-palm-tree\words.txt&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="id">fileName</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="rt">File</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="id">ReadAllLines</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="id">groupBy</span> <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="fn">sortString</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="id">sortByDescending</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="fn">snd</span> <span class="o">&gt;</span><span class="pn">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 30)" onmouseover="showTip(event, 'fs10', 30)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="id">length</span><span class="pn">)</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="id">take</span> <span class="n">10</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 35)" onmouseover="showTip(event, 'fs21', 35)" class="id">iter</span> <span class="pn">(</span><span class="k">fun</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="fn">k</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="fn">vs</span><span class="pn">)</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 38)" onmouseover="showTip(event, 'fs23', 38)" class="fn">vs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="m">String</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="id">concat</span> <span class="s">&quot;,&quot;</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="fn">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s"> : </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="fn">k</span><span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
+
+
+<div class="fsdocs-tip" id="fs1">namespace System</div>
+<div class="fsdocs-tip" id="fs2">namespace System.IO</div>
+<div class="fsdocs-tip" id="fs3">val listToString: l: &#39;a list -&gt; string</div>
+<div class="fsdocs-tip" id="fs4">val l: &#39;a list</div>
+<div class="fsdocs-tip" id="fs5">val head: &#39;a</div>
+<div class="fsdocs-tip" id="fs6">val tail: &#39;a list</div>
+<div class="fsdocs-tip" id="fs7">System.Object.ToString() : string</div>
+<div class="fsdocs-tip" id="fs8">val sortString: s: seq&lt;&#39;a&gt; -&gt; string (requires comparison)</div>
+<div class="fsdocs-tip" id="fs9">val s: seq&lt;&#39;a&gt; (requires comparison)</div>
+<div class="fsdocs-tip" id="fs10">module Seq
+
+from Microsoft.FSharp.Collections<br /><em>&lt;summary&gt;Contains operations for working with values of type &lt;see cref=&quot;T:Microsoft.FSharp.Collections.seq`1&quot; /&gt;.&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs11">val sort: source: seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires comparison)<br /><em>&lt;summary&gt;Yields a sequence ordered by keys.&lt;/summary&gt;<br />&lt;remarks&gt;This function returns a sequence that digests the whole initial sequence as soon as
+ that sequence is iterated. As a result this function should not be used with
+ large or infinite sequences.
+
+ The function makes no assumption on the ordering of the original
+ sequence and uses a stable sort, that is the original order of equal elements is preserved.&lt;/remarks&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;example id=&quot;sort-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let input = seq { 8; 4; 3; 1; 6; 1 }
+
+ Seq.sort input
+ &lt;/code&gt;
+ Evaluates to a sequence yielding the same results as &lt;c&gt;seq { 1; 1 3; 4; 6; 8 }&lt;/c&gt;.
+ &lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs12">val toList: source: seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><em>&lt;summary&gt;Builds a list from the given collection.&lt;/summary&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result list.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;example id=&quot;tolist-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = seq { 1; 2; 5 }
+
+ inputs |&amp;gt; Seq.toList
+ &lt;/code&gt;
+ Evaluates to &lt;c&gt;[ 1; 2; 5 ]&lt;/c&gt;.
+ &lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs13">val fileName: string</div>
+<div class="fsdocs-tip" id="fs14">type File =
+  static member AppendAllLines: path: string * contents: IEnumerable&lt;string&gt; -&gt; unit + 1 overload
+  static member AppendAllLinesAsync: path: string * contents: IEnumerable&lt;string&gt; * encoding: Encoding * ?cancellationToken: CancellationToken -&gt; Task + 1 overload
+  static member AppendAllText: path: string * contents: string -&gt; unit + 1 overload
+  static member AppendAllTextAsync: path: string * contents: string * encoding: Encoding * ?cancellationToken: CancellationToken -&gt; Task + 1 overload
+  static member AppendText: path: string -&gt; StreamWriter
+  static member Copy: sourceFileName: string * destFileName: string -&gt; unit + 1 overload
+  static member Create: path: string -&gt; FileStream + 2 overloads
+  static member CreateSymbolicLink: path: string * pathToTarget: string -&gt; FileSystemInfo
+  static member CreateText: path: string -&gt; StreamWriter
+  static member Decrypt: path: string -&gt; unit
+  ...<br /><em>&lt;summary&gt;Provides static methods for the creation, copying, deletion, moving, and opening of a single file, and aids in the creation of &lt;see cref=&quot;T:System.IO.FileStream&quot; /&gt; objects.&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs15">File.ReadAllLines(path: string) : string array<br />File.ReadAllLines(path: string, encoding: System.Text.Encoding) : string array</div>
+<div class="fsdocs-tip" id="fs16">val groupBy: projection: (&#39;T -&gt; &#39;Key) -&gt; source: seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)<br /><em>&lt;summary&gt;Applies a key-generating function to each element of a sequence and yields a sequence of
+ unique keys. Each unique key contains a sequence of all elements that match
+ to this key.&lt;/summary&gt;<br />&lt;remarks&gt;This function returns a sequence that digests the whole initial sequence as soon as
+ that sequence is iterated. As a result this function should not be used with
+ large or infinite sequences. The function makes no assumption on the ordering of the original
+ sequence.&lt;/remarks&gt;<br />&lt;param name=&quot;projection&quot;&gt;A function that transforms an element of the sequence into a comparable key.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result sequence.&lt;/returns&gt;<br />&lt;example id=&quot;group-by-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = [1; 2; 3; 4; 5]
+
+ inputs |&amp;gt; Seq.groupBy (fun n -&amp;gt; n % 2)
+ &lt;/code&gt;
+ Evaluates to a sequence yielding the same results as &lt;c&gt;seq { (1, seq { 1; 3; 5 }); (0, seq { 2; 4 }) }&lt;/c&gt;&lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs17">val sortByDescending: projection: (&#39;T -&gt; &#39;Key) -&gt; source: seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires comparison)<br /><em>&lt;summary&gt;Applies a key-generating function to each element of a sequence and yield a sequence ordered
+ descending by keys.  The keys are compared using generic comparison as implemented by &lt;see cref=&quot;M:Microsoft.FSharp.Core.Operators.compare&quot; /&gt;.&lt;/summary&gt;<br />&lt;remarks&gt;This function returns a sequence that digests the whole initial sequence as soon as
+ that sequence is iterated. As a result this function should not be used with
+ large or infinite sequences. The function makes no assumption on the ordering of the original
+ sequence.
+
+ This is a stable sort, that is the original order of equal elements is preserved.&lt;/remarks&gt;<br />&lt;param name=&quot;projection&quot;&gt;A function to transform items of the input sequence into comparable keys.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;example id=&quot;sortbydescending-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let input = [&quot;a&quot;; &quot;bbb&quot;; &quot;cccc&quot;; &quot;dd&quot;]
+
+ input |&amp;gt; Seq.sortByDescending (fun s -&amp;gt; s.Length)
+ &lt;/code&gt;
+ Evaluates to a sequence yielding the same results as &lt;c&gt;seq { &quot;cccc&quot;; &quot;bbb&quot;; &quot;dd&quot;; &quot;a&quot; }&lt;/c&gt;.
+ &lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs18">val snd: tuple: (&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><em>&lt;summary&gt;Return the second element of a tuple, &lt;c&gt;snd (a,b) = b&lt;/c&gt;.&lt;/summary&gt;<br />&lt;param name=&quot;tuple&quot;&gt;The input tuple.&lt;/param&gt;<br />&lt;returns&gt;The second value.&lt;/returns&gt;<br />&lt;example id=&quot;snd-example&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ snd (&quot;first&quot;, 2)  //  Evaluates to 2
+ &lt;/code&gt;&lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs19">val length: source: seq&lt;&#39;T&gt; -&gt; int<br /><em>&lt;summary&gt;Returns the length of the sequence&lt;/summary&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The length of the sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;example id=&quot;item-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;]
+
+ inputs |&amp;gt; Seq.length
+ &lt;/code&gt;
+ Evaluates to &lt;c&gt;3&lt;/c&gt;&lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs20">val take: count: int -&gt; source: seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><em>&lt;summary&gt;Returns the first N elements of the sequence.&lt;/summary&gt;<br />&lt;remarks&gt;Throws &lt;c&gt;InvalidOperationException&lt;/c&gt;
+ if the count exceeds the number of elements in the sequence. &lt;c&gt;Seq.truncate&lt;/c&gt;
+ returns as many items as the sequence contains instead of throwing an exception.&lt;/remarks&gt;<br />&lt;param name=&quot;count&quot;&gt;The number of items to take.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when the input sequence is empty and the count is greater than zero.&lt;/exception&gt;<br />&lt;exception cref=&quot;T:System.InvalidOperationException&quot;&gt;Thrown when count exceeds the number of elements
+ in the sequence.&lt;/exception&gt;<br />&lt;example id=&quot;take-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;; &quot;d&quot;]
+
+ inputs |&amp;gt; Seq.take 2
+ &lt;/code&gt;
+ Evaluates to a sequence yielding the same results as &lt;c&gt;[&quot;a&quot;; &quot;b&quot;]&lt;/c&gt;&lt;/example&gt;<br />&lt;example id=&quot;take-2&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;; &quot;d&quot;]
+
+ inputs |&amp;gt; Seq.take 6
+ &lt;/code&gt;
+ Throws &lt;c&gt;InvalidOperationException&lt;/c&gt;.
+ &lt;/example&gt;<br />&lt;example id=&quot;take-3&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let inputs = [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;; &quot;d&quot;]
+
+ inputs |&amp;gt; Seq.take 0
+ &lt;/code&gt;
+ Evaluates to a sequence yielding no results.
+ &lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs21">val iter: action: (&#39;T -&gt; unit) -&gt; source: seq&lt;&#39;T&gt; -&gt; unit<br /><em>&lt;summary&gt;Applies the given function to each element of the collection.&lt;/summary&gt;<br />&lt;param name=&quot;action&quot;&gt;A function to apply to each element of the sequence.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;example id=&quot;iter-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;] |&amp;gt; Seq.iter (printfn &quot;%s&quot;)
+ &lt;/code&gt;
+ Evaluates to &lt;c&gt;unit&lt;/c&gt; and prints
+ &lt;code&gt;
+ a
+ b
+ c
+ &lt;/code&gt;
+ in the console.
+ &lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs22">val k: string</div>
+<div class="fsdocs-tip" id="fs23">val vs: seq&lt;string&gt;</div>
+<div class="fsdocs-tip" id="fs24">module String
+
+from Microsoft.FSharp.Core<br /><em>&lt;summary&gt;Functional programming operators for string processing.  Further string operations
+ are available via the member functions on strings and other functionality in
+  &lt;a href=&quot;http://msdn2.microsoft.com/en-us/library/system.string.aspx&quot;&gt;System.String&lt;/a&gt;
+ and &lt;a href=&quot;http://msdn2.microsoft.com/library/system.text.regularexpressions.aspx&quot;&gt;System.Text.RegularExpressions&lt;/a&gt; types.
+ &lt;/summary&gt;<br />&lt;category&gt;Strings and Text&lt;/category&gt;</em></div>
+<div class="fsdocs-tip" id="fs25">val concat: sep: string -&gt; strings: seq&lt;string&gt; -&gt; string<br /><em>&lt;summary&gt;Returns a new string made by concatenating the given strings
+ with separator &lt;c&gt;sep&lt;/c&gt;, that is &lt;c&gt;a1 + sep + ... + sep + aN&lt;/c&gt;.&lt;/summary&gt;<br />&lt;param name=&quot;sep&quot;&gt;The separator string to be inserted between the strings
+ of the input sequence.&lt;/param&gt;<br />&lt;param name=&quot;strings&quot;&gt;The sequence of strings to be concatenated.&lt;/param&gt;<br />&lt;returns&gt;A new string consisting of the concatenated strings separated by
+ the separation string.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;c&gt;strings&lt;/c&gt; is null.&lt;/exception&gt;<br />&lt;example id=&quot;concat-1&quot;&gt;&lt;code lang=&quot;fsharp&quot;&gt;
+ let input1 = [&quot;Stefan&quot;; &quot;says:&quot;; &quot;Hello&quot;; &quot;there!&quot;]
+
+ input1 |&amp;gt; String.concat &quot; &quot;  // evaluates &quot;Stefan says: Hello there!&quot;
+
+ let input2 = [0..9] |&amp;gt; List.map string
+
+ input2 |&amp;gt; String.concat &quot;&quot;    // evaluates &quot;0123456789&quot;
+ input2 |&amp;gt; String.concat &quot;, &quot;  // evaluates &quot;0, 1, 2, 3, 4, 5, 6, 7, 8, 9&quot;
+
+ let input3 = [&quot;No comma&quot;]
+
+ input3 |&amp;gt; String.concat &quot;,&quot;   // evaluates &quot;No comma&quot;
+ &lt;/code&gt;&lt;/example&gt;</em></div>
+<div class="fsdocs-tip" id="fs26">val printfn: format: Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><em>&lt;summary&gt;Print to &lt;c&gt;stdout&lt;/c&gt; using the given format, and add a newline.&lt;/summary&gt;<br />&lt;param name=&quot;format&quot;&gt;The formatter.&lt;/param&gt;<br />&lt;returns&gt;The formatted result.&lt;/returns&gt;<br />&lt;example&gt;See &lt;c&gt;Printf.printfn&lt;/c&gt; (link: &lt;see cref=&quot;M:Microsoft.FSharp.Core.PrintfModule.PrintFormatLine``1&quot; /&gt;) for examples.&lt;/example&gt;</em></div>
