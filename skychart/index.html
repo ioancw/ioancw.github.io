@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pennard Sky Chart</title>
+<meta name="description" content="Clear Sky Chart-style astronomy forecast for UK sites, using Met Office UKV data via Open-Meteo.">
+<style>
+  /* Night-friendly page: always dark, to protect dark adaptation. */
+  :root {
+    --bg: #0d0d0f; --fg: #dcdcdc; --muted: #8c8c94; --rule: #55555c;
+    --good: #1f7a3a; --usable: #b08a1a; --poor: #7a1f1f;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  .meta { color: var(--muted); margin-bottom: 14px; font-size: 13px; }
+  .wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.chart { border-collapse: collapse; }
+  .chart td { width: 14px; min-width: 14px; height: 18px; border: 1px solid var(--bg); padding: 0; cursor: pointer; }
+  .chart th { font-weight: normal; font-size: 10px; color: var(--muted); padding: 0; }
+  .chart th.label { text-align: right; padding-right: 8px; white-space: nowrap; position: sticky; left: 0;
+                    background: var(--bg); color: var(--fg); font-size: 12px; z-index: 1; }
+  .chart th.day { text-align: left; color: var(--fg); border-left: 2px solid var(--rule); padding-left: 4px; white-space: nowrap; }
+  .chart .newday { border-left: 2px solid var(--rule); }
+  #detail { min-height: 1.5em; margin: 10px 0 18px; font-size: 13px; color: var(--fg); }
+  h2 { font-size: 15px; margin: 22px 0 8px; }
+  table.nights { border-collapse: collapse; font-size: 13px; }
+  .nights th, .nights td { text-align: left; padding: 4px 14px 4px 0; border-bottom: 1px solid #222; vertical-align: top; }
+  .nights th { color: var(--muted); font-weight: normal; }
+  .pill { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 12px; }
+  form { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin-top: 8px; }
+  label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
+  input, select, button { background: #1b1b1f; color: var(--fg); border: 1px solid #333; border-radius: 4px; padding: 5px 7px; font: inherit; }
+  input { width: 9em; }
+  button { cursor: pointer; }
+  .notes { color: var(--muted); max-width: 72ch; font-size: 12px; }
+  .error { color: #ff8a80; }
+  a { color: #8ab4f8; }
+</style>
+</head>
+<body>
+<h1 id="title">Sky chart</h1>
+<div class="meta" id="meta">Loading forecast…</div>
+
+<div class="wrap"><table class="chart" id="chart"></table></div>
+<div id="detail">Tap or hover a cell for details.</div>
+
+<h2>Nights</h2>
+<table class="nights" id="nights"></table>
+
+<h2>Location</h2>
+<form id="loc">
+  <label>Name <input name="name"></label>
+  <label>Latitude <input name="lat" inputmode="decimal"></label>
+  <label>Longitude <input name="lon" inputmode="decimal"></label>
+  <label>Dark-site limit <input name="dark" inputmode="decimal" title="Moonless zenith limiting magnitude: 6.5 truly dark, ~5 suburban"></label>
+  <label>Model
+    <select name="model">
+      <option value="ukmo_seamless">Met Office UKV</option>
+      <option value="ecmwf_ifs025">ECMWF IFS</option>
+      <option value="icon_seamless">DWD ICON</option>
+      <option value="best_match">Open-Meteo best match</option>
+    </select>
+  </label>
+  <button>Update</button>
+</form>
+
+<p class="notes">
+  Darker blue is better on every row except temperature. Darkness is calculated
+  in the browser from low-precision Sun and Moon positions (accurate to about a
+  degree, so times are ±10 minutes); white means the Sun is above −6°.
+  Transparency is a rough proxy from surface humidity and visibility, not column
+  water vapour. There is no seeing row: Open-Meteo has no seeing forecast.
+  Weather data from <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0).
+</p>
+
+<script>
+// @ts-check
+"use strict";
+
+const DEFAULTS = { name: "Pennard, Gower", lat: 51.576, lon: -4.088, dark: 6.0, model: "ukmo_seamless" };
+const TZ = "Europe/London";
+const VARS = ["cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
+              "relative_humidity_2m", "temperature_2m", "dew_point_2m", "wind_speed_10m", "visibility"];
+
+/**
+ * @typedef {{name: string, lat: number, lon: number, dark: number, model: string}} Site
+ * @typedef {{color: string, tip: string}} Cell
+ * @typedef {[number, number, number, number]} RGBA
+ */
+
+// ------------------------------------------------------------ settings
+
+/** @returns {Site} */
+function readSite() {
+  const q = new URLSearchParams(location.search);
+  const num = (/** @type {string} */ k, /** @type {number} */ d) => {
+    const v = parseFloat(q.get(k) ?? "");
+    return Number.isFinite(v) ? v : d;
+  };
+  return {
+    name: q.get("name") || DEFAULTS.name,
+    lat: num("lat", DEFAULTS.lat),
+    lon: num("lon", DEFAULTS.lon),
+    dark: num("dark", DEFAULTS.dark),
+    model: q.get("model") || DEFAULTS.model,
+  };
+}
+
+// --------------------------------------------- low-precision ephemerides
+
+const RAD = Math.PI / 180;
+const J2000 = Date.UTC(2000, 0, 1, 12);
+
+/** @param {number} lam @param {number} beta @param {number} d */
+function eclToEq(lam, beta, d) {
+  const eps = (23.439 - 4e-7 * d) * RAD;
+  lam *= RAD; beta *= RAD;
+  const ra = Math.atan2(Math.sin(lam) * Math.cos(eps) - Math.tan(beta) * Math.sin(eps), Math.cos(lam));
+  const dec = Math.asin(Math.sin(beta) * Math.cos(eps) + Math.cos(beta) * Math.sin(eps) * Math.sin(lam));
+  return { ra, dec };
+}
+
+/** @param {{ra: number, dec: number}} eq @param {number} d @param {number} lat @param {number} lon */
+function altitude({ ra, dec }, d, lat, lon) {
+  const lst = ((280.46061837 + 360.98564736629 * d + lon) % 360) * RAD;
+  const ha = lst - ra, phi = lat * RAD;
+  return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(ha)) / RAD;
+}
+
+/**
+ * Sun altitude, Moon altitude and Moon illuminated fraction at a time.
+ * @param {number} ms Unix time in milliseconds
+ * @param {number} lat @param {number} lon
+ */
+function sunMoon(ms, lat, lon) {
+  const d = (ms - J2000) / 864e5;
+  const g = (357.528 + 0.9856003 * d) * RAD;
+  const sunLam = 280.460 + 0.9856474 * d + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g);
+
+  const mm = (134.963 + 13.064993 * d) * RAD;   // Moon's mean anomaly
+  const mf = (93.272 + 13.229350 * d) * RAD;    // argument of latitude
+  const moonLam = 218.316 + 13.176396 * d + 6.289 * Math.sin(mm);
+  const moonBeta = 5.128 * Math.sin(mf);
+
+  const elong = Math.acos(Math.cos(moonBeta * RAD) * Math.cos((moonLam - sunLam) * RAD));
+  return {
+    sun: altitude(eclToEq(sunLam, 0, d), d, lat, lon),
+    moon: altitude(eclToEq(moonLam, moonBeta, d), d, lat, lon),
+    frac: (1 - Math.cos(elong)) / 2,
+  };
+}
+
+/**
+ * Rough naked-eye zenith limiting magnitude, or null in daylight.
+ * Coefficients are eyeballed, not fitted.
+ * @param {{sun: number, moon: number, frac: number}} p @param {number} darkLimit
+ */
+function limitingMag({ sun, moon, frac }, darkLimit) {
+  if (sun > -6) return null;
+  let lm = darkLimit;
+  if (sun > -18) lm -= (sun + 18) / 12 * (darkLimit - 1);
+  if (moon > 0) lm -= 2.5 * frac ** 1.5 * Math.sin(moon * RAD) ** 0.5;
+  return Math.max(lm, 1);
+}
+
+// ------------------------------------------------------------- colours
+
+/** @typedef {[number, [number, number, number]][]} Ramp */
+const DEEP = /** @type {[number,number,number]} */ ([0, 51, 153]);
+const MID = /** @type {[number,number,number]} */ ([60, 120, 200]);
+const PALE = /** @type {[number,number,number]} */ ([170, 200, 230]);
+const WHITE = /** @type {[number,number,number]} */ ([250, 250, 250]);
+/** @type {Ramp} */ const CLOUD = [[0, DEEP], [40, MID], [80, PALE], [100, WHITE]];
+/** @type {Ramp} */ const DARK = [[1, WHITE], [3, [120, 180, 230]], [5, [30, 90, 170]], [6.5, [0, 0, 0]]];
+/** @type {Ramp} */ const HUMID = [[25, DEEP], [70, MID], [90, PALE], [100, WHITE]];
+/** @type {Ramp} */ const WIND = [[0, DEEP], [10, MID], [20, PALE], [30, WHITE]];
+/** @type {Ramp} */ const TEMP = [[-10, [120, 0, 200]], [0, [40, 90, 220]], [10, [40, 180, 160]],
+                                   [20, [230, 200, 40]], [30, [220, 60, 30]]];
+
+/** @param {Ramp} stops @param {number} v */
+function ramp(stops, v) {
+  let c = stops[stops.length - 1][1];
+  if (v <= stops[0][0]) c = stops[0][1];
+  else for (let i = 1; i < stops.length; i++) {
+    const [v1, c1] = stops[i - 1], [v2, c2] = stops[i];
+    if (v <= v2) {
+      const t = (v - v1) / (v2 - v1);
+      c = /** @type {[number,number,number]} */ (c1.map((a, j) => Math.round(a + (c2[j] - a) * t)));
+      break;
+    }
+  }
+  return `rgb(${c.join(",")})`;
+}
+
+/** Haze score 0-100 (lower is better). @param {number} rh @param {number|null} vis */
+function transparency(rh, vis) {
+  let s = Math.max(0, (rh - 40) / 60) * 70;
+  if (vis != null) s += Math.max(0, 1 - vis / 40000) * 30;
+  return Math.min(s, 100);
+}
+
+/** @param {number|null} cloud @param {number|null} lm @param {number} darkLimit */
+function verdict(cloud, lm, darkLimit) {
+  if (lm == null || cloud == null) return { color: "#1a1a1a", tip: "daylight" };
+  if (cloud <= 15 && lm >= darkLimit - 0.5) return { color: "var(--good)", tip: "good" };
+  if (cloud <= 35 && lm >= darkLimit - 1.5) return { color: "var(--usable)", tip: "usable" };
+  return { color: "var(--poor)", tip: "poor" };
+}
+
+// ------------------------------------------------------------- formatting
+
+const fmtHour = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", hourCycle: "h23" });
+const fmtDay = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "2-digit", month: "short" });
+const fmtTime = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const fmtFull = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+
+/** @param {string} s */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c);
+
+// ------------------------------------------------------------- data fetch
+
+/** @param {Site} site */
+async function fetchForecast(site) {
+  const q = new URLSearchParams({
+    latitude: String(site.lat), longitude: String(site.lon), hourly: VARS.join(","),
+    models: site.model, forecast_hours: "72", timeformat: "unixtime", wind_speed_unit: "mph",
+  });
+  const r = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
+  if (!r.ok) throw new Error(`Open-Meteo returned ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  return r.json();
+}
+
+// ------------------------------------------------------------- rendering
+
+/** @param {Site} site @param {any} data */
+function render(site, data) {
+  const h = data.hourly;
+  /** @type {number[]} */ const times = h.time.map((/** @type {number} */ t) => t * 1000);
+  /** @param {string} k @returns {(number|null)[]} */
+  const col = (k) => h[k] ?? times.map(() => null);
+  const [tot, low, mid, high, rh, temp, dew, wind, vis] = VARS.map(col);
+
+  const astro = times.map((t) => {
+    const p = sunMoon(t, site.lat, site.lon);
+    return { ...p, lm: limitingMag(p, site.dark) };
+  });
+
+  /** @param {(number|null)[]} vals @param {Ramp} stops @param {(v: number) => string} fmt @returns {Cell[]} */
+  const cells = (vals, stops, fmt) =>
+    vals.map((v) => (v == null ? { color: "#333", tip: "n/a" } : { color: ramp(stops, v), tip: fmt(v) }));
+
+  /** @type {[string, Cell[]][]} */
+  const rows = [
+    ["Cloud cover", cells(tot, CLOUD, (v) => `${v.toFixed(0)}% cloud`)],
+    ["low", cells(low, CLOUD, (v) => `${v.toFixed(0)}% low cloud`)],
+    ["mid", cells(mid, CLOUD, (v) => `${v.toFixed(0)}% mid cloud`)],
+    ["high", cells(high, CLOUD, (v) => `${v.toFixed(0)}% high cloud`)],
+    ["Transparency", rh.map((r, i) => {
+      if (r == null) return { color: "#333", tip: "n/a" };
+      const s = transparency(r, vis[i]);
+      const v = vis[i];
+      return { color: ramp(CLOUD, s), tip: `haze score ${s.toFixed(0)}` + (v == null ? "" : `, visibility ${(v / 1000).toFixed(0)} km`) };
+    })],
+    ["Darkness", astro.map((a) => ({
+      color: a.lm == null ? "#fff" : ramp(DARK, a.lm),
+      tip: `Sun ${a.sun.toFixed(0)}°, Moon ${a.moon.toFixed(0)}° (${(a.frac * 100).toFixed(0)}% lit)` +
+           (a.lm == null ? "" : `, limiting mag ${a.lm.toFixed(1)}`),
+    }))],
+    ["Wind", cells(wind, WIND, (v) => `${v.toFixed(0)} mph`)],
+    ["Humidity", cells(rh, HUMID, (v) => `${v.toFixed(0)}% humidity`)],
+    ["Temperature", temp.map((t, i) => {
+      if (t == null) return { color: "#333", tip: "n/a" };
+      const d = dew[i];
+      return { color: ramp(TEMP, t), tip: `${t.toFixed(0)}°C` + (d == null ? "" : `, dew point ${d.toFixed(0)}°C (gap ${(t - d).toFixed(1)}°)`) };
+    })],
+    ["Go / no-go", tot.map((c, i) => verdict(c, astro[i].lm, site.dark))],
+  ];
+
+  // Header rows: one per day, one per hour.
+  const hours = times.map((t) => fmtHour.format(t));
+  const newDay = hours.map((hh, i) => i > 0 && hh === "00");
+  /** @type {[string, number][]} */ const days = [];
+  times.forEach((t, i) => {
+    if (i === 0 || newDay[i]) days.push([fmtDay.format(t), 0]);
+    days[days.length - 1][1]++;
+  });
+  const cls = (/** @type {number} */ i) => (newDay[i] ? ' class="newday"' : "");
+
+  let out = `<tr><th class="label"></th>${days.map(([d, n]) => `<th colspan="${n}" class="day">${d}</th>`).join("")}</tr>`;
+  out += `<tr><th class="label">hour</th>${hours.map((hh, i) => `<th${cls(i)}>${hh}</th>`).join("")}</tr>`;
+  for (const [label, cs] of rows) {
+    out += `<tr><th class="label">${label}</th>` +
+      cs.map((c, i) => `<td${cls(i)} style="background:${c.color}" data-tip="${esc(`${fmtFull.format(times[i])}: ${label}, ${c.tip}`)}" title="${esc(c.tip)}"></td>`).join("") +
+      "</tr>";
+  }
+  const chart = /** @type {HTMLTableElement} */ (document.getElementById("chart"));
+  chart.innerHTML = out;
+
+  renderNights(site, times[0], times[times.length - 1], times, tot);
+}
+
+/**
+ * Per-night summary: dark window, Moon, and mean cloud while dark.
+ * @param {Site} site @param {number} start @param {number} end
+ * @param {number[]} times @param {(number|null)[]} cloud
+ */
+function renderNights(site, start, end, times, cloud) {
+  const step = 5 * 60e3;
+  /** @type {{label: string, darkFrom?: number, darkTo?: number, moonEvents: string[], cloud: number[]}[]} */
+  const nights = [];
+  /** @type {typeof nights[0] | null} */ let cur = null;
+  let prev = sunMoon(start, site.lat, site.lon);
+  for (let t = start + step; t <= end; t += step) {
+    const p = sunMoon(t, site.lat, site.lon);
+    if (prev.sun >= -18 && p.sun < -18) {
+      cur = { label: fmtDay.format(t), darkFrom: t, moonEvents: [], cloud: [] };
+      if (p.moon > 0) cur.moonEvents.push(`up at dark, ${(p.frac * 100).toFixed(0)}% lit`);
+      nights.push(cur);
+    }
+    if (cur && !cur.darkTo) {
+      if (prev.moon <= 0 && p.moon > 0) cur.moonEvents.push(`rises ${fmtTime.format(t)}, ${(p.frac * 100).toFixed(0)}% lit`);
+      if (prev.moon > 0 && p.moon <= 0) cur.moonEvents.push(`sets ${fmtTime.format(t)}`);
+      if (prev.sun < -18 && p.sun >= -18) cur.darkTo = t;
+    }
+    prev = p;
+  }
+  // Mean forecast cloud over each night's dark window.
+  for (const n of nights) {
+    times.forEach((t, i) => {
+      const c = cloud[i];
+      if (c != null && n.darkFrom != null && t >= n.darkFrom && t <= (n.darkTo ?? end)) n.cloud.push(c);
+    });
+  }
+
+  const rows = nights.map((n) => {
+    const win = `${fmtTime.format(/** @type {number} */ (n.darkFrom))} – ${n.darkTo ? fmtTime.format(n.darkTo) : "beyond forecast"}`;
+    const moon = n.moonEvents.length ? n.moonEvents.join("; ") : "below horizon";
+    const mean = n.cloud.length ? n.cloud.reduce((a, b) => a + b, 0) / n.cloud.length : null;
+    const pill = mean == null ? "–" :
+      `<span class="pill" style="background:${ramp(CLOUD, mean)};color:${mean > 60 ? "#000" : "#fff"}">${mean.toFixed(0)}%</span>`;
+    return `<tr><td>${n.label}</td><td>${win}</td><td>${moon}</td><td>${pill}</td></tr>`;
+  });
+  const table = /** @type {HTMLTableElement} */ (document.getElementById("nights"));
+  table.innerHTML = `<tr><th>Night</th><th>Astronomically dark</th><th>Moon</th><th>Mean cloud</th></tr>` +
+    (rows.join("") || `<tr><td colspan="4">No astronomical darkness in the forecast window.</td></tr>`);
+}
+
+// ------------------------------------------------------------- wiring
+
+async function main() {
+  const site = readSite();
+  document.title = `${site.name} sky chart`;
+  /** @type {HTMLElement} */ (document.getElementById("title")).textContent = site.name;
+  const meta = /** @type {HTMLElement} */ (document.getElementById("meta"));
+
+  const form = /** @type {HTMLFormElement} */ (document.getElementById("loc"));
+  for (const [k, v] of Object.entries(site)) {
+    const el = /** @type {HTMLInputElement} */ (form.elements.namedItem(k));
+    if (el) el.value = String(v);
+  }
+
+  const chart = /** @type {HTMLElement} */ (document.getElementById("chart"));
+  const detail = /** @type {HTMLElement} */ (document.getElementById("detail"));
+  const show = (/** @type {Event} */ e) => {
+    const td = /** @type {HTMLElement} */ (e.target).closest("td");
+    if (td?.dataset.tip) detail.textContent = td.dataset.tip;
+  };
+  chart.addEventListener("mouseover", show);
+  chart.addEventListener("click", show);
+
+  try {
+    const data = await fetchForecast(site);
+    render(site, data);
+    const model = /** @type {HTMLSelectElement} */ (form.elements.namedItem("model"));
+    const modelName = model.selectedOptions[0]?.textContent ?? site.model;
+    meta.textContent = `${site.lat.toFixed(3)}, ${site.lon.toFixed(3)} · ${modelName} via Open-Meteo · ` +
+      `fetched ${fmtFull.format(Date.now())} · dark-site limit ${site.dark}`;
+  } catch (err) {
+    meta.innerHTML = `<span class="error">Couldn't load the forecast: ${esc(String(err))}</span>`;
+  }
+}
+
+main();
+</script>
+</body>
+</html>
