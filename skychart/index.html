@@ -45,7 +45,7 @@
   table.nights { border-collapse: collapse; font-size: 13px; }
   .nights th, .nights td { text-align: left; padding: 4px 14px 4px 0; border-bottom: 1px solid #222; vertical-align: top; }
   .nights th { color: var(--muted); font-weight: normal; }
-  .pill { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 12px; }
+  .pill { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 12px; white-space: nowrap; }
   form { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin-top: 8px; }
   label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
   input, select, button { background: #1b1b1f; color: var(--fg); border: 1px solid #333; border-radius: 4px; padding: 5px 7px; font: inherit; }
@@ -336,7 +336,7 @@ const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">"
 async function fetchForecast(site) {
   const q = new URLSearchParams({
     latitude: String(site.lat), longitude: String(site.lon), hourly: VARS.join(","),
-    models: site.model, forecast_hours: "120", timeformat: "unixtime", wind_speed_unit: "mph",
+    models: site.model, forecast_hours: "168", timeformat: "unixtime", wind_speed_unit: "mph",
   });
   const r = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
   if (!r.ok) throw new Error(`Open-Meteo returned ${r.status}: ${(await r.text()).slice(0, 200)}`);
@@ -409,6 +409,8 @@ function render(site, data, showDay, kp) {
   const cells = (vals, stops, fmt) =>
     vals.map((v) => (v == null ? { color: "#333", tip: "n/a" } : { color: ramp(stops, v), tip: fmt(v) }));
 
+  const go = tot.map((c, i) => verdict(c, astro[i], site.dark));
+
   /** @type {[string, Cell[]][]} */
   const rows = [
     ["Cloud cover", cells(tot, CLOUD, (v) => `${v.toFixed(0)}% cloud`)],
@@ -433,7 +435,7 @@ function render(site, data, showDay, kp) {
       const d = dew[i];
       return { color: ramp(TEMP, t), tip: `${t.toFixed(0)}°C` + (d == null ? "" : `, dew point ${d.toFixed(0)}°C (gap ${(t - d).toFixed(1)}°)`) };
     })],
-    ["Go / no-go", tot.map((c, i) => verdict(c, astro[i], site.dark))],
+    ["Go / no-go", go],
   ];
 
   // Aurora row and alert, when NOAA's Kp forecast is available.
@@ -512,24 +514,24 @@ function render(site, data, showDay, kp) {
   const chart = /** @type {HTMLTableElement} */ (document.getElementById("chart"));
   chart.innerHTML = groups.length ? out : `<tr><td class="gap">No night hours in the forecast.</td></tr>`;
 
-  renderNights(site, times[0], times[times.length - 1], times, tot);
+  renderNights(site, times[0], times[times.length - 1], times, tot, go);
 }
 
 /**
- * Per-night summary: dark window, Moon, and mean cloud while dark.
+ * Per-night summary: overall rating, dark window, Moon, and mean cloud while dark.
  * @param {Site} site @param {number} start @param {number} end
- * @param {number[]} times @param {(number|null)[]} cloud
+ * @param {number[]} times @param {(number|null)[]} cloud @param {Cell[]} go
  */
-function renderNights(site, start, end, times, cloud) {
+function renderNights(site, start, end, times, cloud, go) {
   const step = 5 * 60e3;
-  /** @type {{label: string, darkFrom?: number, darkTo?: number, moonEvents: string[], cloud: number[]}[]} */
+  /** @type {{label: string, darkFrom?: number, darkTo?: number, moonEvents: string[], cloud: number[], go: string[]}[]} */
   const nights = [];
   /** @type {typeof nights[0] | null} */ let cur = null;
   let prev = sunMoon(start, site.lat, site.lon);
   for (let t = start + step; t <= end; t += step) {
     const p = sunMoon(t, site.lat, site.lon);
     if (prev.sun >= -18 && p.sun < -18) {
-      cur = { label: fmtDay.format(t), darkFrom: t, moonEvents: [], cloud: [] };
+      cur = { label: fmtDay.format(t), darkFrom: t, moonEvents: [], cloud: [], go: [] };
       if (p.moon > 0) cur.moonEvents.push(`up at dark, ${(p.frac * 100).toFixed(0)}% lit`);
       nights.push(cur);
     }
@@ -540,25 +542,43 @@ function renderNights(site, start, end, times, cloud) {
     }
     prev = p;
   }
-  // Mean forecast cloud over each night's dark window.
+  // Cloud and go / no-go over each night's dark window.
   for (const n of nights) {
     times.forEach((t, i) => {
+      if (n.darkFrom == null || t < n.darkFrom || t > (n.darkTo ?? end)) return;
       const c = cloud[i];
-      if (c != null && n.darkFrom != null && t >= n.darkFrom && t <= (n.darkTo ?? end)) n.cloud.push(c);
+      if (c != null) n.cloud.push(c);
+      n.go.push(go[i].tip.split(/[ :(]/)[0]);
     });
   }
 
-  const rows = nights.map((n) => {
+  // Rate each night from its dark hours, and pick the best.
+  const rated = nights.map((n) => {
+    const count = (/** @type {string} */ k) => n.go.filter((g) => g === k).length;
+    const good = count("good"), usable = count("usable"), bright = count("clear");
+    const score = 2 * good + usable + 0.5 * bright;
+    const rating = n.cloud.length === 0 ? { label: "No data", color: "#333" }
+      : good >= 3 ? { label: `Good · ${good} h`, color: "var(--good)" }
+      : good + usable >= 2 ? { label: `OK · ${good + usable} h`, color: "var(--usable)" }
+      : good + usable + bright >= 2 ? { label: "Clear but moonlit", color: "var(--bright)" }
+      : { label: "Poor", color: "var(--poor)" };
+    return { n, rating, score };
+  });
+  const best = rated.reduce((a, b) => (b.score > (a?.score ?? 0) ? b : a), /** @type {typeof rated[0] | null} */ (null));
+
+  const rows = rated.map(({ n, rating }, i) => {
     const win = `${fmtTime.format(/** @type {number} */ (n.darkFrom))} – ${n.darkTo ? fmtTime.format(n.darkTo) : "beyond forecast"}`;
     const moon = n.moonEvents.length ? n.moonEvents.join("; ") : "below horizon";
     const mean = n.cloud.length ? n.cloud.reduce((a, b) => a + b, 0) / n.cloud.length : null;
     const pill = mean == null ? "–" :
       `<span class="pill" style="background:${ramp(CLOUD, mean)};color:${mean > 60 ? "#000" : "#fff"}">${mean.toFixed(0)}%</span>`;
-    return `<tr><td>${n.label}</td><td>${win}</td><td>${moon}</td><td>${pill}</td></tr>`;
+    const star = best && best === rated[i] && best.score >= 4 ? " ★" : "";
+    return `<tr><td>${n.label}${star}</td><td><span class="pill" style="background:${rating.color};color:#fff">${rating.label}</span></td>` +
+      `<td>${win}</td><td>${moon}</td><td>${pill}</td></tr>`;
   });
   const table = /** @type {HTMLTableElement} */ (document.getElementById("nights"));
-  table.innerHTML = `<tr><th>Night</th><th>Astronomically dark</th><th>Moon</th><th>Mean cloud</th></tr>` +
-    (rows.join("") || `<tr><td colspan="4">No astronomical darkness in the forecast window.</td></tr>`);
+  table.innerHTML = `<tr><th>Night</th><th>Verdict</th><th>Astronomically dark</th><th>Moon</th><th>Mean cloud</th></tr>` +
+    (rows.join("") || `<tr><td colspan="5">No astronomical darkness in the forecast window.</td></tr>`);
 }
 
 // ------------------------------------------------------------- wiring
