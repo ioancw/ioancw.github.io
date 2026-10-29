@@ -9,7 +9,7 @@
   /* Night-friendly page: always dark, to protect dark adaptation. */
   :root {
     --bg: #0d0d0f; --fg: #dcdcdc; --muted: #8c8c94; --rule: #55555c;
-    --good: #1f7a3a; --usable: #b08a1a; --poor: #7a1f1f;
+    --good: #1f7a3a; --usable: #b08a1a; --bright: #5b4a9e; --poor: #7a1f1f;
   }
   * { box-sizing: border-box; }
   body { background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; }
@@ -23,6 +23,12 @@
                     background: var(--bg); color: var(--fg); font-size: 12px; z-index: 1; }
   .chart th.day { text-align: left; color: var(--fg); border-left: 2px solid var(--rule); padding-left: 4px; white-space: nowrap; }
   .chart .newday { border-left: 2px solid var(--rule); }
+  .chart .gap { width: 10px; min-width: 10px; border: 0; background: var(--bg); cursor: default; }
+  .chart td.far { opacity: 0.75; }
+  label.toggle { flex-direction: row; align-items: center; gap: 6px; margin: 0 0 10px; font-size: 13px; }
+  label.toggle input { width: auto; margin: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .legend .pill { color: #fff; }
   #detail { min-height: 1.5em; margin: 10px 0 18px; font-size: 13px; color: var(--fg); }
   h2 { font-size: 15px; margin: 22px 0 8px; }
   table.nights { border-collapse: collapse; font-size: 13px; }
@@ -51,7 +57,14 @@
 <div class="meta" id="meta">Loading forecast…</div>
 <nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
+<label class="toggle"><input type="checkbox" id="showday"> Show daytime</label>
 <div class="wrap"><table class="chart" id="chart"></table></div>
+<div class="legend">Go / no-go:
+  <span class="pill" style="background:var(--good)">good</span>
+  <span class="pill" style="background:var(--usable)">usable</span>
+  <span class="pill" style="background:var(--bright)">clear but moonlit or twilight</span>
+  <span class="pill" style="background:var(--poor)">cloudy</span>
+</div>
 <div id="detail">Tap or hover a cell for details.</div>
 
 <h2>Nights</h2>
@@ -78,6 +91,8 @@
 <div id="status"></div>
 
 <p class="notes">
+  Each night runs from an hour before sunset to an hour after sunrise. Hours more
+  than two days ahead are faded because forecasts get less reliable further out.
   Darker blue is better on every row except temperature. Darkness is calculated
   in the browser from low-precision Sun and Moon positions (accurate to about a
   degree, so times are ±10 minutes); white means the Sun is above −6°.
@@ -262,12 +277,19 @@ function transparency(rh, vis) {
   return Math.min(s, 100);
 }
 
-/** @param {number|null} cloud @param {number|null} lm @param {number} darkLimit */
-function verdict(cloud, lm, darkLimit) {
-  if (lm == null || cloud == null) return { color: "#1a1a1a", tip: "daylight" };
-  if (cloud <= 15 && lm >= darkLimit - 0.5) return { color: "var(--good)", tip: "good" };
-  if (cloud <= 35 && lm >= darkLimit - 1.5) return { color: "var(--usable)", tip: "usable" };
-  return { color: "var(--poor)", tip: "poor" };
+/**
+ * Go / no-go for one hour, with the reason when it isn't good.
+ * @param {number|null} cloud @param {{lm: number|null, moon: number}} a @param {number} darkLimit
+ */
+function verdict(cloud, a, darkLimit) {
+  if (a.lm == null || cloud == null) return { color: "#1a1a1a", tip: "daylight" };
+  const clear = cloud <= 15, fair = cloud <= 35;
+  const dark = a.lm >= darkLimit - 0.5, dim = a.lm >= darkLimit - 1.5;
+  const glow = a.moon > 0 ? "moonlit" : "twilight";
+  if (clear && dark) return { color: "var(--good)", tip: "good" };
+  if (fair && dim) return { color: "var(--usable)", tip: `usable (${clear ? glow : "some cloud"})` };
+  if (fair) return { color: "var(--bright)", tip: `clear but ${glow}: fine for the Moon, planets and doubles` };
+  return { color: "var(--poor)", tip: "poor (cloud)" };
 }
 
 // ------------------------------------------------------------- formatting
@@ -286,7 +308,7 @@ const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">"
 async function fetchForecast(site) {
   const q = new URLSearchParams({
     latitude: String(site.lat), longitude: String(site.lon), hourly: VARS.join(","),
-    models: site.model, forecast_hours: "72", timeformat: "unixtime", wind_speed_unit: "mph",
+    models: site.model, forecast_hours: "120", timeformat: "unixtime", wind_speed_unit: "mph",
   });
   const r = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
   if (!r.ok) throw new Error(`Open-Meteo returned ${r.status}: ${(await r.text()).slice(0, 200)}`);
@@ -295,8 +317,8 @@ async function fetchForecast(site) {
 
 // ------------------------------------------------------------- rendering
 
-/** @param {Site} site @param {any} data */
-function render(site, data) {
+/** @param {Site} site @param {any} data @param {boolean} showDay */
+function render(site, data, showDay) {
   const h = data.hourly;
   /** @type {number[]} */ const times = h.time.map((/** @type {number} */ t) => t * 1000);
   /** @param {string} k @returns {(number|null)[]} */
@@ -336,28 +358,51 @@ function render(site, data) {
       const d = dew[i];
       return { color: ramp(TEMP, t), tip: `${t.toFixed(0)}°C` + (d == null ? "" : `, dew point ${d.toFixed(0)}°C (gap ${(t - d).toFixed(1)}°)`) };
     })],
-    ["Go / no-go", tot.map((c, i) => verdict(c, astro[i].lm, site.dark))],
+    ["Go / no-go", tot.map((c, i) => verdict(c, astro[i], site.dark))],
   ];
 
-  // Header rows: one per day, one per hour.
+  // Columns, grouped by calendar day, or by night (an hour either side of
+  // sunset to sunrise) with a gap between nights.
   const hours = times.map((t) => fmtHour.format(t));
-  const newDay = hours.map((hh, i) => i > 0 && hh === "00");
-  /** @type {[string, number][]} */ const days = [];
+  const HOUR = 36e5, FAR = 48 * HOUR;
+  const sunDown = (/** @type {number} */ t) => sunMoon(t, site.lat, site.lon).sun < -0.833;
+  /** @type {{label: string, cols: number[]}[]} */ const groups = [];
   times.forEach((t, i) => {
-    if (i === 0 || newDay[i]) days.push([fmtDay.format(t), 0]);
-    days[days.length - 1][1]++;
+    if (showDay) {
+      if (i === 0 || hours[i] === "00") groups.push({ label: fmtDay.format(t), cols: [] });
+    } else {
+      if (!(sunDown(t - HOUR) || sunDown(t) || sunDown(t + HOUR))) return;
+      if (i === 0 || groups.length === 0 || groups[groups.length - 1].cols.at(-1) !== i - 1) {
+        groups.push({ label: `${fmtDay.format(t - 12 * HOUR)} night`, cols: [] });
+      }
+    }
+    groups[groups.length - 1].cols.push(i);
   });
-  const cls = (/** @type {number} */ i) => (newDay[i] ? ' class="newday"' : "");
 
-  let out = `<tr><th class="label"></th>${days.map(([d, n]) => `<th colspan="${n}" class="day">${d}</th>`).join("")}</tr>`;
-  out += `<tr><th class="label">hour</th>${hours.map((hh, i) => `<th${cls(i)}>${hh}</th>`).join("")}</tr>`;
+  /** @param {number} gi @param {number} j @param {number} i */
+  const cls = (gi, j, i) => {
+    const c = [];
+    if (showDay && gi > 0 && j === 0) c.push("newday");
+    if (times[i] - times[0] > FAR) c.push("far");
+    return c.length ? ` class="${c.join(" ")}"` : "";
+  };
+  /** @param {number} gi @param {string} tag */
+  const gap = (gi, tag) => (!showDay && gi > 0 ? `<${tag} class="gap"></${tag}>` : "");
+
+  let out = `<tr><th class="label"></th>` +
+    groups.map((g, gi) => gap(gi, "th") + `<th colspan="${g.cols.length}" class="day">${g.label}</th>`).join("") + "</tr>";
+  out += `<tr><th class="label">hour</th>` +
+    groups.map((g, gi) => gap(gi, "th") + g.cols.map((i, j) => `<th${cls(gi, j, i)}>${hours[i]}</th>`).join("")).join("") + "</tr>";
   for (const [label, cs] of rows) {
     out += `<tr><th class="label">${label}</th>` +
-      cs.map((c, i) => `<td${cls(i)} style="background:${c.color}" data-tip="${esc(`${fmtFull.format(times[i])}: ${label}, ${c.tip}`)}" title="${esc(c.tip)}"></td>`).join("") +
+      groups.map((g, gi) => gap(gi, "td") + g.cols.map((i, j) => {
+        const c = cs[i];
+        return `<td${cls(gi, j, i)} style="background:${c.color}" data-tip="${esc(`${fmtFull.format(times[i])}: ${label}, ${c.tip}`)}" title="${esc(c.tip)}"></td>`;
+      }).join("")).join("") +
       "</tr>";
   }
   const chart = /** @type {HTMLTableElement} */ (document.getElementById("chart"));
-  chart.innerHTML = out;
+  chart.innerHTML = groups.length ? out : `<tr><td class="gap">No night hours in the forecast.</td></tr>`;
 
   renderNights(site, times[0], times[times.length - 1], times, tot);
 }
@@ -489,9 +534,17 @@ async function main() {
     }, (err) => say(`Couldn't get your location: ${err.message}`), { enableHighAccuracy: true, timeout: 15000 });
   });
 
+  const STORE_SHOWDAY = "skychart.showDay";
+  const toggle = /** @type {HTMLInputElement} */ (document.getElementById("showday"));
+  toggle.checked = loadJSON(STORE_SHOWDAY) === true;
+
   try {
     const data = await fetchForecast(site);
-    render(site, data);
+    render(site, data, toggle.checked);
+    toggle.addEventListener("change", () => {
+      saveJSON(STORE_SHOWDAY, toggle.checked);
+      render(site, data, toggle.checked);
+    });
     const model = /** @type {HTMLSelectElement} */ (form.elements.namedItem("model"));
     const modelName = model.selectedOptions[0]?.textContent ?? site.model;
     meta.textContent = `${site.lat.toFixed(3)}, ${site.lon.toFixed(3)} · ${modelName} via Open-Meteo · ` +
