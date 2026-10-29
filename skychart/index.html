@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pennard Sky Chart</title>
 <meta name="description" content="Clear Sky Chart-style astronomy forecast for UK sites, using Met Office UKV data via Open-Meteo.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d0d0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Sky Chart">
 <style>
   /* Night-friendly page: always dark, to protect dark adaptation. */
   :root {
@@ -25,7 +33,10 @@
   .chart .newday { border-left: 2px solid var(--rule); }
   .chart .gap { width: 10px; min-width: 10px; border: 0; background: var(--bg); cursor: default; }
   .chart td.far { opacity: 0.75; }
-  label.toggle { flex-direction: row; align-items: center; gap: 6px; margin: 0 0 10px; font-size: 13px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 10px; }
+  .alert { background: #12301d; border: 1px solid #2fa35a; color: #d6f5e0; padding: 8px 10px; border-radius: 6px;
+           margin: 0 0 10px; font-size: 13px; max-width: 72ch; }
+  label.toggle { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; }
   label.toggle input { width: auto; margin: 0; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
   .legend .pill { color: #fff; }
@@ -57,13 +68,22 @@
 <div class="meta" id="meta">Loading forecast…</div>
 <nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
-<label class="toggle"><input type="checkbox" id="showday"> Show daytime</label>
+<div class="alert" id="aurora" hidden></div>
+<div class="toolbar">
+  <label class="toggle"><input type="checkbox" id="showday"> Show daytime</label>
+  <button type="button" id="install" hidden>Install app</button>
+</div>
 <div class="wrap"><table class="chart" id="chart"></table></div>
 <div class="legend">Go / no-go:
   <span class="pill" style="background:var(--good)">good</span>
   <span class="pill" style="background:var(--usable)">usable</span>
   <span class="pill" style="background:var(--bright)">clear but moonlit or twilight</span>
   <span class="pill" style="background:var(--poor)">cloudy</span>
+</div>
+<div class="legend" id="aurora-legend" hidden>Aurora:
+  <span class="pill" style="background:#2e4d36">unlikely</span>
+  <span class="pill" style="background:#2fa35a">camera possible</span>
+  <span class="pill" style="background:#d0409a">naked eye possible</span>
 </div>
 <div id="detail">Tap or hover a cell for details.</div>
 
@@ -98,7 +118,15 @@
   degree, so times are ±10 minutes); white means the Sun is above −6°.
   Transparency is a rough proxy from surface humidity and visibility, not column
   water vapour. There is no seeing row: Open-Meteo has no seeing forecast.
-  Weather data from <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0).
+  The aurora row uses NOAA's 3-hourly Kp forecast (about three days ahead). The
+  Kp needed is a rough guide by latitude: in South Wales a camera can pick up
+  aurora low in the north from about Kp 6, and Kp 7 or more is usually needed to
+  see it by eye.
+  The last forecast for each site is kept, so the page still opens with no signal.
+  To install on an iPhone: Share, then Add to Home Screen. On Android use the
+  Install app button or the browser menu.
+  Weather data from <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0);
+  Kp forecast from <a href="https://www.swpc.noaa.gov/">NOAA SWPC</a>.
 </p>
 
 <script>
@@ -315,10 +343,57 @@ async function fetchForecast(site) {
   return r.json();
 }
 
+/** @typedef {{t: number, kp: number, kind: string}} Kp */
+
+/**
+ * NOAA's 3-hourly planetary Kp, observed and predicted. The feed has been
+ * published both as an array of arrays with a header row and as an array of
+ * objects, so accept either.
+ * @returns {Promise<Kp[]>}
+ */
+async function fetchKp() {
+  const r = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json");
+  if (!r.ok) throw new Error(`NOAA returned ${r.status}`);
+  const raw = await r.json();
+  /** @type {any[]} */
+  const rows = Array.isArray(raw[0]) ? raw.slice(1).map((/** @type {any[]} */ a) => ({ time_tag: a[0], kp: a[1], observed: a[2] })) : raw;
+  return rows.map((o) => {
+    const s = String(o.time_tag).replace(" ", "T");
+    return { t: Date.parse(/Z|[+-]\d\d:?\d\d$/.test(s) ? s : s + "Z"), kp: parseFloat(o.kp), kind: String(o.observed ?? "") };
+  }).filter((k) => Number.isFinite(k.t) && Number.isFinite(k.kp));
+}
+
+/**
+ * Rough Kp needed for aurora at a UK latitude: camera, then naked eye.
+ * @param {number} lat
+ */
+function auroraNeed(lat) {
+  const eye = lat >= 58 ? 5 : lat >= 55 ? 6 : 7;
+  return { camera: eye - 1, eye };
+}
+
+/** @param {Kp[]} kp @param {number} t */
+const kpAt = (kp, t) => kp.find((k) => k.t <= t && t < k.t + 3 * 36e5) ?? null;
+
+// Last good forecast per site, so the page still works with no signal.
+const STORE_CACHE = "skychart.cache";
+/** @param {Site} s */
+const cacheKey = (s) => `${s.lat},${s.lon},${s.model}`;
+
+/** @param {any} data Drop hours more than an hour in the past (from a cached forecast). */
+function trimPast(data) {
+  const h = data.hourly, cut = Date.now() / 1000 - 3600;
+  const start = h.time.findIndex((/** @type {number} */ t) => t >= cut);
+  if (start <= 0) return data;
+  /** @type {Record<string, any[]>} */ const out = {};
+  for (const [k, v] of Object.entries(h)) out[k] = Array.isArray(v) ? v.slice(start) : v;
+  return { ...data, hourly: out };
+}
+
 // ------------------------------------------------------------- rendering
 
-/** @param {Site} site @param {any} data @param {boolean} showDay */
-function render(site, data, showDay) {
+/** @param {Site} site @param {any} data @param {boolean} showDay @param {Kp[] | null} kp */
+function render(site, data, showDay, kp) {
   const h = data.hourly;
   /** @type {number[]} */ const times = h.time.map((/** @type {number} */ t) => t * 1000);
   /** @param {string} k @returns {(number|null)[]} */
@@ -360,6 +435,39 @@ function render(site, data, showDay) {
     })],
     ["Go / no-go", tot.map((c, i) => verdict(c, astro[i], site.dark))],
   ];
+
+  // Aurora row and alert, when NOAA's Kp forecast is available.
+  const need = auroraNeed(site.lat);
+  const aurora = /** @type {HTMLElement} */ (document.getElementById("aurora"));
+  /** @type {HTMLElement} */ (document.getElementById("aurora-legend")).hidden = !kp;
+  aurora.hidden = true;
+  if (kp) {
+    rows.splice(rows.length - 1, 0, ["Aurora (Kp)", times.map((t) => {
+      const k = kpAt(kp, t);
+      if (!k) return { color: "#333", tip: "beyond NOAA's forecast" };
+      const chance = k.kp >= need.eye ? ["#d0409a", "naked eye possible, low in the north"]
+        : k.kp >= need.camera ? ["#2fa35a", "camera possible, low in the north"]
+        : k.kp >= need.camera - 1 ? ["#2e4d36", "unlikely"] : ["#1b1b1f", "none"];
+      return { color: chance[0], tip: `Kp ${k.kp.toFixed(1)} (${k.kind || "forecast"}): ${chance[1]}` };
+    })]);
+
+    // Alert for dark hours (Sun below -12°) at or above the camera threshold.
+    /** @type {Map<string, {max: number, from: number, to: number}>} */ const hits = new Map();
+    times.forEach((t, i) => {
+      const k = kpAt(kp, t);
+      if (!k || k.kp < need.camera || astro[i].sun > -12) return;
+      const night = fmtDay.format(t - 12 * 36e5);
+      const hit = hits.get(night) ?? { max: 0, from: t, to: t };
+      hits.set(night, { max: Math.max(hit.max, k.kp), from: hit.from, to: t + 36e5 });
+    });
+    if (hits.size) {
+      aurora.innerHTML = "<strong>Aurora chance.</strong> " + [...hits].map(([night, h]) =>
+        `${night} night: Kp up to ${h.max.toFixed(1)}, ${fmtTime.format(h.from)}–${fmtTime.format(h.to)}` +
+        ` (${h.max >= need.eye ? "may be visible by eye" : "camera likely to show more than your eyes"}).`
+      ).join(" ") + " Look low to the north and check the cloud rows.";
+      aurora.hidden = false;
+    }
+  }
 
   // Columns, grouped by calendar day, or by night (an hour either side of
   // sunset to sunrise) with a gap between nights.
@@ -538,21 +646,60 @@ async function main() {
   const toggle = /** @type {HTMLInputElement} */ (document.getElementById("showday"));
   toggle.checked = loadJSON(STORE_SHOWDAY) === true;
 
-  try {
-    const data = await fetchForecast(site);
-    render(site, data, toggle.checked);
-    toggle.addEventListener("change", () => {
-      saveJSON(STORE_SHOWDAY, toggle.checked);
-      render(site, data, toggle.checked);
-    });
-    const model = /** @type {HTMLSelectElement} */ (form.elements.namedItem("model"));
-    const modelName = model.selectedOptions[0]?.textContent ?? site.model;
-    meta.textContent = `${site.lat.toFixed(3)}, ${site.lon.toFixed(3)} · ${modelName} via Open-Meteo · ` +
-      `fetched ${fmtFull.format(Date.now())} · dark-site limit ${site.dark}`;
-  } catch (err) {
-    meta.innerHTML = `<span class="error">Couldn't load the forecast: ${esc(String(err))}</span>`;
+  // Install button (Android/desktop Chrome; iPhone uses Share > Add to Home Screen).
+  const installBtn = /** @type {HTMLButtonElement} */ (document.getElementById("install"));
+  /** @type {any} */ let installPrompt = null;
+  addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    installPrompt = e;
+    installBtn.hidden = false;
+  });
+  installBtn.addEventListener("click", async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    installBtn.hidden = true;
+  });
+
+  const [fc, kpRes] = await Promise.allSettled([fetchForecast(site), fetchKp()]);
+  /** @type {Record<string, {data: any, kp: Kp[] | null, at: number}>} */
+  const cache = loadJSON(STORE_CACHE) ?? {};
+  const cached = cache[cacheKey(site)];
+
+  let data = fc.status === "fulfilled" ? fc.value : cached?.data;
+  const kp = kpRes.status === "fulfilled" ? kpRes.value : cached?.kp ?? null;
+  if (!data) {
+    const reason = fc.status === "rejected" ? String(fc.reason) : "";
+    meta.innerHTML = `<span class="error">Couldn't load the forecast: ${esc(reason)}</span>`;
+    return;
+  }
+  const at = fc.status === "fulfilled" ? Date.now() : cached.at;
+  if (fc.status === "fulfilled") {
+    // Keep the five most recently fetched sites.
+    const entries = Object.entries({ ...cache, [cacheKey(site)]: { data, kp, at } })
+      .sort((a, b) => b[1].at - a[1].at).slice(0, 5);
+    saveJSON(STORE_CACHE, Object.fromEntries(entries));
+  }
+  data = trimPast(data);
+
+  render(site, data, toggle.checked, kp);
+  toggle.addEventListener("change", () => {
+    saveJSON(STORE_SHOWDAY, toggle.checked);
+    render(site, data, toggle.checked, kp);
+  });
+
+  const model = /** @type {HTMLSelectElement} */ (form.elements.namedItem("model"));
+  const modelName = model.selectedOptions[0]?.textContent ?? site.model;
+  meta.textContent = `${site.lat.toFixed(3)}, ${site.lon.toFixed(3)} · ${modelName} via Open-Meteo · ` +
+    `fetched ${fmtFull.format(at)} · dark-site limit ${site.dark}` +
+    (kp ? "" : " · aurora data unavailable");
+  if (fc.status === "rejected") {
+    meta.insertAdjacentHTML("afterbegin", `<span class="error">Offline or Open-Meteo unreachable: showing the saved forecast.</span><br>`);
   }
 }
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 
 main();
 </script>
