@@ -22,6 +22,8 @@
   * { box-sizing: border-box; }
   body { background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; }
   h1 { font-size: 20px; margin: 0 0 2px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  #refresh { font-size: 18px; line-height: 1; padding: 4px 10px; }
   .meta { color: var(--muted); margin-bottom: 14px; font-size: 13px; }
   .wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table.chart { border-collapse: collapse; }
@@ -65,7 +67,10 @@
 </style>
 </head>
 <body>
-<h1 id="title">Sky chart</h1>
+<header class="top">
+  <h1 id="title">Sky chart</h1>
+  <button type="button" id="refresh" aria-label="Refresh forecast" title="Refresh">↻</button>
+</header>
 <div class="meta" id="meta">Loading forecast…</div>
 <nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
@@ -720,6 +725,7 @@ async function main() {
   }
 }
 
+/** @type {HTMLElement} */ (document.getElementById("refresh")).addEventListener("click", () => location.reload());
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 
 main();
