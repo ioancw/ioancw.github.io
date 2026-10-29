@@ -1,0 +1,27 @@
+name: Fetch tides
+
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/fetch_tides.py
+        env:
+          ADMIRALTY_API_KEY: ${{ secrets.ADMIRALTY_API_KEY }}
+      - name: Commit new tide times
+        run: |
+          git add tides/tides.json 2>/dev/null || exit 0
+          git diff --cached --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update Admiralty tide times"
+          git push

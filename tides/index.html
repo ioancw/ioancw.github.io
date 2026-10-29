@@ -84,12 +84,7 @@
 </section>
 
 <div class="meta" id="meta"></div>
-<p class="notes">
-  Tide times and heights come from Open-Meteo's marine model, not official
-  Admiralty tables, so they can differ by a few minutes and the heights are
-  relative to mean sea level rather than chart datum. Not for navigation.
-  Data: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0).
-</p>
+<p class="notes" id="source"></p>
 
 <script>
 // @ts-check
@@ -109,7 +104,7 @@ const SITES = [
 ];
 const TZ = "Europe/London";
 const HOUR = 36e5;
-const STORE_SITE = "tides.site", STORE_CACHE = "tides.cache";
+const STORE_SITE = "tides.site", STORE_CACHE = "tides.cache", STORE_OFFICIAL = "tides.official";
 
 const fmtTime = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 const fmtDay = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric" });
@@ -176,6 +171,40 @@ function levelAt(t, y, ms) {
   return a + (b - a) * (ms - t[i - 1]) / (t[i] - t[i - 1]);
 }
 
+/**
+ * Official Admiralty highs and lows, saved daily by a GitHub Action. Read from
+ * the repo directly so a new file shows before the site rebuilds.
+ * @returns {Promise<{station: string, fetched: number, events: {t: number, h: number, high: boolean}[]} | null>}
+ */
+async function fetchOfficial() {
+  for (const url of ["https://raw.githubusercontent.com/ioancw/ioancw.github.io/master/tides/tides.json", "tides.json"]) {
+    try {
+      const r = await fetch(url, { cache: "no-store" });
+      if (r.ok) return await r.json();
+    } catch { /* try the next one */ }
+  }
+  return null;
+}
+
+/**
+ * A smooth curve through official highs and lows (half a cosine between each
+ * pair), sampled every 10 minutes on the clock.
+ * @param {Extreme[]} ex
+ */
+function curveFrom(ex) {
+  const STEP = 10 * 60000;
+  /** @type {number[]} */ const t = [];
+  /** @type {number[]} */ const y = [];
+  let i = 0;
+  for (let ms = Math.ceil(ex[0].t / STEP) * STEP; ms <= ex[ex.length - 1].t; ms += STEP) {
+    while (ex[i + 1].t < ms) i++;
+    const a = ex[i], b = ex[i + 1], f = (ms - a.t) / (b.t - a.t);
+    t.push(ms);
+    y.push(a.h + (b.h - a.h) * (1 - Math.cos(Math.PI * f)) / 2);
+  }
+  return { t, y };
+}
+
 // ------------------------------------------------------------- rendering
 
 /** @param {number} ms */
@@ -184,13 +213,16 @@ function inHours(ms) {
   return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")} min`;
 }
 
-/** @param {number[]} t @param {(number|null)[]} y @param {Extreme[]} ex @param {any} h */
+/**
+ * @param {number[]} t @param {(number|null)[]} y @param {Extreme[]} ex
+ * @param {any} h Open-Meteo hourly data, for waves and sea temperature
+ */
 function renderNow(t, y, ex, h) {
   const now = Date.now();
   const next = ex.find((e) => e.t > now);
   const after = next && ex.find((e) => e.t > next.t);
   const lvl = levelAt(t, y, now);
-  const i = t.findIndex((x) => x > now) - 1;
+  const i = (h.time ?? []).findIndex((/** @type {number} */ s) => s * 1000 > now) - 1;
   const wave = h.wave_height?.[i], sst = h.sea_surface_temperature?.[i];
   const extra = [
     lvl == null ? null : `Now ${metres(lvl)}`,
@@ -214,7 +246,9 @@ function renderChart(t, y, ex, day) {
   // Draw at the on-screen width so text stays readable on phones.
   const W = Math.max(300, Math.round(svg.getBoundingClientRect().width || 600)), H = 230, L = 30, R = 12, T = 26, B = 44;
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  const idx = t.map((ms, i) => i).filter((i) => fmtDate.format(t[i]) === day || fmtDate.format(t[i] - HOUR) === day);
+  // The day's points plus the first one after midnight, so the curve reaches 24:00.
+  const idx = t.map((ms, i) => i).filter((i) => fmtDate.format(t[i]) === day);
+  if (idx.length && idx[idx.length - 1] + 1 < t.length) idx.push(idx[idx.length - 1] + 1);
   const pts = idx.filter((i) => y[i] != null).map((i) => ({ t: t[i], h: /** @type {number} */ (y[i]) }));
   if (pts.length < 2) { svg.innerHTML = ""; return; }
   const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
@@ -343,9 +377,35 @@ async function main() {
   }
 
   const h = data.hourly;
-  /** @type {number[]} */ const t = h.time.map((/** @type {number} */ s) => s * 1000);
-  /** @type {(number|null)[]} */ const y = h.sea_level_height_msl;
-  const ex = extremes(t, y);
+
+  // Official Admiralty times when the daily file is there and covers the next day.
+  /** @type {{data: any, at: number} | null} */
+  let official = null;
+  const fresh = await fetchOfficial();
+  if (fresh) { official = { data: fresh, at: Date.now() }; save(STORE_OFFICIAL, official); }
+  else official = load(STORE_OFFICIAL);
+  /** @type {Extreme[]} */
+  const events = (official?.data.events ?? []).map((/** @type {any} */ e) => ({ t: e.t * 1000, h: e.h, high: e.high }));
+  const useOfficial = events.length >= 4 && events[events.length - 1].t > Date.now() + 24 * HOUR;
+
+  /** @type {number[]} */ let t;
+  /** @type {(number|null)[]} */ let y;
+  /** @type {Extreme[]} */ let ex;
+  if (useOfficial) {
+    ({ t, y } = curveFrom(events));
+    ex = events;
+  } else {
+    t = h.time.map((/** @type {number} */ s) => s * 1000);
+    y = h.sea_level_height_msl;
+    ex = extremes(t, y);
+  }
+  $("source").innerHTML = useOfficial
+    ? `Tide times and heights: ADMIRALTY predictions for ${official?.data.station}, which cover all of these beaches to within a few minutes. ` +
+      `Heights are above chart datum. Contains ADMIRALTY® data © Crown copyright and database right. ` +
+      `Waves and sea temperature: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0). Not for navigation.`
+    : `Tide times and heights come from Open-Meteo's marine model, not official Admiralty tables, so times can be ` +
+      `up to about 40 minutes out and heights are relative to mean sea level rather than chart datum. Not for navigation. ` +
+      `Data: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0).`;
 
   let selected = fmtDate.format(Date.now());
   const show = (/** @type {string} */ day) => {
@@ -358,7 +418,7 @@ async function main() {
   show(selected);
   addEventListener("resize", () => renderChart(t, y, ex, selected));
   $("meta").innerHTML = (offline ? `<span class="error">Offline: showing saved tides.</span> ` : "") +
-    `Fetched ${fmtTime.format(at)}, ${fmtDay.format(at)}`;
+    `Fetched ${fmtTime.format(at)}, ${fmtDay.format(at)}` + (useOfficial ? ` · Admiralty tides for ${official?.data.station}` : "");
 }
 
 $("refresh").addEventListener("click", () => location.reload());
