@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gower Tides</title>
+<meta name="description" content="High and low tide times for Gower beaches, from Open-Meteo's marine model.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d0f13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Tides">
+<style>
+  :root {
+    --bg: #f5f7fa; --surface: #ffffff; --fg: #141a22; --muted: #5a6472; --rule: #e1e5ea;
+    --accent: #1d6fb8; --fill: rgba(29, 111, 184, 0.12); --sel: #e8f1fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a;
+      --accent: #5aa9e6; --fill: rgba(90, 169, 230, 0.15); --sel: #1c2633;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a;
+    --accent: #5aa9e6; --fill: rgba(90, 169, 230, 0.15); --sel: #1c2633;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; margin: 0; padding: 16px;
+         max-width: 720px; margin-inline: auto; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  h1 { font-size: 20px; margin: 0; }
+  button { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px;
+           padding: 4px 10px; font: inherit; cursor: pointer; }
+  #refresh { font-size: 18px; line-height: 1; }
+  .sites { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .sites button { border-radius: 14px; font-size: 13px; padding: 3px 11px; }
+  .sites button[aria-pressed="true"] { border-color: var(--accent); background: var(--sel); }
+  .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  #now .big { font-size: 20px; font-weight: 600; }
+  #now .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .chart-head h2 { font-size: 15px; margin: 0; }
+  #tip { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  td { padding: 7px 4px; border-top: 1px solid var(--rule); vertical-align: top; }
+  tr.day { cursor: pointer; }
+  tr.day[aria-selected="true"] td { background: var(--sel); }
+  td.d { white-space: nowrap; font-weight: 600; width: 5.5em; }
+  .tides { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .hw, .lw { white-space: nowrap; font-size: 14px; }
+  .hw b { color: var(--accent); }
+  .lw { color: var(--muted); }
+  .meta, .notes { color: var(--muted); font-size: 12px; }
+  .notes { margin-top: 14px; max-width: 70ch; }
+  .error { color: #d9534f; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1 id="title">Gower Tides</h1>
+  <button type="button" id="refresh" aria-label="Refresh" title="Refresh">↻</button>
+</header>
+<nav class="sites" id="sites" aria-label="Beaches"></nav>
+
+<section class="card" id="now"><div class="big">Loading tides…</div></section>
+
+<section class="card">
+  <div class="chart-head"><h2 id="chart-title">Today</h2><span id="tip"></span></div>
+  <svg id="chart" viewBox="0 0 600 220" role="img" aria-label="Tide height through the day"></svg>
+</section>
+
+<section class="card">
+  <table id="week" aria-label="High and low tides by day"></table>
+</section>
+
+<div class="meta" id="meta"></div>
+<p class="notes">
+  Tide times and heights come from Open-Meteo's marine model, not official
+  Admiralty tables, so they can differ by a few minutes and the heights are
+  relative to mean sea level rather than chart datum. Not for navigation.
+  Data: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0).
+</p>
+
+<script>
+// @ts-check
+"use strict";
+
+/** @typedef {{id: string, name: string, lat: number, lon: number}} Site */
+/** @typedef {{t: number, h: number, high: boolean}} Extreme */
+
+/** @type {Site[]} */
+const SITES = [
+  { id: "three-cliffs", name: "Three Cliffs", lat: 51.566, lon: -4.112 },
+  { id: "mumbles", name: "Mumbles", lat: 51.566, lon: -3.977 },
+  { id: "oxwich", name: "Oxwich", lat: 51.556, lon: -4.160 },
+  { id: "port-eynon", name: "Port Eynon", lat: 51.541, lon: -4.209 },
+  { id: "rhossili", name: "Rhossili", lat: 51.569, lon: -4.292 },
+  { id: "llangennith", name: "Llangennith", lat: 51.600, lon: -4.290 },
+];
+const TZ = "Europe/London";
+const HOUR = 36e5;
+const STORE_SITE = "tides.site", STORE_CACHE = "tides.cache";
+
+const fmtTime = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const fmtDay = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric" });
+const fmtLong = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "long", day: "numeric", month: "short" });
+const fmtDate = new Intl.DateTimeFormat("en-CA", { timeZone: TZ }); // YYYY-MM-DD
+
+/** @param {string} key */
+function load(key) { try { return JSON.parse(localStorage.getItem(key) ?? "null"); } catch { return null; } }
+/** @param {string} key @param {unknown} v */
+function save(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* storage blocked */ } }
+/** @param {string} id */
+const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+/** @param {number} m */
+const metres = (m) => `${m >= 0 ? "" : "−"}${Math.abs(m).toFixed(1)} m`;
+
+// ------------------------------------------------------------- data
+
+/** @param {Site} s */
+async function fetchMarine(s) {
+  const q = new URLSearchParams({
+    latitude: String(s.lat), longitude: String(s.lon),
+    hourly: "sea_level_height_msl,wave_height,sea_surface_temperature",
+    timeformat: "unixtime", past_days: "1", forecast_days: "8", cell_selection: "sea",
+  });
+  const r = await fetch(`https://marine-api.open-meteo.com/v1/marine?${q}`);
+  if (!r.ok) throw new Error(`Open-Meteo returned ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  return r.json();
+}
+
+/**
+ * Highs and lows from an hourly series, each refined with a parabola through
+ * the turning point and its neighbours. Tiny wiggles (under 0.3 m) are dropped.
+ * @param {number[]} t ms @param {(number|null)[]} y
+ * @returns {Extreme[]}
+ */
+function extremes(t, y) {
+  /** @type {Extreme[]} */ const out = [];
+  for (let i = 1; i < y.length - 1; i++) {
+    const a = y[i - 1], b = y[i], c = y[i + 1];
+    if (a == null || b == null || c == null) continue;
+    const high = b > a && b >= c, low = b < a && b <= c;
+    if (!high && !low) continue;
+    const den = a - 2 * b + c;
+    const off = den === 0 ? 0 : (a - c) / (2 * den);           // hours from t[i], within ±0.5
+    const e = { t: t[i] + off * HOUR, h: b - ((a - c) * off) / 4, high };
+    const prev = out[out.length - 1];
+    if (prev && prev.high === high) {
+      if (high ? e.h > prev.h : e.h < prev.h) out[out.length - 1] = e;
+    } else if (prev && Math.abs(e.h - prev.h) < 0.3) {
+      out.pop();
+    } else {
+      out.push(e);
+    }
+  }
+  return out;
+}
+
+/** Linear interpolation of the series at time ms. @param {number[]} t @param {(number|null)[]} y @param {number} ms */
+function levelAt(t, y, ms) {
+  const i = t.findIndex((x) => x > ms);
+  if (i <= 0) return null;
+  const a = y[i - 1], b = y[i];
+  if (a == null || b == null) return null;
+  return a + (b - a) * (ms - t[i - 1]) / (t[i] - t[i - 1]);
+}
+
+// ------------------------------------------------------------- rendering
+
+/** @param {number} ms */
+function inHours(ms) {
+  const m = Math.max(0, Math.round(ms / 60000));
+  return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")} min`;
+}
+
+/** @param {number[]} t @param {(number|null)[]} y @param {Extreme[]} ex @param {any} h */
+function renderNow(t, y, ex, h) {
+  const now = Date.now();
+  const next = ex.find((e) => e.t > now);
+  const after = next && ex.find((e) => e.t > next.t);
+  const lvl = levelAt(t, y, now);
+  const i = t.findIndex((x) => x > now) - 1;
+  const wave = h.wave_height?.[i], sst = h.sea_surface_temperature?.[i];
+  const extra = [
+    lvl == null ? null : `Now ${metres(lvl)}`,
+    wave == null ? null : `waves ${wave.toFixed(1)} m`,
+    sst == null ? null : `sea ${sst.toFixed(0)}°C`,
+  ].filter(Boolean).join(" · ");
+  $("now").innerHTML = next
+    ? `<div class="big">${next.high ? "Rising" : "Falling"} · ${next.high ? "high" : "low"} tide ${fmtTime.format(next.t)}` +
+      ` <span style="font-weight:400">(in ${inHours(next.t - now)})</span></div>` +
+      `<div class="sub">${after ? `then ${after.high ? "high" : "low"} ${fmtTime.format(after.t)} · ` : ""}${extra}</div>`
+    : `<div class="big">No tide data ahead</div>`;
+}
+
+/**
+ * Tide curve for one local day, with highs and lows labelled, a now line,
+ * and a hover/touch readout.
+ * @param {number[]} t @param {(number|null)[]} y @param {Extreme[]} ex @param {string} day YYYY-MM-DD
+ */
+function renderChart(t, y, ex, day) {
+  const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ ($("chart")));
+  // Draw at the on-screen width so text stays readable on phones.
+  const W = Math.max(300, Math.round(svg.getBoundingClientRect().width || 600)), H = 230, L = 30, R = 12, T = 26, B = 44;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const idx = t.map((ms, i) => i).filter((i) => fmtDate.format(t[i]) === day || fmtDate.format(t[i] - HOUR) === day);
+  const pts = idx.filter((i) => y[i] != null).map((i) => ({ t: t[i], h: /** @type {number} */ (y[i]) }));
+  if (pts.length < 2) { svg.innerHTML = ""; return; }
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
+  const all = y.filter((v) => v != null).map(Number);
+  const lo = Math.floor(Math.min(...all)), hi = Math.ceil(Math.max(...all));
+  const x = (/** @type {number} */ ms) => L + (ms - t0) / (t1 - t0) * (W - L - R);
+  const yy = (/** @type {number} */ m) => T + (hi - m) / (hi - lo) * (H - T - B);
+
+  // Smooth curve through the hourly points (Catmull-Rom as cubic Béziers).
+  const P = pts.map((p) => [x(p.t), yy(p.h)]);
+  let d = `M${P[0][0]},${P[0][1]}`;
+  for (let i = 0; i < P.length - 1; i++) {
+    const p0 = P[i - 1] ?? P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] ?? p2;
+    d += `C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+  }
+  const base = yy(lo);
+
+  let g = "";
+  for (let m = lo; m <= hi; m += hi - lo > 8 ? 2 : 1) {
+    g += `<line x1="${L}" x2="${W - R}" y1="${yy(m)}" y2="${yy(m)}" stroke="var(--rule)" stroke-width="1"/>` +
+         `<text x="${L - 6}" y="${yy(m) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${m}</text>`;
+  }
+  for (let hr = 0; hr <= 24; hr += 6) {
+    const ms = t0 + hr * HOUR;
+    if (ms > t1) break;
+    const anchor = hr === 0 ? "start" : ms + 6 * HOUR > t1 ? "end" : "middle";
+    g += `<text x="${x(ms)}" y="${H - 6}" text-anchor="${anchor}" font-size="11" fill="var(--muted)">${String(hr % 24).padStart(2, "0")}:00</text>`;
+  }
+  g += `<path d="${d}L${P[P.length - 1][0]},${base}L${P[0][0]},${base}Z" fill="var(--fill)"/>` +
+       `<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+  for (const e of ex.filter((e) => e.t >= t0 && e.t <= t1)) {
+    const ex_ = x(e.t), ey = yy(e.h);
+    g += `<circle cx="${ex_}" cy="${ey}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>` +
+         `<text x="${Math.min(Math.max(ex_, L + 18), W - R - 18)}" y="${e.high ? ey - 10 : ey + 18}" text-anchor="middle" font-size="12" fill="var(--fg)">${fmtTime.format(e.t)}</text>`;
+  }
+  const now = Date.now();
+  if (now >= t0 && now <= t1) {
+    g += `<line x1="${x(now)}" x2="${x(now)}" y1="${T - 6}" y2="${base}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  }
+  g += `<line id="cross" y1="${T - 6}" y2="${base}" stroke="var(--fg)" stroke-width="1" visibility="hidden"/>` +
+       `<circle id="crossdot" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`;
+  svg.innerHTML = g;
+
+  const cross = /** @type {SVGElement} */ (svg.querySelector("#cross"));
+  const dot = /** @type {SVGElement} */ (svg.querySelector("#crossdot"));
+  const tip = $("tip");
+  /** @param {PointerEvent} ev */
+  svg.onpointermove = (ev) => {
+    const box = svg.getBoundingClientRect();
+    const px = (ev.clientX - box.left) / box.width * W;
+    const ms = Math.min(Math.max(t0 + (px - L) / (W - L - R) * (t1 - t0), t0), t1);
+    const lvl = levelAt(t, y, ms);
+    if (lvl == null) return;
+    for (const el of [cross, dot]) el.setAttribute("visibility", "visible");
+    cross.setAttribute("x1", String(x(ms))); cross.setAttribute("x2", String(x(ms)));
+    dot.setAttribute("cx", String(x(ms))); dot.setAttribute("cy", String(yy(lvl)));
+    tip.textContent = `${fmtTime.format(ms)} · ${metres(lvl)}`;
+  };
+  svg.onpointerleave = () => {
+    for (const el of [cross, dot]) el.setAttribute("visibility", "hidden");
+    tip.textContent = "";
+  };
+}
+
+/** @param {number[]} t @param {Extreme[]} ex @param {string} selected @param {(day: string) => void} pick */
+function renderWeek(t, ex, selected, pick) {
+  const today = fmtDate.format(Date.now());
+  const days = [...new Set(t.map((ms) => fmtDate.format(ms)))].filter((d) => d >= today).slice(0, 7);
+  $("week").innerHTML = days.map((day) => {
+    const list = ex.filter((e) => fmtDate.format(e.t) === day).map((e) => e.high
+      ? `<span class="hw">▲ <b>${fmtTime.format(e.t)}</b> ${metres(e.h)}</span>`
+      : `<span class="lw">▼ ${fmtTime.format(e.t)} ${metres(e.h)}</span>`).join("");
+    const label = day === today ? "Today" : fmtDay.format(Date.parse(day + "T12:00:00Z"));
+    return `<tr class="day" data-day="${day}" aria-selected="${day === selected}"><td class="d">${label}</td><td><div class="tides">${list}</div></td></tr>`;
+  }).join("");
+  $("week").onclick = (e) => {
+    const row = /** @type {HTMLElement} */ (e.target).closest("tr");
+    if (row?.dataset.day) pick(row.dataset.day);
+  };
+}
+
+// ------------------------------------------------------------- wiring
+
+async function main() {
+  const site = SITES.find((s) => s.id === load(STORE_SITE)) ?? SITES[0];
+  $("title").textContent = `${site.name} tides`;
+  document.title = `${site.name} tides`;
+  $("sites").innerHTML = SITES.map((s) =>
+    `<button type="button" data-id="${s.id}" aria-pressed="${s.id === site.id}">${s.name}</button>`).join("");
+  $("sites").onclick = (e) => {
+    const b = /** @type {HTMLElement} */ (e.target).closest("button");
+    if (b?.dataset.id) { save(STORE_SITE, b.dataset.id); location.reload(); }
+  };
+
+  /** @type {Record<string, {data: any, at: number}>} */
+  const cache = load(STORE_CACHE) ?? {};
+  let data, at = Date.now(), offline = false;
+  try {
+    data = await fetchMarine(site);
+    cache[site.id] = { data, at };
+    save(STORE_CACHE, cache);
+  } catch (err) {
+    if (!cache[site.id]) {
+      $("now").innerHTML = `<div class="big error">Couldn't load tides</div><div class="sub">${String(err)}</div>`;
+      return;
+    }
+    ({ data, at } = cache[site.id]);
+    offline = true;
+  }
+
+  const h = data.hourly;
+  /** @type {number[]} */ const t = h.time.map((/** @type {number} */ s) => s * 1000);
+  /** @type {(number|null)[]} */ const y = h.sea_level_height_msl;
+  const ex = extremes(t, y);
+
+  let selected = fmtDate.format(Date.now());
+  const show = (/** @type {string} */ day) => {
+    selected = day;
+    $("chart-title").textContent = day === fmtDate.format(Date.now()) ? "Today" : fmtLong.format(Date.parse(day + "T12:00:00Z"));
+    renderChart(t, y, ex, day);
+    renderWeek(t, ex, selected, show);
+  };
+  renderNow(t, y, ex, h);
+  show(selected);
+  addEventListener("resize", () => renderChart(t, y, ex, selected));
+  $("meta").innerHTML = (offline ? `<span class="error">Offline: showing saved tides.</span> ` : "") +
+    `Fetched ${fmtTime.format(at)}, ${fmtDay.format(at)}`;
+}
+
+$("refresh").addEventListener("click", () => location.reload());
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+main();
+</script>
+</body>
+</html>
