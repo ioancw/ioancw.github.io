@@ -35,6 +35,13 @@
   input { width: 9em; }
   button { cursor: pointer; }
   .notes { color: var(--muted); max-width: 72ch; font-size: 12px; }
+  .sites { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+  .chip { display: inline-flex; align-items: center; border: 1px solid #333; border-radius: 14px; background: #1b1b1f; }
+  .chip.current { border-color: #8ab4f8; background: #1d2633; }
+  .chip a { color: var(--fg); text-decoration: none; padding: 3px 2px 3px 11px; }
+  .chip button { border: 0; background: none; color: var(--muted); padding: 3px 9px 3px 5px; font-size: 15px; line-height: 1; }
+  .chip button:hover { color: #ff8a80; }
+  #status { color: var(--muted); font-size: 12px; min-height: 1.4em; margin-top: 6px; }
   .error { color: #ff8a80; }
   a { color: #8ab4f8; }
 </style>
@@ -42,6 +49,7 @@
 <body>
 <h1 id="title">Sky chart</h1>
 <div class="meta" id="meta">Loading forecast…</div>
+<nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
 <div class="wrap"><table class="chart" id="chart"></table></div>
 <div id="detail">Tap or hover a cell for details.</div>
@@ -63,8 +71,11 @@
       <option value="best_match">Open-Meteo best match</option>
     </select>
   </label>
-  <button>Update</button>
+  <button>Show forecast</button>
+  <button type="button" id="save">Save site</button>
+  <button type="button" id="geo">Use my location</button>
 </form>
+<div id="status"></div>
 
 <p class="notes">
   Darker blue is better on every row except temperature. Darkness is calculated
@@ -92,20 +103,70 @@ const VARS = ["cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_
 
 // ------------------------------------------------------------ settings
 
-/** @returns {Site} */
+// Saved sites live in this browser's localStorage. Storage can be blocked
+// (private windows, cleared site data), so every access is guarded and the
+// page falls back to Pennard.
+const STORE_SITES = "skychart.sites";
+const STORE_LAST = "skychart.last";
+
+/** @param {string} key */
+function loadJSON(key) {
+  try { return JSON.parse(localStorage.getItem(key) ?? "null"); } catch { return null; }
+}
+
+/** @param {string} key @param {unknown} value */
+function saveJSON(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; }
+}
+
+/** @param {any} s @returns {s is Site} */
+function isSite(s) {
+  return s && typeof s.name === "string" && Number.isFinite(s.lat) && Number.isFinite(s.lon) &&
+    Number.isFinite(s.dark) && typeof s.model === "string";
+}
+
+/** @returns {Site[]} */
+function loadSites() {
+  const s = loadJSON(STORE_SITES);
+  return Array.isArray(s) && s.some(isSite) ? s.filter(isSite) : [DEFAULTS];
+}
+
+/** @param {Site} a @param {Site} b */
+const sameSite = (a, b) => a.name === b.name && Math.abs(a.lat - b.lat) < 1e-4 && Math.abs(a.lon - b.lon) < 1e-4;
+
+/** @param {Site} s */
+const siteUrl = (s) => "?" + new URLSearchParams({
+  name: s.name, lat: String(s.lat), lon: String(s.lon), dark: String(s.dark), model: s.model,
+});
+
+/**
+ * Site from the URL if it names one, else the last site viewed here, else the
+ * first saved site.
+ * @returns {Site}
+ */
 function readSite() {
   const q = new URLSearchParams(location.search);
-  const num = (/** @type {string} */ k, /** @type {number} */ d) => {
-    const v = parseFloat(q.get(k) ?? "");
-    return Number.isFinite(v) ? v : d;
-  };
+  const last = loadJSON(STORE_LAST);
+  const base = isSite(last) ? last : loadSites()[0];
+  const num = (/** @type {string} */ k) => parseFloat(q.get(k) ?? "");
+  const lat = num("lat"), lon = num("lon"), dark = num("dark");
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return base;
   return {
-    name: q.get("name") || DEFAULTS.name,
-    lat: num("lat", DEFAULTS.lat),
-    lon: num("lon", DEFAULTS.lon),
-    dark: num("dark", DEFAULTS.dark),
+    name: q.get("name") || `${lat.toFixed(3)}, ${lon.toFixed(3)}`,
+    lat, lon,
+    dark: Number.isFinite(dark) ? dark : DEFAULTS.dark,
     model: q.get("model") || DEFAULTS.model,
   };
+}
+
+/** @param {Site} current */
+function renderSites(current) {
+  const nav = /** @type {HTMLElement} */ (document.getElementById("sites"));
+  nav.innerHTML = loadSites().map((s, i) =>
+    `<span class="chip${sameSite(s, current) ? " current" : ""}">` +
+    `<a href="${esc(siteUrl(s))}">${esc(s.name)}</a>` +
+    `<button type="button" data-remove="${i}" aria-label="Remove ${esc(s.name)}" title="Remove">×</button></span>`
+  ).join("");
 }
 
 // --------------------------------------------- low-precision ephemerides
@@ -369,6 +430,64 @@ async function main() {
   };
   chart.addEventListener("mouseover", show);
   chart.addEventListener("click", show);
+
+  // Saved sites.
+  const status = /** @type {HTMLElement} */ (document.getElementById("status"));
+  const say = (/** @type {string} */ msg) => { status.textContent = msg; };
+  saveJSON(STORE_LAST, site);
+  renderSites(site);
+
+  /** @returns {Site | null} */
+  const formSite = () => {
+    const f = new FormData(form);
+    const s = {
+      name: String(f.get("name") ?? "").trim(),
+      lat: parseFloat(String(f.get("lat"))),
+      lon: parseFloat(String(f.get("lon"))),
+      dark: parseFloat(String(f.get("dark"))),
+      model: String(f.get("model")),
+    };
+    if (!s.name) { say("Give the site a name first."); return null; }
+    if (!(Math.abs(s.lat) <= 90 && Math.abs(s.lon) <= 180)) { say("Latitude or longitude doesn't look right."); return null; }
+    if (!Number.isFinite(s.dark)) s.dark = DEFAULTS.dark;
+    return s;
+  };
+
+  /** @type {HTMLElement} */ (document.getElementById("save")).addEventListener("click", () => {
+    const s = formSite();
+    if (!s) return;
+    const sites = loadSites();
+    const i = sites.findIndex((x) => x.name.toLowerCase() === s.name.toLowerCase());
+    if (i >= 0) sites[i] = s; else sites.push(s);
+    if (!saveJSON(STORE_SITES, sites)) { say("Couldn't save: this browser is blocking site storage."); return; }
+    location.href = siteUrl(s);
+  });
+
+  /** @type {HTMLElement} */ (document.getElementById("sites")).addEventListener("click", (e) => {
+    const btn = /** @type {HTMLElement} */ (e.target).closest("button");
+    if (!btn?.dataset.remove) return;
+    const sites = loadSites();
+    const s = sites[Number(btn.dataset.remove)];
+    if (!s || !confirm(`Remove ${s.name} from saved sites?`)) return;
+    sites.splice(Number(btn.dataset.remove), 1);
+    if (!saveJSON(STORE_SITES, sites.length ? sites : [DEFAULTS])) { say("Couldn't save: this browser is blocking site storage."); return; }
+    renderSites(site);
+  });
+
+  /** @type {HTMLElement} */ (document.getElementById("geo")).addEventListener("click", () => {
+    if (!navigator.geolocation) { say("This browser can't share its location."); return; }
+    say("Finding your location…");
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const set = (/** @type {string} */ k, /** @type {string} */ v) => {
+        /** @type {HTMLInputElement} */ (form.elements.namedItem(k)).value = v;
+      };
+      set("lat", pos.coords.latitude.toFixed(3));
+      set("lon", pos.coords.longitude.toFixed(3));
+      set("name", "");
+      /** @type {HTMLInputElement} */ (form.elements.namedItem("name")).focus();
+      say("Location filled in. Name it, then Save site or Show forecast.");
+    }, (err) => say(`Couldn't get your location: ${err.message}`), { enableHighAccuracy: true, timeout: 15000 });
+  });
 
   try {
     const data = await fetchForecast(site);
