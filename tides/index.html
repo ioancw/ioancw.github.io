@@ -16,17 +16,17 @@
 <style>
   :root {
     --bg: #f5f7fa; --surface: #ffffff; --fg: #141a22; --muted: #5a6472; --rule: #e1e5ea;
-    --accent: #1d6fb8; --fill: rgba(29, 111, 184, 0.12); --sel: #e8f1fa;
+    --accent: #1d6fb8; --rise: #2fbf4f; --fall: #2f5fe0; --sel: #e8f1fa;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a;
-      --accent: #5aa9e6; --fill: rgba(90, 169, 230, 0.15); --sel: #1c2633;
+      --accent: #5aa9e6; --rise: #36d158; --fall: #2f5fe0; --sel: #1c2633;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a;
-    --accent: #5aa9e6; --fill: rgba(90, 169, 230, 0.15); --sel: #1c2633;
+    --accent: #5aa9e6; --rise: #36d158; --fall: #2f5fe0; --sel: #1c2633;
   }
   * { box-sizing: border-box; }
   body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; margin: 0; padding: 16px;
@@ -45,6 +45,9 @@
   .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
   .chart-head h2 { font-size: 15px; margin: 0; }
   #tip { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .key { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .key i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-left: 8px; }
+  .key i:first-child { margin-left: 0; }
   svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
   table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
   td { padding: 7px 4px; border-top: 1px solid var(--rule); vertical-align: top; }
@@ -73,6 +76,7 @@
 <section class="card">
   <div class="chart-head"><h2 id="chart-title">Today</h2><span id="tip"></span></div>
   <svg id="chart" viewBox="0 0 600 220" role="img" aria-label="Tide height through the day"></svg>
+  <div class="key"><i style="background:var(--rise)"></i>Rising <i style="background:var(--fall)"></i>Falling</div>
 </section>
 
 <section class="card">
@@ -239,16 +243,33 @@ function renderChart(t, y, ex, day) {
     const anchor = hr === 0 ? "start" : ms + 6 * HOUR > t1 ? "end" : "middle";
     g += `<text x="${x(ms)}" y="${H - 6}" text-anchor="${anchor}" font-size="11" fill="var(--muted)">${String(hr % 24).padStart(2, "0")}:00</text>`;
   }
-  g += `<path d="${d}L${P[P.length - 1][0]},${base}L${P[0][0]},${base}Z" fill="var(--fill)"/>` +
-       `<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+  // Rising (flood) in green and falling (ebb) in blue, split at each high and low.
+  const area = `${d}L${P[P.length - 1][0]},${base}L${P[0][0]},${base}Z`;
+  const turns = ex.filter((e) => e.t > t0 && e.t < t1);
+  const edges = [t0, ...turns.map((e) => e.t), t1];
+  let rising = turns.length ? turns[0].high : pts[pts.length - 1].h > pts[0].h;
+  let clips = "", fills = "";
+  for (let i = 0; i < edges.length - 1; i++) {
+    clips += `<clipPath id="seg${i}"><rect x="${x(edges[i])}" y="0" width="${x(edges[i + 1]) - x(edges[i]) + 0.5}" height="${H}"/></clipPath>`;
+    fills += `<path d="${area}" fill="var(${rising ? "--rise" : "--fall"})" clip-path="url(#seg${i})"/>`;
+    rising = !rising;
+  }
+  g += `<defs>${clips}</defs>${fills}`;
+  // Grid over the fill, as on a Garmin tide screen.
+  for (let hr = 3; hr < 24; hr += 3) {
+    g += `<line x1="${x(t0 + hr * HOUR)}" x2="${x(t0 + hr * HOUR)}" y1="${T}" y2="${base}" stroke="var(--surface)" stroke-opacity="0.35" stroke-width="1"/>`;
+  }
+  for (let m = lo + 1; m < hi; m += hi - lo > 8 ? 2 : 1) {
+    g += `<line x1="${L}" x2="${W - R}" y1="${yy(m)}" y2="${yy(m)}" stroke="var(--surface)" stroke-opacity="0.35" stroke-width="1"/>`;
+  }
   for (const e of ex.filter((e) => e.t >= t0 && e.t <= t1)) {
     const ex_ = x(e.t), ey = yy(e.h);
-    g += `<circle cx="${ex_}" cy="${ey}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>` +
+    g += `<circle cx="${ex_}" cy="${ey}" r="4" fill="var(--fg)" stroke="var(--surface)" stroke-width="2"/>` +
          `<text x="${Math.min(Math.max(ex_, L + 18), W - R - 18)}" y="${e.high ? ey - 10 : ey + 18}" text-anchor="middle" font-size="12" fill="var(--fg)">${fmtTime.format(e.t)}</text>`;
   }
   const now = Date.now();
   if (now >= t0 && now <= t1) {
-    g += `<line x1="${x(now)}" x2="${x(now)}" y1="${T - 6}" y2="${base}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>`;
+    g += `<line x1="${x(now)}" x2="${x(now)}" y1="${T - 6}" y2="${base}" stroke="var(--fg)" stroke-width="2"/>`;
   }
   g += `<line id="cross" y1="${T - 6}" y2="${base}" stroke="var(--fg)" stroke-width="1" visibility="hidden"/>` +
        `<circle id="crossdot" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`;
