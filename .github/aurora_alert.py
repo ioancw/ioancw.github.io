@@ -105,8 +105,12 @@ def main():
     a = p.parse_args()
 
     topic = os.environ.get("NTFY_TOPIC", "").strip()
-    if a.mode != "dry-run" and not topic:
+    if not topic and a.mode == "test":
         sys.exit("NTFY_TOPIC is not set: add it as a repository secret.")
+    if not topic and a.mode == "normal":
+        # Not set up yet: still check the feeds, but don't fail every scheduled run.
+        print("::warning::NTFY_TOPIC is not set, so no notification will be sent.")
+        a.mode = "dry-run"
     if a.mode == "test":
         send(topic, "Sky Chart test", "Aurora alerts are set up. You'll get one when aurora is likely and skies are clear.")
         print("sent test notification")
