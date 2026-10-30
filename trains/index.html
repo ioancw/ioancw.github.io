@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Trains</title>
+<meta name="description" content="Live departures for my regular London commutes, from National Rail Darwin.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d0f13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Trains">
+<style>
+  :root {
+    --bg: #f5f7fa; --surface: #ffffff; --fg: #141a22; --muted: #5a6472; --rule: #e1e5ea; --sel: #e8f1fa;
+    --accent: #1d6fb8; --ok: #1f8a46; --late: #b7791f; --bad: #c0392b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a; --sel: #1c2633;
+      --accent: #5aa9e6; --ok: #3ccf74; --late: #f0b44c; --bad: #ff6b5e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a; --sel: #1c2633;
+    --accent: #5aa9e6; --ok: #3ccf74; --late: #f0b44c; --bad: #ff6b5e;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; margin: 0 auto; padding: 16px; max-width: 640px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  h1 { font-size: 20px; margin: 0; }
+  button { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px; font: inherit; cursor: pointer; }
+  #refresh { font-size: 18px; line-height: 1; }
+  .routes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 12px 0; }
+  .routes button { border-radius: 10px; padding: 8px 10px; text-align: left; font-size: 14px; }
+  .routes button[aria-pressed="true"] { border-color: var(--accent); background: var(--sel); font-weight: 600; }
+  .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 4px 14px; }
+  .msg { background: var(--surface); border: 1px solid var(--late); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 13px; }
+  .svc { display: grid; grid-template-columns: 4.2em 1fr auto; gap: 2px 10px; padding: 10px 0; border-top: 1px solid var(--rule); align-items: baseline; }
+  .svc:first-child { border-top: 0; }
+  .std { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .svc.cancelled .std { text-decoration: line-through; color: var(--muted); }
+  .status { font-weight: 600; }
+  .ok { color: var(--ok); } .late { color: var(--late); } .bad { color: var(--bad); }
+  .plat { text-align: right; font-variant-numeric: tabular-nums; }
+  .plat b { font-size: 18px; }
+  .sub { grid-column: 2 / 4; grid-row: 2; color: var(--muted); font-size: 13px; }
+  .mins { grid-column: 1; grid-row: 2; color: var(--muted); font-size: 13px; }
+  .meta, .notes { color: var(--muted); font-size: 12px; margin-top: 10px; }
+  .empty { padding: 14px 0; color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>My trains</h1>
+  <button type="button" id="refresh" aria-label="Refresh" title="Refresh">↻</button>
+</header>
+<nav class="routes" id="routes" aria-label="Routes"></nav>
+<div id="messages"></div>
+<section class="card" id="board"><div class="empty">Loading departures…</div></section>
+<div class="meta" id="meta"></div>
+<p class="notes">Live departures from National Rail Darwin. Updates every minute while open.</p>
+
+<script>
+// @ts-check
+"use strict";
+
+// Relay URL (a Cloudflare Worker running relay-worker.js). Set once deployed.
+const RELAY = "";
+
+/** @typedef {{id: string, from: string, to: string, label: string}} Route */
+/** @typedef {{std: string|null, etd: string|null, platform: string|null, operator: string|null, destination: string, cancelled: boolean, reason: string|null}} Service */
+
+/** @type {Route[]} */
+const ROUTES = [
+  { id: "wnt-wat", from: "WNT", to: "WAT", label: "Wandsworth Town → Waterloo" },
+  { id: "wat-wnt", from: "WAT", to: "WNT", label: "Waterloo → Wandsworth Town" },
+  { id: "clj-vic", from: "CLJ", to: "VIC", label: "Clapham Jn → Victoria" },
+  { id: "vic-clj", from: "VIC", to: "CLJ", label: "Victoria → Clapham Jn" },
+];
+const TZ = "Europe/London";
+const STORE_ROUTE = "trains.route", STORE_CACHE = "trains.cache", STORE_RELAY = "trains.relay";
+
+/** @param {string} key */
+function load(key) { try { return JSON.parse(localStorage.getItem(key) ?? "null"); } catch { return null; } }
+/** @param {string} key @param {unknown} v */
+function save(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* storage blocked */ } }
+/** @param {string} id */
+const $ = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+/** @param {string} s */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c);
+const fmtTime = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+
+/** Minutes from now until a UK clock time "HH:MM" (assumed to be within the next 12 hours). @param {string} hhmm */
+function minutesUntil(hhmm) {
+  const [nh, nm] = fmtTime.format(Date.now()).split(":").map(Number);
+  const [h, m] = hhmm.split(":").map(Number);
+  let d = (h * 60 + m) - (nh * 60 + nm);
+  if (d < -12 * 60) d += 24 * 60;
+  return d;
+}
+
+/** Status text and colour class from Darwin's etd. @param {Service} s */
+function trainStatus(s) {
+  if (s.cancelled || s.etd === "Cancelled") return { text: "Cancelled", cls: "bad", when: null };
+  if (s.etd === "On time") return { text: "On time", cls: "ok", when: s.std };
+  if (s.etd === "Delayed") return { text: "Delayed", cls: "late", when: null };
+  if (s.etd && /^\d\d:\d\d$/.test(s.etd)) return { text: `Exp ${s.etd}`, cls: "late", when: s.etd };
+  return { text: s.etd ?? "", cls: "late", when: s.std };
+}
+
+/** @param {{services: Service[], messages?: string[]}} data */
+function render(data) {
+  $("messages").innerHTML = (data.messages ?? []).map((m) => `<div class="msg">${esc(m)}</div>`).join("");
+  if (!data.services.length) {
+    $("board").innerHTML = `<div class="empty">No direct trains in the next couple of hours.</div>`;
+    return;
+  }
+  $("board").innerHTML = data.services.map((s) => {
+    const st = trainStatus(s);
+    const mins = st.when ? minutesUntil(st.when) : null;
+    const due = mins == null ? "" : mins <= 0 ? "due" : `${mins} min`;
+    return `<div class="svc${st.cls === "bad" ? " cancelled" : ""}">` +
+      `<div class="std">${esc(s.std ?? "")}</div>` +
+      `<div class="status ${st.cls}">${esc(st.text)}</div>` +
+      `<div class="plat">${s.platform ? `Plat <b>${esc(s.platform)}</b>` : `<span class="sub">Plat –</span>`}</div>` +
+      `<div class="sub">to ${esc(s.destination)}${s.reason ? ` · ${esc(s.reason)}` : ""}</div>` +
+      `<div class="mins">${due}</div></div>`;
+  }).join("");
+}
+
+async function main() {
+  const route = ROUTES.find((r) => r.id === load(STORE_ROUTE)) ?? ROUTES[0];
+  $("routes").innerHTML = ROUTES.map((r) =>
+    `<button type="button" data-id="${r.id}" aria-pressed="${r.id === route.id}">${r.label}</button>`).join("");
+  $("routes").onclick = (e) => {
+    const b = /** @type {HTMLElement} */ (e.target).closest("button");
+    if (b?.dataset.id) { save(STORE_ROUTE, b.dataset.id); location.reload(); }
+  };
+
+  const relay = RELAY || load(STORE_RELAY) || "";
+  if (!relay) {
+    $("board").innerHTML = `<div class="empty">Not connected yet: the live-times relay hasn't been set up.</div>`;
+    return;
+  }
+
+  /** @type {Record<string, {data: any, at: number}>} */
+  const cache = load(STORE_CACHE) ?? {};
+  const refresh = async () => {
+    try {
+      const r = await fetch(`${relay}?${new URLSearchParams({ from: route.from, to: route.to })}`, { cache: "no-store" });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error ?? `relay returned ${r.status}`);
+      cache[route.id] = { data, at: Date.now() };
+      save(STORE_CACHE, cache);
+      render(data);
+      $("meta").textContent = `Updated ${fmtTime.format(Date.now())}`;
+    } catch (err) {
+      const saved = cache[route.id];
+      if (saved) render(saved.data);
+      $("meta").textContent = `Couldn't update (${String(err)}).` + (saved ? ` Showing ${fmtTime.format(saved.at)} board.` : "");
+    }
+  };
+  await refresh();
+  setInterval(() => { if (document.visibilityState === "visible") refresh(); }, 60000);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") refresh(); });
+}
+
+$("refresh").addEventListener("click", () => location.reload());
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+main();
+</script>
+</body>
+</html>
