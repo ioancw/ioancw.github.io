@@ -70,7 +70,7 @@
 "use strict";
 
 // Relay URL (a Cloudflare Worker running relay-worker.js). Set once deployed.
-const RELAY = "";
+const RELAY = "https://trains-relay.ioancwilliams.workers.dev/";
 
 /** @typedef {{id: string, from: string, to: string, label: string}} Route */
 /** @typedef {{std: string|null, etd: string|null, platform: string|null, operator: string|null, destination: string, cancelled: boolean, reason: string|null}} Service */
@@ -162,6 +162,9 @@ async function main() {
     } catch (err) {
       const saved = cache[route.id];
       if (saved) render(saved.data);
+      else $("board").innerHTML = /RDM_KEY|DARWIN_TOKEN/.test(String(err))
+        ? `<div class="empty">Almost there: waiting for your Rail Data Marketplace key to be added to the relay.</div>`
+        : `<div class="empty">Couldn't load departures.</div>`;
       $("meta").textContent = `Couldn't update (${String(err)}).` + (saved ? ` Showing ${fmtTime.format(saved.at)} board.` : "");
     }
   };
