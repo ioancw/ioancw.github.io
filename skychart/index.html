@@ -13,61 +13,95 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Sky Chart">
+<script>
+  try { if (JSON.parse(localStorage.getItem("skychart.night") ?? "false") === true) document.documentElement.dataset.theme = "dark"; } catch {}
+</script>
 <style>
-  /* Night-friendly page: always dark, to protect dark adaptation. */
+  /* Follows the phone's light or dark setting; "Night mode" forces dark. */
   :root {
-    --bg: #0d0d0f; --fg: #dcdcdc; --muted: #8c8c94; --rule: #55555c;
-    --good: #1f7a3a; --usable: #b08a1a; --bright: #5b4a9e; --poor: #7a1f1f;
+    --bg: #f5f7fa; --surface: #ffffff; --fg: #141a22; --muted: #5a6472; --rule: #e1e5ea; --sel: #e8f1fa;
+    --accent: #1d6fb8; --gap: #c3cad3; --na: #d5dae0; --none: #e9ecf0;
+    --good: #1f7a3a; --usable: #b08a1a; --bright: #5b4a9e; --poor: #a12b2b;
+    --alert-bg: #e6f6ec; --alert-fg: #14532d; --error: #c0392b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a; --sel: #1c2633;
+      --accent: #5aa9e6; --gap: #161a21; --na: #333a45; --none: #1f242d; --poor: #7a1f1f;
+      --alert-bg: #12301d; --alert-fg: #d6f5e0; --error: #ff8a80;
+    }
+  }
+  :root[data-theme="dark"] {
+      --bg: #0d0f13; --surface: #161a21; --fg: #e4e7ec; --muted: #98a1ae; --rule: #2a303a; --sel: #1c2633;
+      --accent: #5aa9e6; --gap: #161a21; --na: #333a45; --none: #1f242d; --poor: #7a1f1f;
+      --alert-bg: #12301d; --alert-fg: #d6f5e0; --error: #ff8a80;
   }
   * { box-sizing: border-box; }
-  body { background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; }
-  h1 { font-size: 20px; margin: 0 0 2px; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; }
+  h1 { font-size: 20px; margin: 0; }
+  h2 { font-size: 15px; margin: 0 0 8px; }
   .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   #refresh { font-size: 18px; line-height: 1; padding: 4px 10px; }
-  .meta { color: var(--muted); margin-bottom: 14px; font-size: 13px; }
-  .wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .meta { color: var(--muted); margin: 2px 0 12px; font-size: 12px; }
+  .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y pinch-zoom; }
   table.chart { border-collapse: collapse; }
-  .chart td { width: 14px; min-width: 14px; height: 18px; border: 1px solid var(--bg); padding: 0; cursor: pointer; }
+  .chart td { width: 14px; min-width: 14px; height: 18px; border: 1px solid var(--gap); padding: 0; cursor: pointer; }
   .chart th { font-weight: normal; font-size: 10px; color: var(--muted); padding: 0; }
   .chart th.label { text-align: right; padding-right: 8px; white-space: nowrap; position: sticky; left: 0;
-                    background: var(--bg); color: var(--fg); font-size: 12px; z-index: 1; }
-  .chart th.day { text-align: left; color: var(--fg); border-left: 2px solid var(--rule); padding-left: 4px; white-space: nowrap; }
-  .chart .newday { border-left: 2px solid var(--rule); }
-  .chart .gap { width: 10px; min-width: 10px; border: 0; background: var(--bg); cursor: default; }
+                    background: var(--surface); color: var(--fg); font-size: 12px; z-index: 1; }
+  .chart th.day { text-align: left; color: var(--fg); border-left: 2px solid var(--muted); padding-left: 4px; white-space: nowrap; }
+  .chart .newday { border-left: 2px solid var(--muted); }
+  .chart .gap { width: 10px; min-width: 10px; border: 0; background: var(--surface); cursor: default; }
   .chart td.far { opacity: 0.75; }
-  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 10px; }
-  .tonight { border: 1px solid #2a2a30; border-left: 5px solid #333; border-radius: 8px; background: #16161a;
-             padding: 9px 12px; margin: 0 0 10px; max-width: 72ch; }
+  /* One night per screen on phones: columns stretch to fill the width. */
+  .chart.paged { width: 100%; table-layout: fixed; }
+  .chart.paged th.label { width: 88px; }
+  .chart.paged td { width: auto; min-width: 0; height: 24px; }
+  .pager { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
+  .pager[hidden] { display: none; }
+  .pager span { font-weight: 600; }
+  .pager small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .pager button { font-size: 20px; line-height: 1; padding: 4px 14px; }
+  .pager button:disabled { opacity: 0.35; cursor: default; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin: 0 0 10px; }
+  .tonight { border-left: 5px solid var(--na); max-width: 72ch; }
   .tonight .big { font-size: 17px; font-weight: 600; }
   .tonight .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
-  .alert { background: #12301d; border: 1px solid #2fa35a; color: #d6f5e0; padding: 8px 10px; border-radius: 6px;
-           margin: 0 0 10px; font-size: 13px; max-width: 72ch; }
-  label.toggle { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; }
+  .alert { background: var(--alert-bg); border: 1px solid #2fa35a; color: var(--alert-fg); padding: 8px 12px; border-radius: 10px;
+           margin: 0 0 12px; font-size: 13px; max-width: 72ch; }
+  label.toggle { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; color: var(--fg); }
   label.toggle input { width: auto; margin: 0; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
   .legend .pill { color: #fff; }
-  #detail { min-height: 1.5em; margin: 10px 0 18px; font-size: 13px; color: var(--fg); }
-  h2 { font-size: 15px; margin: 22px 0 8px; }
-  table.nights { border-collapse: collapse; font-size: 13px; }
-  .nights th, .nights td { text-align: left; padding: 4px 14px 4px 0; border-bottom: 1px solid #222; vertical-align: top; }
+  #detail { min-height: 1.5em; margin-top: 10px; font-size: 13px; color: var(--fg); }
+  table.nights { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .nights th, .nights td { text-align: left; padding: 6px 14px 6px 0; border-top: 1px solid var(--rule); vertical-align: top; }
+  .nights tr:first-child th { border-top: 0; }
+  .nights td:nth-child(2), .nights td:nth-child(3) { white-space: nowrap; }
+  .nights th, .nights td { padding-right: 10px; }
+  .nights { width: 100%; max-width: 560px; }
   .nights th { color: var(--muted); font-weight: normal; }
+  .nights tr[data-night] { cursor: pointer; }
+  .nights tr[aria-selected="true"] td { background: var(--sel); }
   .dot { display: inline-block; width: 30px; height: 14px; border-radius: 7px; vertical-align: middle; }
   .pill { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 12px; white-space: nowrap; }
-  form { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin-top: 8px; }
+  form { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
   label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
-  input, select, button { background: #1b1b1f; color: var(--fg); border: 1px solid #333; border-radius: 4px; padding: 5px 7px; font: inherit; }
+  input, select, button { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; font: inherit; }
+  input, select { background: var(--bg); }
   input { width: 9em; }
   button { cursor: pointer; }
   .notes { color: var(--muted); max-width: 72ch; font-size: 12px; }
-  .sites { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
-  .chip { display: inline-flex; align-items: center; border: 1px solid #333; border-radius: 14px; background: #1b1b1f; }
-  .chip.current { border-color: #8ab4f8; background: #1d2633; }
+  .sites { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  .chip { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); font-size: 13px; }
+  .chip.current { border-color: var(--accent); background: var(--sel); }
   .chip a { color: var(--fg); text-decoration: none; padding: 3px 2px 3px 11px; }
   .chip button { border: 0; background: none; color: var(--muted); padding: 3px 9px 3px 5px; font-size: 15px; line-height: 1; }
-  .chip button:hover { color: #ff8a80; }
+  .chip button:hover { color: var(--error); }
   #status { color: var(--muted); font-size: 12px; min-height: 1.4em; margin-top: 6px; }
-  .error { color: #ff8a80; }
-  a { color: #8ab4f8; }
+  .error { color: var(--error); }
+  a { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -78,13 +112,20 @@
 <div class="meta" id="meta">Loading forecast…</div>
 <nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
-<section class="tonight" id="tonight" hidden></section>
+<section class="card tonight" id="tonight" hidden></section>
 <div class="alert" id="aurora" hidden></div>
+<section class="card">
 <div class="toolbar">
   <label class="toggle"><input type="checkbox" id="showday"> Show daytime</label>
+  <label class="toggle"><input type="checkbox" id="night"> Night mode</label>
   <button type="button" id="install" hidden>Install app</button>
 </div>
-<div class="wrap"><table class="chart" id="chart"></table></div>
+<div class="pager" id="pager" hidden>
+  <button type="button" id="prev" aria-label="Previous night">‹</button>
+  <span id="pager-label"></span>
+  <button type="button" id="next" aria-label="Next night">›</button>
+</div>
+<div class="wrap" id="wrap"><table class="chart" id="chart"></table></div>
 <div class="legend">Go / no-go:
   <span class="pill" style="background:var(--good)">good</span>
   <span class="pill" style="background:var(--usable)">usable</span>
@@ -92,15 +133,19 @@
   <span class="pill" style="background:var(--poor)">cloudy</span>
 </div>
 <div class="legend" id="aurora-legend" hidden>Aurora:
-  <span class="pill" style="background:#2e4d36">unlikely</span>
+  <span class="pill" style="background:#3f6b4a">unlikely</span>
   <span class="pill" style="background:#2fa35a">camera possible</span>
   <span class="pill" style="background:#d0409a">naked eye possible</span>
 </div>
 <div id="detail">Tap or hover a cell for details.</div>
+</section>
 
+<section class="card">
 <h2>Nights</h2>
 <table class="nights" id="nights"></table>
+</section>
 
+<section class="card">
 <h2>Location</h2>
 <form id="loc">
   <label>Name <input name="name"></label>
@@ -120,6 +165,7 @@
   <button type="button" id="geo">Use my location</button>
 </form>
 <div id="status"></div>
+</section>
 
 <p class="notes">
   <a href="../apps/">All apps</a> ·
@@ -322,7 +368,7 @@ function transparency(rh, vis) {
  * @param {number|null} cloud @param {{lm: number|null, moon: number}} a @param {number} darkLimit
  */
 function verdict(cloud, a, darkLimit) {
-  if (a.lm == null || cloud == null) return { color: "#1a1a1a", tip: "daylight" };
+  if (a.lm == null || cloud == null) return { color: "var(--none)", tip: "daylight" };
   const clear = cloud <= 15, fair = cloud <= 35;
   const dark = a.lm >= darkLimit - 0.5, dim = a.lm >= darkLimit - 1.5;
   const glow = a.moon > 0 ? "moonlit" : "twilight";
@@ -404,6 +450,10 @@ function trimPast(data) {
 
 // ------------------------------------------------------------- rendering
 
+// On phones the chart shows one night (or day) at a time.
+/** @type {{paged: boolean, page: number, labels: string[]}} */
+const view = { paged: false, page: 0, labels: [] };
+
 /** @param {Site} site @param {any} data @param {boolean} showDay @param {Kp[] | null} kp */
 function render(site, data, showDay, kp) {
   const h = data.hourly;
@@ -419,7 +469,7 @@ function render(site, data, showDay, kp) {
 
   /** @param {(number|null)[]} vals @param {Ramp} stops @param {(v: number) => string} fmt @returns {Cell[]} */
   const cells = (vals, stops, fmt) =>
-    vals.map((v) => (v == null ? { color: "#333", tip: "n/a" } : { color: ramp(stops, v), tip: fmt(v) }));
+    vals.map((v) => (v == null ? { color: "var(--na)", tip: "n/a" } : { color: ramp(stops, v), tip: fmt(v) }));
 
   const go = tot.map((c, i) => verdict(c, astro[i], site.dark));
 
@@ -430,7 +480,7 @@ function render(site, data, showDay, kp) {
     ["mid", cells(mid, CLOUD, (v) => `${v.toFixed(0)}% mid cloud`)],
     ["high", cells(high, CLOUD, (v) => `${v.toFixed(0)}% high cloud`)],
     ["Transparency", rh.map((r, i) => {
-      if (r == null) return { color: "#333", tip: "n/a" };
+      if (r == null) return { color: "var(--na)", tip: "n/a" };
       const s = transparency(r, vis[i]);
       const v = vis[i];
       return { color: ramp(CLOUD, s), tip: `haze score ${s.toFixed(0)}` + (v == null ? "" : `, visibility ${(v / 1000).toFixed(0)} km`) };
@@ -443,7 +493,7 @@ function render(site, data, showDay, kp) {
     ["Wind", cells(wind, WIND, (v) => `${v.toFixed(0)} mph`)],
     ["Humidity", cells(rh, HUMID, (v) => `${v.toFixed(0)}% humidity`)],
     ["Temperature", temp.map((t, i) => {
-      if (t == null) return { color: "#333", tip: "n/a" };
+      if (t == null) return { color: "var(--na)", tip: "n/a" };
       const d = dew[i];
       return { color: ramp(TEMP, t), tip: `${t.toFixed(0)}°C` + (d == null ? "" : `, dew point ${d.toFixed(0)}°C (gap ${(t - d).toFixed(1)}°)`) };
     })],
@@ -458,10 +508,10 @@ function render(site, data, showDay, kp) {
   if (kp) {
     rows.splice(rows.length - 1, 0, ["Aurora (Kp)", times.map((t) => {
       const k = kpAt(kp, t);
-      if (!k) return { color: "#333", tip: "beyond NOAA's forecast" };
+      if (!k) return { color: "var(--na)", tip: "beyond NOAA's forecast" };
       const chance = k.kp >= need.eye ? ["#d0409a", "naked eye possible, low in the north"]
         : k.kp >= need.camera ? ["#2fa35a", "camera possible, low in the north"]
-        : k.kp >= need.camera - 1 ? ["#2e4d36", "unlikely"] : ["#1b1b1f", "none"];
+        : k.kp >= need.camera - 1 ? ["#3f6b4a", "unlikely"] : ["var(--none)", "none"];
       return { color: chance[0], tip: `Kp ${k.kp.toFixed(1)} (${k.kind || "forecast"}): ${chance[1]}` };
     })]);
 
@@ -501,23 +551,29 @@ function render(site, data, showDay, kp) {
     groups[groups.length - 1].cols.push(i);
   });
 
+  view.labels = groups.map((g) => g.label);
+  view.page = Math.min(Math.max(view.page, 0), Math.max(groups.length - 1, 0));
+  const paged = view.paged && groups.length > 0;
+  const shown = paged ? [groups[view.page]] : groups;
+
   /** @param {number} gi @param {number} j @param {number} i */
   const cls = (gi, j, i) => {
     const c = [];
-    if (showDay && gi > 0 && j === 0) c.push("newday");
+    if (showDay && !paged && gi > 0 && j === 0) c.push("newday");
     if (times[i] - times[0] > FAR) c.push("far");
     return c.length ? ` class="${c.join(" ")}"` : "";
   };
   /** @param {number} gi @param {string} tag */
   const gap = (gi, tag) => (!showDay && gi > 0 ? `<${tag} class="gap"></${tag}>` : "");
 
-  let out = `<tr><th class="label"></th>` +
-    groups.map((g, gi) => gap(gi, "th") + `<th colspan="${g.cols.length}" class="day">${g.label}</th>`).join("") + "</tr>";
+  // The pager names the night, so the day header row is only for the full view.
+  let out = paged ? "" : `<tr><th class="label"></th>` +
+    shown.map((g, gi) => gap(gi, "th") + `<th colspan="${g.cols.length}" class="day">${g.label}</th>`).join("") + "</tr>";
   out += `<tr><th class="label">hour</th>` +
-    groups.map((g, gi) => gap(gi, "th") + g.cols.map((i, j) => `<th${cls(gi, j, i)}>${hours[i]}</th>`).join("")).join("") + "</tr>";
+    shown.map((g, gi) => gap(gi, "th") + g.cols.map((i, j) => `<th${cls(gi, j, i)}>${hours[i]}</th>`).join("")).join("") + "</tr>";
   for (const [label, cs] of rows) {
     out += `<tr><th class="label">${label}</th>` +
-      groups.map((g, gi) => gap(gi, "td") + g.cols.map((i, j) => {
+      shown.map((g, gi) => gap(gi, "td") + g.cols.map((i, j) => {
         const c = cs[i];
         return `<td${cls(gi, j, i)} style="background:${c.color}" data-tip="${esc(`${fmtFull.format(times[i])}: ${label}, ${c.tip}`)}" title="${esc(c.tip)}"></td>`;
       }).join("")).join("") +
@@ -525,6 +581,15 @@ function render(site, data, showDay, kp) {
   }
   const chart = /** @type {HTMLTableElement} */ (document.getElementById("chart"));
   chart.innerHTML = groups.length ? out : `<tr><td class="gap">No night hours in the forecast.</td></tr>`;
+  chart.classList.toggle("paged", paged);
+
+  /** @type {HTMLElement} */ (document.getElementById("pager")).hidden = !paged;
+  if (paged) {
+    /** @type {HTMLElement} */ (document.getElementById("pager-label")).innerHTML =
+      `${shown[0].label}<small>${view.page + 1} of ${groups.length}</small>`;
+    /** @type {HTMLButtonElement} */ (document.getElementById("prev")).disabled = view.page === 0;
+    /** @type {HTMLButtonElement} */ (document.getElementById("next")).disabled = view.page === groups.length - 1;
+  }
 
   renderNights(site, times[0], times[times.length - 1], times, tot, go);
 }
@@ -576,7 +641,7 @@ function renderNights(site, start, end, times, cloud, go) {
     const count = (/** @type {string} */ k) => n.go.filter((g) => g === k).length;
     const good = count("good"), usable = count("usable"), bright = count("clear");
     const score = 2 * good + usable + 0.5 * bright;
-    const rating = n.cloud.length === 0 ? { label: "No data", color: "#333" }
+    const rating = n.cloud.length === 0 ? { label: "No data", color: "var(--na)" }
       : good >= 3 ? { label: `Good · ${good} h`, color: "var(--good)" }
       : good + usable >= 2 ? { label: `OK · ${good + usable} h`, color: "var(--usable)" }
       : good + usable + bright >= 2 ? { label: "Clear but moonlit", color: "var(--bright)" }
@@ -592,7 +657,8 @@ function renderNights(site, start, end, times, cloud, go) {
     const pill = mean == null ? "–" :
       `<span class="pill" style="background:${ramp(CLOUD, mean)};color:${mean > 60 ? "#000" : "#fff"}">${mean.toFixed(0)}%</span>`;
     const star = best && best === rated[i] && best.score >= 4 ? " ★" : "";
-    return `<tr><td><span class="dot" style="background:${rating.color}" title="${rating.label}" aria-label="${rating.label}"></span></td><td>${n.label}${star}</td>` +
+    const onScreen = view.paged && (view.labels[view.page] ?? "").startsWith(n.label);
+    return `<tr data-night="${n.label}" aria-selected="${onScreen}"><td><span class="dot" style="background:${rating.color}" title="${rating.label}" aria-label="${rating.label}"></span></td><td>${n.label}${star}</td>` +
       `<td>${win}</td><td>${moon}</td><td>${pill}</td></tr>`;
   });
   renderTonight(rated[0] ?? null, best && best.score >= 4 ? best : null);
@@ -726,6 +792,16 @@ async function main() {
     }, (err) => say(`Couldn't get your location: ${err.message}`), { enableHighAccuracy: true, timeout: 15000 });
   });
 
+  // Night mode: force the dark theme whatever the phone is set to.
+  const STORE_NIGHT = "skychart.night";
+  const night = /** @type {HTMLInputElement} */ (document.getElementById("night"));
+  night.checked = loadJSON(STORE_NIGHT) === true;
+  night.addEventListener("change", () => {
+    saveJSON(STORE_NIGHT, night.checked);
+    if (night.checked) document.documentElement.dataset.theme = "dark";
+    else delete document.documentElement.dataset.theme;
+  });
+
   const STORE_SHOWDAY = "skychart.showDay";
   const toggle = /** @type {HTMLInputElement} */ (document.getElementById("showday"));
   toggle.checked = loadJSON(STORE_SHOWDAY) === true;
@@ -767,10 +843,34 @@ async function main() {
   }
   data = trimPast(data);
 
-  render(site, data, toggle.checked, kp);
+  const narrow = matchMedia("(max-width: 700px)");
+  view.paged = narrow.matches;
+  const rerender = () => render(site, data, toggle.checked, kp);
+  /** @param {number} page */
+  const go = (page) => { view.page = page; rerender(); };
+  rerender();
+  narrow.addEventListener("change", () => { view.paged = narrow.matches; rerender(); });
   toggle.addEventListener("change", () => {
     saveJSON(STORE_SHOWDAY, toggle.checked);
-    render(site, data, toggle.checked, kp);
+    go(0);
+  });
+
+  // Paging: buttons, swipe on the chart, or tap a night in the Nights table.
+  /** @type {HTMLElement} */ (document.getElementById("prev")).addEventListener("click", () => go(view.page - 1));
+  /** @type {HTMLElement} */ (document.getElementById("next")).addEventListener("click", () => go(view.page + 1));
+  const wrap = /** @type {HTMLElement} */ (document.getElementById("wrap"));
+  let sx = 0, sy = 0;
+  wrap.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  wrap.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (view.paged && Math.abs(dx) > 40 && Math.abs(dx) > 1.5 * Math.abs(dy)) go(view.page + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+  /** @type {HTMLElement} */ (document.getElementById("nights")).addEventListener("click", (e) => {
+    const row = /** @type {HTMLElement} */ (e.target).closest("tr");
+    const i = view.labels.findIndex((l) => l.startsWith(row?.dataset.night ?? "\n"));
+    if (!view.paged || i < 0) return;
+    go(i);
+    /** @type {HTMLElement} */ (document.getElementById("pager")).scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   const model = /** @type {HTMLSelectElement} */ (form.elements.namedItem("model"));
