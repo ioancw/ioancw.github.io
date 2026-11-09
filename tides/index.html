@@ -13,6 +13,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Tides">
+<script>
+  // Saved day / night choice, applied before first paint. Without one the page follows the phone.
+  try { const t = JSON.parse(localStorage.getItem("tides.theme") ?? "null"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch {}
+</script>
 <style>
   :root {
     --bg: #f5f7fa; --surface: #ffffff; --fg: #141a22; --muted: #5a6472; --rule: #e1e5ea;
@@ -35,7 +39,8 @@
   h1 { font-size: 20px; margin: 0; }
   button { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px;
            padding: 4px 10px; font: inherit; cursor: pointer; }
-  #refresh { font-size: 18px; line-height: 1; }
+  #refresh, #theme { font-size: 18px; line-height: 1; min-width: 40px; }
+  .tools { display: flex; gap: 6px; }
   .sites { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
   .sites button { border-radius: 14px; font-size: 13px; padding: 3px 11px; }
   .sites button[aria-pressed="true"] { border-color: var(--accent); background: var(--sel); }
@@ -67,7 +72,10 @@
 <body>
 <header class="top">
   <h1 id="title">Gower Tides</h1>
-  <button type="button" id="refresh" aria-label="Refresh" title="Refresh">↻</button>
+  <span class="tools">
+    <button type="button" id="theme" aria-label="Switch between day and night mode" title="Day / night mode">☾</button>
+    <button type="button" id="refresh" aria-label="Refresh" title="Refresh">↻</button>
+  </span>
 </header>
 <nav class="sites" id="sites" aria-label="Beaches"></nav>
 
@@ -423,6 +431,17 @@ async function main() {
 }
 
 $("refresh").addEventListener("click", () => location.reload());
+
+// Day / night switch: the button shows the mode a tap will switch to.
+const isDark = () => (document.documentElement.dataset.theme ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+const showTheme = () => { $("theme").textContent = isDark() ? "☀" : "☾"; };
+$("theme").addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  save("tides.theme", next);
+  showTheme();
+});
+showTheme();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 main();
 </script>
