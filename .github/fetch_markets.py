@@ -5,9 +5,8 @@ Runs hourly on weekdays from GitHub Actions; no API keys. Each section is
 fetched on its own, and a section that fails keeps its previous values.
 
   gilts   Bank of England nominal spot curve (daily, published next morning)
-  fx      GBP/USD and GBP/EUR, ECB reference rates via Frankfurter (daily)
-  ftse    FTSE 100 daily closes: Yahoo Finance, falling back to Stooq
-  us10y   US 10-year Treasury yield: FRED, falling back to Yahoo (^TNX)
+  fx      GBP/USD, GBP/EUR and EUR/USD, ECB reference rates via Frankfurter (daily)
+  us10y   US 10-year Treasury par yield, from the US Treasury's daily curve
 
     python3 .github/fetch_markets.py            # needs: pip install openpyxl
 """
@@ -16,7 +15,6 @@ import io
 import json
 import sys
 import time
-import urllib.parse
 import urllib.request
 import zipfile
 from datetime import date, datetime, timedelta, timezone
@@ -62,54 +60,35 @@ def fx():
     start = (date.today() - timedelta(days=DAYS)).isoformat()
     d = json.loads(get(f"https://api.frankfurter.dev/v1/{start}..?base=GBP&symbols=USD,EUR"))
     rates = sorted(d["rates"].items())
-    return {"date": rates[-1][0],
-            "pairs": {c: [[day, r[c]] for day, r in rates if c in r] for c in ("USD", "EUR")}}
+    pairs = {c: [[day, r[c]] for day, r in rates if c in r] for c in ("USD", "EUR")}
+    pairs["EURUSD"] = [[day, round(r["USD"] / r["EUR"], 4)] for day, r in rates if "USD" in r and "EUR" in r]
+    return {"date": rates[-1][0], "pairs": pairs}
 
 
-def yahoo(symbol):
-    q = urllib.parse.urlencode({"range": "6mo", "interval": "1d"})
-    d = json.loads(get(f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(symbol)}?{q}"))
-    r = d["chart"]["result"][0]
-    closes = r["indicators"]["quote"][0]["close"]
-    series = [[datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%d"), round(c, 3)]
-              for t, c in zip(r["timestamp"], closes) if c is not None]
-    return series[-DAYS:]
-
-
-def stooq(symbol):
-    rows = list(csv.DictReader(io.StringIO(get(f"https://stooq.com/q/d/l/?s={urllib.parse.quote(symbol)}&i=d").decode())))
-    series = [[r["Date"], round(float(r["Close"]), 3)] for r in rows if r.get("Close") not in (None, "", "N/D")]
+def us10y():
+    """US 10-year par yield from the US Treasury's daily yield curve CSV (newest first)."""
+    series = []
+    for year in (date.today().year, date.today().year - 1):
+        url = ("https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/"
+               f"{year}/all?type=daily_treasury_yield_curve&field_tdr_date_value={year}&page&_format=csv")
+        for row in csv.DictReader(io.StringIO(get(url).decode("utf-8-sig"))):
+            try:
+                d = datetime.strptime(row["Date"], "%m/%d/%Y").strftime("%Y-%m-%d")
+                series.append([d, float(row["10 Yr"])])
+            except (KeyError, ValueError):
+                continue
+        if len(series) >= DAYS:
+            break
     if not series:
-        raise ValueError("Stooq returned no rows")
-    return series[-DAYS:]
-
-
-def fred(series_id):
-    start = (date.today() - timedelta(days=DAYS * 2)).isoformat()
-    rows = list(csv.reader(io.StringIO(get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}&cosd={start}").decode())))[1:]
-    series = [[d, float(v)] for d, v in rows if v not in ("", ".")]
-    if not series:
-        raise ValueError("FRED returned no rows")
-    return series[-DAYS:]
-
-
-def first_of(*sources):
-    """Try each (label, fn) in turn; return the first series that works."""
-    errors = []
-    for label, fn in sources:
-        try:
-            series = fn()
-            return {"source": label, "date": series[-1][0], "series": series}
-        except Exception as e:  # noqa: BLE001 - any failure moves on to the next source
-            errors.append(f"{label}: {e}")
-    raise RuntimeError("; ".join(errors))
+        raise ValueError("US Treasury returned no rows")
+    series.sort()
+    return {"source": "US Treasury", "date": series[-1][0], "series": series[-DAYS:]}
 
 
 SECTIONS = {
     "gilts": gilts,
     "fx": fx,
-    "ftse": lambda: first_of(("Yahoo Finance", lambda: yahoo("^FTSE")), ("Stooq", lambda: stooq("^ukx"))),
-    "us10y": lambda: first_of(("FRED", lambda: fred("DGS10")), ("Yahoo Finance", lambda: yahoo("^TNX"))),
+    "us10y": us10y,
 }
 
 

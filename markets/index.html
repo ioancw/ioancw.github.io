@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Markets Glance</title>
-<meta name="description" content="UK gilt curve, FTSE 100, sterling and the US 10-year at a glance.">
+<meta name="description" content="UK gilt curve, sterling, the euro and the US 10-year at a glance.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -86,7 +86,7 @@
 <p class="notes">
   End-of-day figures, refreshed hourly on weekdays; not live prices. Gilts: Bank of
   England nominal spot (zero-coupon) curve, published the next working morning.
-  Sterling: ECB reference rates via Frankfurter. FTSE 100 and US 10-year: daily closes.
+  Currencies: ECB reference rates via Frankfurter. US 10-year: US Treasury par yield.
   Not investment advice. <a href="../apps/">All apps</a>
 </p>
 
@@ -235,10 +235,10 @@ function renderGilts(g) {
 function render(d) {
   const yld = (/** @type {number} */ v) => v.toFixed(2) + "%";
   $("tiles").innerHTML =
-    tile("FTSE 100", d.ftse?.series, (v) => v.toLocaleString("en-GB", { maximumFractionDigits: 0 }), pct) +
-    tile("US 10-year", d.us10y?.series, yld, bp) +
     tile("GBP / USD", d.fx?.pairs?.USD, (v) => v.toFixed(4), pct) +
-    tile("GBP / EUR", d.fx?.pairs?.EUR, (v) => v.toFixed(4), pct);
+    tile("GBP / EUR", d.fx?.pairs?.EUR, (v) => v.toFixed(4), pct) +
+    tile("EUR / USD", d.fx?.pairs?.EURUSD, (v) => v.toFixed(4), pct) +
+    tile("US 10-year", d.us10y?.series, yld, bp);
   renderGilts(d.gilts);
 }
 

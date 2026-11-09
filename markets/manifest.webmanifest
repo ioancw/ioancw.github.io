@@ -1,7 +1,7 @@
 {
   "name": "Markets Glance",
   "short_name": "Markets",
-  "description": "UK gilt curve, FTSE 100, sterling and the US 10-year at a glance.",
+  "description": "UK gilt curve, sterling, the euro and the US 10-year at a glance.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
