@@ -36,6 +36,10 @@
   .chart .gap { width: 10px; min-width: 10px; border: 0; background: var(--bg); cursor: default; }
   .chart td.far { opacity: 0.75; }
   .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 10px; }
+  .tonight { border: 1px solid #2a2a30; border-left: 5px solid #333; border-radius: 8px; background: #16161a;
+             padding: 9px 12px; margin: 0 0 10px; max-width: 72ch; }
+  .tonight .big { font-size: 17px; font-weight: 600; }
+  .tonight .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
   .alert { background: #12301d; border: 1px solid #2fa35a; color: #d6f5e0; padding: 8px 10px; border-radius: 6px;
            margin: 0 0 10px; font-size: 13px; max-width: 72ch; }
   label.toggle { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; }
@@ -74,6 +78,7 @@
 <div class="meta" id="meta">Loading forecast…</div>
 <nav class="sites" id="sites" aria-label="Saved sites"></nav>
 
+<section class="tonight" id="tonight" hidden></section>
 <div class="alert" id="aurora" hidden></div>
 <div class="toolbar">
   <label class="toggle"><input type="checkbox" id="showday"> Show daytime</label>
@@ -117,6 +122,7 @@
 <div id="status"></div>
 
 <p class="notes">
+  <a href="../apps/">All apps</a> ·
   Each night runs from an hour before sunset to an hour after sunrise. Hours more
   than two days ahead are faded because forecasts get less reliable further out.
   Darker blue is better on every row except temperature. Darkness is calculated
@@ -530,14 +536,20 @@ function render(site, data, showDay, kp) {
  */
 function renderNights(site, start, end, times, cloud, go) {
   const step = 5 * 60e3;
-  /** @type {{label: string, darkFrom?: number, darkTo?: number, moonEvents: string[], cloud: number[], go: string[]}[]} */
+  /** @type {{label: string, darkFrom?: number, darkTo?: number, started?: boolean, moonEvents: string[], cloud: number[], go: string[], hours: number[]}[]} */
   const nights = [];
   /** @type {typeof nights[0] | null} */ let cur = null;
   let prev = sunMoon(start, site.lat, site.lon);
+  if (prev.sun < -18) {
+    // Already dark: the night in progress counts too.
+    cur = { label: fmtDay.format(start - 12 * 36e5), darkFrom: start, started: true, moonEvents: [], cloud: [], go: [], hours: [] };
+    if (prev.moon > 0) cur.moonEvents.push(`up, ${(prev.frac * 100).toFixed(0)}% lit`);
+    nights.push(cur);
+  }
   for (let t = start + step; t <= end; t += step) {
     const p = sunMoon(t, site.lat, site.lon);
     if (prev.sun >= -18 && p.sun < -18) {
-      cur = { label: fmtDay.format(t), darkFrom: t, moonEvents: [], cloud: [], go: [] };
+      cur = { label: fmtDay.format(t), darkFrom: t, moonEvents: [], cloud: [], go: [], hours: [] };
       if (p.moon > 0) cur.moonEvents.push(`up at dark, ${(p.frac * 100).toFixed(0)}% lit`);
       nights.push(cur);
     }
@@ -555,6 +567,7 @@ function renderNights(site, start, end, times, cloud, go) {
       const c = cloud[i];
       if (c != null) n.cloud.push(c);
       n.go.push(go[i].tip.split(/[ :(]/)[0]);
+      n.hours.push(t);
     });
   }
 
@@ -573,7 +586,7 @@ function renderNights(site, start, end, times, cloud, go) {
   const best = rated.reduce((a, b) => (b.score > (a?.score ?? 0) ? b : a), /** @type {typeof rated[0] | null} */ (null));
 
   const rows = rated.map(({ n, rating }, i) => {
-    const win = `${fmtTime.format(/** @type {number} */ (n.darkFrom))} – ${n.darkTo ? fmtTime.format(n.darkTo) : "beyond forecast"}`;
+    const win = `${n.started ? "now" : fmtTime.format(/** @type {number} */ (n.darkFrom))} – ${n.darkTo ? fmtTime.format(n.darkTo) : "beyond forecast"}`;
     const moon = n.moonEvents.length ? n.moonEvents.join("; ") : "below horizon";
     const mean = n.cloud.length ? n.cloud.reduce((a, b) => a + b, 0) / n.cloud.length : null;
     const pill = mean == null ? "–" :
@@ -582,9 +595,54 @@ function renderNights(site, start, end, times, cloud, go) {
     return `<tr><td><span class="dot" style="background:${rating.color}" title="${rating.label}" aria-label="${rating.label}"></span></td><td>${n.label}${star}</td>` +
       `<td>${win}</td><td>${moon}</td><td>${pill}</td></tr>`;
   });
+  renderTonight(rated[0] ?? null, best && best.score >= 4 ? best : null);
+
   const table = /** @type {HTMLTableElement} */ (document.getElementById("nights"));
   table.innerHTML = `<tr><th></th><th>Night</th><th>Astronomically dark</th><th>Moon</th><th>Mean cloud</th></tr>` +
     (rows.join("") || `<tr><td colspan="5">No astronomical darkness in the forecast window.</td></tr>`);
+}
+
+/**
+ * One-line verdict for the coming night: its best spell, dark window, Moon and cloud.
+ * @typedef {{n: {label: string, darkFrom?: number, darkTo?: number, started?: boolean, moonEvents: string[], cloud: number[], go: string[], hours: number[]}, rating: {label: string, color: string}, score: number}} RatedNight
+ * @param {RatedNight | null} first
+ * @param {RatedNight | null} best
+ */
+function renderTonight(first, best) {
+  const box = /** @type {HTMLElement} */ (document.getElementById("tonight"));
+  box.hidden = !first;
+  if (!first) return;
+  const { n, rating } = first;
+  const when = (n.darkFrom ?? 0) - Date.now() < 20 * 36e5 ? "Tonight" : n.label;
+
+  // Longest run of hours at each quality level, best level first.
+  const run = (/** @type {string[]} */ kinds) => {
+    let bestRun = { from: 0, len: 0 }, from = 0, len = 0;
+    n.go.forEach((g, i) => {
+      if (kinds.includes(g)) { if (!len) from = i; len++; if (len > bestRun.len) bestRun = { from, len }; }
+      else len = 0;
+    });
+    if (!bestRun.len) return null;
+    const to = Math.min(n.hours[bestRun.from + bestRun.len - 1] + 36e5, n.darkTo ?? Infinity);
+    return `${bestRun.from === 0 && n.started ? "now" : fmtTime.format(n.hours[bestRun.from])}–${fmtTime.format(to)}`;
+  };
+  const good = run(["good"]), ok = run(["good", "usable"]), bright = run(["good", "usable", "clear"]);
+  const verdict = n.cloud.length === 0 ? "no forecast"
+    : rating.label.startsWith("Good") && good ? `good ${good}`
+    : rating.label.startsWith("OK") && ok ? `usable ${ok}`
+    : rating.label.startsWith("Clear") && bright ? `clear but moonlit ${bright}`
+    : ok ? `mostly poor, a short usable spell ${ok}` : "poor, too much cloud";
+
+  const mean = n.cloud.length ? n.cloud.reduce((a, b) => a + b, 0) / n.cloud.length : null;
+  const sub = [
+    n.started ? `Dark until ${n.darkTo ? fmtTime.format(n.darkTo) : "…"}`
+      : `Dark ${fmtTime.format(/** @type {number} */ (n.darkFrom))}–${n.darkTo ? fmtTime.format(n.darkTo) : "…"}`,
+    `Moon ${n.moonEvents.length ? n.moonEvents.join("; ") : "below horizon"}`,
+    mean == null ? null : `cloud ${mean.toFixed(0)}%`,
+    best && best !== first ? `Best night: ${best.n.label}` : null,
+  ].filter(Boolean).join(" · ");
+  box.style.borderLeftColor = rating.color;
+  box.innerHTML = `<div class="big">${when}: ${verdict}</div><div class="sub">${sub}</div>`;
 }
 
 // ------------------------------------------------------------- wiring
