@@ -1,0 +1,34 @@
+name: Fetch markets
+
+on:
+  schedule:
+    - cron: "17 7-21 * * 1-5"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/fetch_markets.py
+      - .github/workflows/fetch-markets.yml
+
+permissions:
+  contents: write
+
+concurrency: fetch-markets
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet openpyxl
+      - run: python3 .github/fetch_markets.py
+      - name: Commit new figures
+        run: |
+          git add markets/data.json
+          git diff --cached --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update market data"
+          git pull --rebase --quiet origin master
+          git push
