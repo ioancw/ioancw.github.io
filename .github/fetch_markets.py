@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Fetch a few market numbers into markets/data.json for the markets app.
 
-Runs hourly on weekdays from GitHub Actions; no API keys. Each section is
+Runs every 20 minutes on weekdays from GitHub Actions (GitHub skips many
+scheduled runs, so it is asked often); no API keys. The file is only rewritten
+when a source has published something new. Each section is
 fetched on its own, and a section that fails keeps its previous values.
 
   gilts   Bank of England nominal spot curve (daily, published next morning)
@@ -97,22 +99,28 @@ def main():
         data = json.load(open(OUT))
     except (OSError, ValueError):
         data = {}
-    ok = 0
+    ok = changed = 0
     for name, fn in SECTIONS.items():
         try:
-            data[name] = fn()
-            data[name]["fetched"] = int(time.time())
+            new = fn()
             ok += 1
-            print(f"{name}: ok, latest {data[name].get('date')}")
+            old = {k: v for k, v in data.get(name, {}).items() if k != "fetched"}
+            if new != old:
+                data[name] = {**new, "fetched": int(time.time())}
+                changed += 1
+            print(f"{name}: ok, latest {new.get('date')}" + ("" if new != old else " (unchanged)"))
         except Exception as e:  # noqa: BLE001 - keep the previous values for this section
             print(f"::warning::{name} failed, keeping previous values: {e}")
     if not ok:
         sys.exit("every source failed; leaving the file as it was")
+    if not changed:
+        # Nothing new published: leave the file alone so there is no commit or site rebuild.
+        print("no new figures")
+        return
     data["updated"] = int(time.time())
     with open(OUT, "w") as f:
         json.dump(data, f, separators=(",", ":"))
-    print(f"wrote {OUT} ({ok} of {len(SECTIONS)} sections refreshed)")
-
+    print(f"wrote {OUT} ({changed} of {len(SECTIONS)} sections changed)")
 
 if __name__ == "__main__":
     main()

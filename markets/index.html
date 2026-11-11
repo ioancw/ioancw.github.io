@@ -84,7 +84,7 @@
 
 <div class="meta" id="meta">Loading…</div>
 <p class="notes">
-  End-of-day figures, refreshed hourly on weekdays; not live prices. Gilts: Bank of
+  End-of-day figures, checked for updates through the day on weekdays; not live prices. Gilts: Bank of
   England nominal spot (zero-coupon) curve, published the next working morning.
   Currencies: ECB reference rates via Frankfurter. US 10-year: US Treasury par yield.
   Not investment advice. <a href="../apps/">All apps</a>
@@ -251,7 +251,7 @@ async function main() {
   render(d);
   addEventListener("resize", () => renderGilts(d.gilts));
   $("meta").innerHTML = (fresh ? "" : `<span class="error">Offline: showing saved figures.</span> `) +
-    `Data refreshed ${fmtStamp.format(d.updated * 1000)}`;
+    `Latest figures picked up ${fmtStamp.format(d.updated * 1000)}`;
 }
 
 $("refresh").addEventListener("click", () => location.reload());

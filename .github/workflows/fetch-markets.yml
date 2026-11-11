@@ -2,7 +2,9 @@ name: Fetch markets
 
 on:
   schedule:
-    - cron: "17 7-21 * * 1-5"
+    # GitHub drops many scheduled runs, so ask every 20 minutes; the script
+    # only commits when a source has published new figures.
+    - cron: "7,27,47 6-22 * * 1-5"
   workflow_dispatch:
   push:
     branches: [master]
